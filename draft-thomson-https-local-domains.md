@@ -19,11 +19,11 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
-category: info
+title: "HTTPS for Local Domains"
+abbrev: "HTTPS Local Domains"
+category: std
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-thomson-https-local-domains-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -45,10 +45,17 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
-
+    fullname: Martin Thomson
+    organization: Mozilla
+    email: mt@lowentropy.net
+ -
+    ins: D. Wing
+    name: Dan Wing
+    organization: Cloud Software Group Holdings, Inc.
+    abbrev: Cloud Software Group
+    email: danwing@gmail.com
+    role: editor
+    
 normative:
 
 informative:
