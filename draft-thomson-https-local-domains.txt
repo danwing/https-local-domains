@@ -73,7 +73,7 @@ Table of Contents
    5.  Raw Public Keys
    6.  Validation
    7.  Encoding Details
-   8.  Upgrading to Easier Short Names
+   8.  Short Names
    9.  Local Domain Names
    10. Security Considerations
    11. IANA Considerations
@@ -170,7 +170,7 @@ Table of Contents
                       hash-algorithm
                       hash
 
-8.  Upgrading to Easier Short Names
+8.  Short Names
 
    Long host names containing encoded public keys are awkward for users.
    This section describes how short names can also be advertised by
