@@ -74,9 +74,12 @@ Table of Contents
    6.  Validation
    7.  Encoding Details
    8.  Upgrading to Easier Short Names
-   9.  Security Considerations
-   10. IANA Considerations
-   11. Normative References
+   9.  Local Domain Names
+   10. Security Considerations
+   11. IANA Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Appendix A.  Discussion Points
      A.1.  DTLS
    Acknowledgments
@@ -96,9 +99,11 @@ Table of Contents
 
 3.  Operation
 
-   Server uses a unique host name that includes a hash of its public
-   key.  Clients use TLS to connect to that name, validate the hash
-   matches the key in the TLS ServerHello, and continue communication.
+   Server uses a unique host name that includes a hash of its public key
+   using a local domain name (Section 9).  When clients connect to such
+   a local domain name (Section 9) using TLS they validate the name's
+   hash matches the key in the TLS ServerHello, and continue
+   communication.
 
    This system does not require storage on the client.
 
@@ -119,6 +124,9 @@ Table of Contents
    into the name itself.  This achieves uniqueness and is also used by
    the client to validate the server's public key Section 6.  Details on
    encoding are in Section 7.
+
+   To ease clients connecting to these long names, servers SHOULD
+   advertise their long names on the local network [DNS-SD].
 
 5.  Raw Public Keys
 
@@ -181,15 +189,23 @@ Table of Contents
    terminate the TLS handshake after the Finished message by sending TLS
    close_notify.
 
-9.  Security Considerations
+9.  Local Domain Names
+
+   The following domain name suffixes are considered 'local' for
+   purposes of this document: .local ([RFC6762]), .home-arpa
+   ([RFC8375]), and .internal ([icann]).
+
+10.  Security Considerations
 
    TODO Security
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    Hash type, 0=SHA256, further extensions via IETF Action.
 
-11.  Normative References
+12.  References
+
+12.1.  Normative References
 
    [DNS-SD]   Cheshire, S. and M. Krochmal, "DNS-Based Service
               Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
@@ -209,6 +225,21 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+12.2.  Informative References
+
+   [icann]    ICANN, "Identification of a top-level domain for private
+              use", January 2024, <https://itp.cdn.icann.org/en/files/
+              root-system/identification-tld-private-use-
+              24-01-2024-en.pdf>.
+
+   [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
+              DOI 10.17487/RFC6762, February 2013,
+              <https://www.rfc-editor.org/rfc/rfc6762>.
+
+   [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
+              'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
+              <https://www.rfc-editor.org/rfc/rfc8375>.
 
 Appendix A.  Discussion Points
 
