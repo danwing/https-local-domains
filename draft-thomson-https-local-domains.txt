@@ -1,0 +1,232 @@
+
+
+
+
+Network Working Group                                         M. Thomson
+Internet-Draft                                                   Mozilla
+Intended status: Standards Track                            D. Wing, Ed.
+Expires: 11 May 2025                                Cloud Software Group
+                                                         7 November 2024
+
+
+                        HTTPS for Local Domains
+                draft-thomson-https-local-domains-latest
+
+Abstract
+
+   This specification eliminates security warnings when connecting to
+   local domains using TLS.  Servers use a long hostname which encodes
+   their public key that is validated against the public key presented
+   in the TLS handshake.  Additional features are discussed to allow
+   users to securely interact with short names.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://danwing.github.io/https-local-domains/draft-thomson-https-
+   local-domains.html.  Status information for this document may be
+   found at https://datatracker.ietf.org/doc/draft-thomson-https-local-
+   domains/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/danwing/https-local-domains.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 11 May 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  Operation
+   4.  Unique Host Names
+   5.  Raw Public Keys
+   6.  Validation
+   7.  Encoding Details
+   8.  Upgrading to Easier Short Names
+   9.  Security Considerations
+   10. IANA Considerations
+   11. Normative References
+   Appendix A.  Discussion Points
+     A.1.  DTLS
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   TODO Introduction
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  Operation
+
+   Server uses a unique host name that includes a hash of its public
+   key.  Clients use TLS to connect to that name, validate the hash
+   matches the key in the TLS ServerHello, and continue communication.
+
+   This system does not require storage on the client.
+
+4.  Unique Host Names
+
+   Web browsers and other application clients store per-host state using
+   the host name, including cached form data such as passwords,
+   integrated and 3rd party password managers, cookies, and other data.
+   When a name collision occurs (e.g., the same printer.internal name on
+   two different networks) the client cannot recognize a different host
+   is being encountered.  While it is possible to extend all of these
+   clients to extend their index to include the server's public key,
+   this seems to lack business justification for the engineering effort
+   to solely improve the user experience (shorter name) on local
+   networks.
+
+   A unique name can be created by embedding the hash of the public key
+   into the name itself.  This achieves uniqueness and is also used by
+   the client to validate the server's public key Section 6.  Details on
+   encoding are in Section 7.
+
+5.  Raw Public Keys
+
+   Todo: rewrite this section
+
+   Certificates are complicated for most people.  They also have an
+   expiration date.  This system uses a public key for the lifetime of
+   the device, which is hopefully years.  A certificate is not
+   appropriate; a raw public key is more approporiate.
+
+6.  Validation
+
+   The client connects to a unique hostname and sends a TLS ClientHello.
+   As the client only needs the raw public key, the request MAY include
+   a request for a raw public key [RFC7250].  The client parses the
+   returned certificate or raw public key to extract the public key and
+   compare its hash with the hash contained in the hostname.  If they
+   match, the TLS session continues.  If they do not match, the client
+   might warn the user (as is common today) or simply abandon the TLS
+   connection.
+
+   If a certificate is returned both its 'NotBefore' and 'NotAfter'
+   dates are ignored for purposes of this specification.
+
+7.  Encoding Details
+
+   The general format is hostname, a period, a digit indicating the hash
+   algorithm, and the hash.  Currently only SHA256 is defined.  This can
+   be extended via IANA action.
+
+      Note there is no separator between the hash-algorithm identifier
+      and the hash itself.  This reduces unecessary periods..
+
+   friendly-name = 1*(ALPHA | DIGIT)
+
+   hash-algorithm = 0 ; SHA256
+
+   hash = 1*(ALPHA | DIGIT)
+
+   encoded-hostname = friendly-name "."
+                      hash-algorithm
+                      hash
+
+8.  Upgrading to Easier Short Names
+
+   Long host names containing encoded public keys are awkward for users.
+   This section describes how short names can also be advertised by
+   servers and securely validated by clients, so that the short name is
+   presented to users while the long name is used to actually connect.
+
+   The server advertises both its (long) unique name and its short
+   nickname using [DNS-SD].  The client connects to the long name and
+   performs a full TLS handshake and validation (Section 6).  The client
+   then connects to the short nickname and performs a full TLS
+   handshake.  If the same public key was presented by both TLS
+   connections, the client SHOULD present the short name to the user.
+
+   To avoid the problems described in Section 4, the short name MUST NOT
+   be used by clients after the TLS handshake and the server MUST
+   terminate the TLS handshake after the Finished message by sending TLS
+   close_notify.
+
+9.  Security Considerations
+
+   TODO Security
+
+10.  IANA Considerations
+
+   Hash type, 0=SHA256, further extensions via IETF Action.
+
+11.  Normative References
+
+   [DNS-SD]   Cheshire, S. and M. Krochmal, "DNS-Based Service
+              Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
+              <https://www.rfc-editor.org/rfc/rfc6763>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
+              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
+              Transport Layer Security (TLS) and Datagram Transport
+              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
+              June 2014, <https://www.rfc-editor.org/rfc/rfc7250>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+Appendix A.  Discussion Points
+
+A.1.  DTLS
+
+   This should work for DTLS, as well?
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Authors' Addresses
+
+   Martin Thomson
+   Mozilla
+   Email: mt@lowentropy.net
+
+
+   Dan Wing (editor)
+   Cloud Software Group Holdings, Inc.
+   Email: danwing@gmail.com
