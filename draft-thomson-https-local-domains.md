@@ -39,6 +39,13 @@ author:
 normative:
 
 informative:
+  icann:
+     title: "Identification of a top-level domain for private use"
+     author:
+       org: ICANN
+       name:
+     date: January 2024
+     target: https://itp.cdn.icann.org/en/files/root-system/identification-tld-private-use-24-01-2024-en.pdf
 
 
 --- abstract
@@ -62,11 +69,14 @@ TODO Introduction
 
 # Operation
 
-Server uses a unique host name that includes a hash of its public key.
-Clients use TLS to connect to that name, validate the hash matches the key
-in the TLS ServerHello, and continue communication.
+Server uses a unique host name that includes a hash of its public key
+using a local domain name ({{local}}).  When clients connect to such a
+local domain name ({{local}}) using TLS they validate the name's hash
+matches the key in the TLS ServerHello, and continue communication.
 
 This system does not require storage on the client.
+
+
 
 # Unique Host Names {#unique}
 
@@ -84,6 +94,9 @@ A unique name can be created by embedding the hash of the public
 key into the name itself.  This achieves uniqueness and is also
 used by the client to validate the server's public key {{validation}}.
 Details on encoding are in {{encoding}}.
+
+To ease clients connecting to these long names, servers SHOULD
+advertise their long names on the local network {{?DNS-SD=RFC6763}}.
 
 # Raw Public Keys {#rpk}
 
@@ -148,6 +161,12 @@ the user.
 To avoid the problems described in {{unique}}, the short name MUST NOT
 be used by clients after the TLS handshake and the server MUST terminate
 the TLS handshake after the Finished message by sending TLS close_notify.
+
+# Local Domain Names {#local}
+
+The following domain name suffixes are considered 'local' for
+purposes of this document: .local ({{?RFC6762}}), .home-arpa
+({{?RFC8375}}), and .internal ({{icann}}).
 
 
 
