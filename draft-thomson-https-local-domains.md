@@ -143,7 +143,7 @@ encoded-hostname = friendly-name "."
 ~~~~~
 
 
-# Upgrading to Easier Short Names
+# Short Names
 
 Long host names containing encoded public keys are awkward for users. This
 section describes how short names can also be advertised by servers and
