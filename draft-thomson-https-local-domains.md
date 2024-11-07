@@ -55,7 +55,7 @@ author:
     abbrev: Cloud Software Group
     email: danwing@gmail.com
     role: editor
-    
+
 normative:
 
 informative:
