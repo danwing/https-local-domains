@@ -1381,19 +1381,18 @@ name and performs a full TLS handshake and validation
 performs a full TLS handshake. If the same public key was presented by
 both TLS connections, the client <span class="bcp14">SHOULD</span> present both the
 long name and short name to the user.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">To avoid the problems described in <a href="#unique" class="auto internal xref">Section 4</a>, the TLS connection to
-the printer <span class="bcp14">MUST</span> always use the long name.  Thus, if a user types
-printer.local, and the client has validated that short name as
-described above, the client <span class="bcp14">SHOULD</span> make the TLS connection to the long
-name.  The short name <span class="bcp14">MUST NOT</span> be used by clients after the TLS
-handshake and the server <span class="bcp14">MUST</span> terminate the TLS handshake after the
-Finished message by sending TLS close_notify.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-8-4.1">
-          <p id="section-8-4.1.1">Discuss: we could avoid the server advertising its short name by
-  having client simply remove remove the hash in the middle?<a href="#section-8-4.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
+<p id="section-8-3">The client need only look for matching short name and unique name
+within the same TLD domain name (that is, if a unique name is advertised
+with a ".local" domain, the client does not need to look for its
+accompanying short name within ".internal".<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">To avoid the problems described in <a href="#unique" class="auto internal xref">Section 4</a>, the TLS data connection
+to the printer <span class="bcp14">MUST</span> always use the long name.  Thus, if the client has
+validated the short name as described above and a user attempts to
+connect to printer.local (by typing or by some other user
+interaction), the client <span class="bcp14">MUST</span> connect to the unique name.  The TLS
+connection to the short name <span class="bcp14">MUST NOT</span> be used by the client after the
+TLS handshake completes and the server <span class="bcp14">MUST</span> terminate the TLS
+handshake after the Finished message by sending TLS close_notify.<a href="#section-8-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="local">
@@ -1401,9 +1400,9 @@ Finished message by sending TLS close_notify.<a href="#section-8-3" class="pilcr
       <h2 id="name-local-domain-names">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-local-domain-names" class="section-name selfRef">Local Domain Names</a>
       </h2>
-<p id="section-9-1">The following domain name suffixes are considered 'local' for
-purposes of this document: .local (<span>[<a href="#mDNS" class="cite xref">mDNS</a>]</span>), .home-arpa
-(<span>[<a href="#Homenet" class="cite xref">Homenet</a>]</span>), and .internal (<span>[<a href="#I-D.davies-internal-tld" class="cite xref">I-D.davies-internal-tld</a>]</span>).<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-1">The following domain name suffixes are considered "local" for purposes
+of this document: ".local" (<span>[<a href="#mDNS" class="cite xref">mDNS</a>]</span>), ".home-arpa"
+(<span>[<a href="#Homenet" class="cite xref">Homenet</a>]</span>) and ".internal" (<span>[<a href="#I-D.davies-internal-tld" class="cite xref">I-D.davies-internal-tld</a>]</span>).<a href="#section-9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
