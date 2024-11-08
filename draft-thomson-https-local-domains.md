@@ -39,21 +39,13 @@ author:
 normative:
 
 informative:
-  icann:
-     title: "Identification of a top-level domain for private use"
-     author:
-       org: ICANN
-       name:
-     date: January 2024
-     target: https://itp.cdn.icann.org/en/files/root-system/identification-tld-private-use-24-01-2024-en.pdf
 
 
 --- abstract
 
 This specification eliminates security warnings when connecting to local domains
 using TLS.  Servers use a long hostname which encodes their public key that
-is validated against the public key presented in the TLS handshake. Additional
-features are discussed to allow users to securely interact with short names.
+is validated against the public key presented in the TLS handshake.
 
 --- middle
 
@@ -83,12 +75,12 @@ This system does not require storage on the client.
 Web browsers and other application clients store per-host state using
 the host name, including cached form data such as passwords,
 integrated and 3rd party password managers, cookies, and other data.
-When a name collision occurs (e.g., the same printer.internal name on
+When a name collision occurs (e.g., the same printer.local name on
 two different networks) the client cannot recognize a different host
 is being encountered.  While it is possible to extend all of these
 clients to extend their index to include the server's public key, this
 seems to lack business justification for the engineering effort to
-solely improve the user experience (shorter name) on local networks.
+solely improve the user experience (short name, {{short}}) on local networks.
 
 A unique name can be created by embedding the hash of the public
 key into the name itself.  This achieves uniqueness and is also
@@ -124,26 +116,31 @@ are ignored for purposes of this specification.
 # Encoding Details {#encoding}
 
 The general format is hostname, a period, a digit indicating the hash
-algorithm, and the hash.  Currently only SHA256 is defined. This can
-be extended via IANA action.
+algorithm, and then the hash.  The binary hash output is first base64
+encoded and then url encoded {{!RFC3986}} (as base64 encoding contains
+some reserved URI characters).  Currently only SHA256 hash is defined
+with value "0" and can be extended ({{iana}}).
 
 > Note there is no separator between the hash-algorithm identifier
 and the hash itself.  This reduces unecessary periods..
 
 ~~~~ abnf
-friendly-name = 1*(ALPHA | DIGIT)
+friendly-name = 1*63(ALPHA / DIGIT)
 
-hash-algorithm = 0 ; SHA256
+hash-algorithm = 0   ; 0=SHA256
 
-hash = 1*(ALPHA | DIGIT)
+hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
+     ; valid chars from RFC3986.  62+1 octet limit from RFC1035
 
 encoded-hostname = friendly-name "."
                    hash-algorithm
                    hash
 ~~~~~
+{: artwork-align="center" artwork-name="encoding"}
 
+An example encoding is shown in {{test-encoding}}.
 
-# Short Names
+# Short Names {#short}
 
 Long host names containing encoded public keys are awkward for users. This
 section describes how short names can also be advertised by servers and
@@ -154,19 +151,27 @@ The server advertises both its (long) unique name and its short
 nickname using {{!DNS-SD=RFC6763}}.  The client connects to the long
 name and performs a full TLS handshake and validation
 ({{validation}}).  The client then connects to the short nickname and
-performs a full TLS handshake. If the same public key was presented
-by both TLS connections, the client SHOULD present the short name to
-the user.
+performs a full TLS handshake. If the same public key was presented by
+both TLS connections, the client SHOULD present both the
+long name and short name to the user.
 
-To avoid the problems described in {{unique}}, the short name MUST NOT
-be used by clients after the TLS handshake and the server MUST terminate
-the TLS handshake after the Finished message by sending TLS close_notify.
+To avoid the problems described in {{unique}}, the TLS connection to
+the printer MUST always use the long name.  Thus, if a user types
+printer.local, and the client has validated that short name as
+described above, the client SHOULD make the TLS connection to the long
+name.  The short name MUST NOT be used by clients after the TLS
+handshake and the server MUST terminate the TLS handshake after the
+Finished message by sending TLS close_notify.
+
+
+> Discuss: we could avoid the server advertising its short name by
+  having client simply remove remove the hash in the middle?
 
 # Local Domain Names {#local}
 
 The following domain name suffixes are considered 'local' for
-purposes of this document: .local ({{?RFC6762}}), .home-arpa
-({{?RFC8375}}), and .internal ({{icann}}).
+purposes of this document: .local ({{?mDNS=RFC6762}}), .home-arpa
+({{?Homenet=RFC8375}}), and .internal ({{?I-D.davies-internal-tld}}).
 
 
 
@@ -175,9 +180,9 @@ purposes of this document: .local ({{?RFC6762}}), .home-arpa
 TODO Security
 
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
-Hash type, 0=SHA256, further extensions via IETF Action.
+New registry for hash type, 0=SHA256, further extensions via IETF Action.
 
 
 --- back
@@ -188,6 +193,87 @@ Hash type, 0=SHA256, further extensions via IETF Action.
 
 This should work for DTLS, as well?
 
+
+# Test Encoding {#test-encoding}
+
+Server with private key of:
+
+~~~~~
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCOkTU8TOKW/IZ6
+whhyhg+1I4u0jm019z4SVUKAwKyOtFPtoEvRGPdKYUoLaPZmVyN/VTYlubVn7dE8
+IYpibwkDhs38DKmyo0vdWjUaopQOaygtLB+PZ12l/XaSCE1cWsl45ShUvktcVR/D
+DKwv7DWEIZrRTLKy6M+8Ne4x++kKXmwbSj8WsNQ4kU4uFhS+JXHXToZvhvoQLkTs
+486XXPn4SJPLyTN62b6KHTLM1vb7RY4i4U7N6hS1UWe7bIxZNZ0vnf4vZ7A6SR7W
+nM31DoaW5XCBH7CL56MSdn7dmuksRimfNmnsEmvBXZmuQMHnUZghBLMHPC9xmHhT
+8q3pSY5jAgMBAAECggEANiAY1vDVob7zi01/HJObCQkatAzSl4drUGiAHAOKP49k
+wbV2s0bIM7vl8ZkC2u3AM0p1iTMNFQzrv+l38VD4WhdmwodIMeLfHYVu3dLVZPf3
+w9aZkMcMfcVRq7VtMV/iV3ygqDOqxr4mldWM1ZDW7HgZn9Z/jX7nxyuuZ9mcquuH
+Brl8pcUba7666jcz+F9NNjXTPCwfm7ihCPkTeYr1NflQGTR5PJ+D5dywb53iulm1
+ZTk2zBXJMujbIyTL0p+MqdEKXci7oQJqf7bQsxsO2ZUD24CmzYldsE6vmYUFxJpw
+ZbYzO/a/Mv0mXQhcUTWKkJkU78QT2Us7SuSL+IPGSQKBgQDC5iRKtlYulUgxV9gu
+TmX30R0W7R0nnsEjolNAqUwcIoUMHk8ODXEsp7jVOSFMJhHRMXL+VKYiBsiIV7vk
+GlTbLRP34HgK54auRF6PTxBfNAkF+FQxl2mzWxj7wi5mg0g+tCJTLereUXULz8+r
+h5Vqp4BCjcoumlyY0xlLtbr9/wKBgQC7Qx2Lb70XCL5eivdokMh2lRint9cfxC2W
+fJ6QOnJgsN9XIQGTUAk3cLvmrKg3UOmJXXq+Q6djVB/3Op3+TFzsGS2ORMel9r6o
+kAHYG/qdairlW9uTDsnwUP8UtE0lidhSXLGIAy71eMDbDg/c/yyrWTvysXf5kAiJ
+CzTnyvY3nQKBgBt+Va5IbH3jxyxWxQM7Qf0kfaMHTe6R4ZMCShY8C6WIZRZhjCti
+UA3JlzRU+9J/KFJHVH52OH1iUZWSMsopwMCuaju0aZq4MHKS6Hf04k1bzM4Pyui4
+AEwx1KNnMB579IwL4y+ysYgtG4LQDO6YkMZb3KcG03ehhOB2HwJkH33HAoGATOw3
+8bQ3v4OG970r/lcjEZsTYqnhA5qJg3yzgdmQbGmbhOX5CLNi5dQ4S3x3KSnilNvC
+dO/DjcjbzKnWhsSFkzKQhRV50ZH3JbTqHQT5QLqA3nCKVPFJQJ90+ONLoXTrWIHd
+J1rvakRtLE6tc4GartRcDMib2PcymmDxHZpA4/0CgYEAs0XF1G0gmnef8oEYuwZT
+c+vr4wnD7YCP1h8nsNSgRHLk1e7k727iHGvruX3qrKsY26RHKi2+i1P6A39I4F5s
+3Dme4HGXTyoc/qKp+/GAx5XYVG4c3Z3sdBejkpkhPTSlsSsDOHbjaiFV1zCyEdg5
+fOPfIBX8uLc3UtOm0+Gn1IQ=
+-----END PRIVATE KEY-----
+~~~~~
+
+and public key in PEM (ASCII) format is:
+
+~~~~~
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjpE1PEzilvyGesIYcoYP
+tSOLtI5tNfc+ElVCgMCsjrRT7aBL0Rj3SmFKC2j2Zlcjf1U2Jbm1Z+3RPCGKYm8J
+A4bN/AypsqNL3Vo1GqKUDmsoLSwfj2ddpf12kghNXFrJeOUoVL5LXFUfwwysL+w1
+hCGa0UyysujPvDXuMfvpCl5sG0o/FrDUOJFOLhYUviVx106Gb4b6EC5E7OPOl1z5
++EiTy8kzetm+ih0yzNb2+0WOIuFOzeoUtVFnu2yMWTWdL53+L2ewOkke1pzN9Q6G
+luVwgR+wi+ejEnZ+3ZrpLEYpnzZp7BJrwV2ZrkDB51GYIQSzBzwvcZh4U/Kt6UmO
+YwIDAQAB
+-----END PUBLIC KEY-----
+~~~~~
+
+Converted to binary format (DER), then hashed with SHA256,
+gives this hex value:
+
+~~~~~
+21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
+~~~~~
+
+Converting that hex value to binary and base64 encoded gives:
+
+~~~~~
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk+Whg=
+~~~~~
+
+After urlencoding gives:
+
+~~~~~
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A
+~~~~~
+
+The hash algorithm digit prefixes that urlencoded output, giving:
+
+~~~~~
+0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A
+~~~~~
+
+Finally, if this is a printer named "printer" advertised using
+".local", the resulting FQDN would be:
+
+~~~~
+printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A.local
+~~~~
 
 
 # Acknowledgments
