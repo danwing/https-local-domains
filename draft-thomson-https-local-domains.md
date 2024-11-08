@@ -155,25 +155,25 @@ performs a full TLS handshake. If the same public key was presented by
 both TLS connections, the client SHOULD present both the
 long name and short name to the user.
 
-To avoid the problems described in {{unique}}, the TLS connection to
-the printer MUST always use the long name.  Thus, if a user types
-printer.local, and the client has validated that short name as
-described above, the client SHOULD make the TLS connection to the long
-name.  The short name MUST NOT be used by clients after the TLS
-handshake and the server MUST terminate the TLS handshake after the
-Finished message by sending TLS close_notify.
+The client need only look for matching short name and unique name
+within the same TLD domain name (that is, if a unique name is advertised
+with a ".local" domain, the client does not need to look for its
+accompanying short name within ".internal".
 
-
-> Discuss: we could avoid the server advertising its short name by
-  having client simply remove remove the hash in the middle?
+To avoid the problems described in {{unique}}, the TLS data connection
+to the printer MUST always use the long name.  Thus, if the client has
+validated the short name as described above and a user attempts to
+connect to printer.local (by typing or by some other user
+interaction), the client MUST connect to the unique name.  The TLS
+connection to the short name MUST NOT be used by the client after the
+TLS handshake completes and the server MUST terminate the TLS
+handshake after the Finished message by sending TLS close_notify.
 
 # Local Domain Names {#local}
 
-The following domain name suffixes are considered 'local' for
-purposes of this document: .local ({{?mDNS=RFC6762}}), .home-arpa
-({{?Homenet=RFC8375}}), and .internal ({{?I-D.davies-internal-tld}}).
-
-
+The following domain name suffixes are considered "local" for purposes
+of this document: ".local" ({{?mDNS=RFC6762}}), ".home-arpa"
+({{?Homenet=RFC8375}}) and ".internal" ({{?I-D.davies-internal-tld}}).
 
 # Security Considerations
 
