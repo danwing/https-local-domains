@@ -1086,7 +1086,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Thomson &amp; Wing</td>
-<td class="center">Expires 12 May 2025</td>
+<td class="center">Expires 13 May 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1099,12 +1099,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-thomson-https-local-domains-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-08" class="published">8 November 2024</time>
+<time datetime="2024-11-09" class="published">9 November 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-12">12 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-05-13">13 May 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1156,7 +1156,7 @@ is validated against the public key presented in the TLS handshake.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1338,17 +1338,10 @@ are ignored for purposes of this specification.<a href="#section-6-2" class="pil
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-encoding-details" class="section-name selfRef">Encoding Details</a>
       </h2>
 <p id="section-7-1">The general format is hostname, a period, a digit indicating the hash
-algorithm, and then the hash.  The binary hash output is first base64
-encoded and then url encoded <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span> (as base64 encoding contains
-some reserved URI characters).  Currently only SHA256 hash is defined
-with value "0" and can be extended (<a href="#iana" class="auto internal xref">Section 11</a>).<a href="#section-7-1" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-7-2.1">
-          <p id="section-7-2.1.1">Note there is no separator between the hash-algorithm identifier
-and the hash itself.  This reduces unecessary periods..<a href="#section-7-2.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<div class="alignCenter art-abnf art-text artwork" id="section-7-3">
+algorithm, and then the hash of the server's public key.  The binary
+hash output is base64url encoded (<span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).
+Currently only SHA256 hash is defined with value "0" (<a href="#iana" class="auto internal xref">Section 11</a>).<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div class="alignCenter art-abnf art-text artwork" id="section-7-2">
 <pre>
 friendly-name = 1*63(ALPHA / DIGIT)
 
@@ -1360,9 +1353,9 @@ hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
 encoded-hostname = friendly-name "."
                    hash-algorithm
                    hash
-</pre><a href="#section-7-3" class="pilcrow">¶</a>
+</pre><a href="#section-7-2" class="pilcrow">¶</a>
 </div>
-<p id="section-7-4">An example encoding is shown in <a href="#test-encoding" class="auto internal xref">Appendix B</a>.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-3">An example encoding is shown in <a href="#test-encoding" class="auto internal xref">Appendix B</a>.<a href="#section-7-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="short">
@@ -1440,9 +1433,9 @@ of this document: ".local" (<span>[<a href="#mDNS" class="cite xref">mDNS</a>]</
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC3986">[RFC3986]</dt>
+<dt id="RFC4648">[RFC4648]</dt>
         <dd>
-<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
+<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7250">[RFC7250]</dt>
         <dd>
@@ -1552,30 +1545,24 @@ gives this hex value:<a href="#appendix-B-5" class="pilcrow">¶</a></p>
 21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 </pre><a href="#appendix-B-6" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B-7">Converting that hex value to binary and base64 encoded gives:<a href="#appendix-B-7" class="pilcrow">¶</a></p>
+<p id="appendix-B-7">Converting that hex value to binary and base64url encoding gives:<a href="#appendix-B-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-8">
 <pre>
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk+Whg=
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
 </pre><a href="#appendix-B-8" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B-9">After urlencoding gives:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
+<p id="appendix-B-9">The hash algorithm digit is then prefixed to that base64url, giving:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-10">
 <pre>
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A
+0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
 </pre><a href="#appendix-B-10" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B-11">The hash algorithm digit prefixes that urlencoded output, giving:<a href="#appendix-B-11" class="pilcrow">¶</a></p>
+<p id="appendix-B-11">Finally, if this is a printer named "printer" advertised using
+".local", the resulting FQDN would be:<a href="#appendix-B-11" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-12">
 <pre>
-0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A
+printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg.local
 </pre><a href="#appendix-B-12" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-13">Finally, if this is a printer named "printer" advertised using
-".local", the resulting FQDN would be:<a href="#appendix-B-13" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-14">
-<pre>
-printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A.local
-</pre><a href="#appendix-B-14" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1584,7 +1571,8 @@ printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A.local
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-C-1">TODO acknowledge.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-1">This Internet Draft started as a document published by Martin
+Thomson in 2007.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
