@@ -189,7 +189,7 @@ connection is made to that address, those are also considered
 "local":
 
 * 10/8, 172.16/12, and 192.168/16 (from {{?RFC1918}})
-* 169.254/16 or fe80::/10 (from {{?RFC3927}} and {{?RFC4291}})
+* 169.254/16 and fe80::/10 (from {{?RFC3927}} and {{?RFC4291}})
 * fc00::/7 (from {{?RFC4193}})
 * 127/8 and ::1/128 (from {{?RFC990}} and {{?RFC4291}})
 
