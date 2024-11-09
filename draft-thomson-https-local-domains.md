@@ -172,6 +172,12 @@ The following domain name suffixes are considered "local" for purposes
 of this document: ".local" ({{?mDNS=RFC6762}}), ".home-arpa"
 ({{?Homenet=RFC8375}}) and ".internal" ({{?I-D.davies-internal-tld}}).
 
+# Incremental Deployment
+
+A motivated network administrator can change a server's hostname to
+comply with this specification to provide immediate value to clients
+supporting this specification.
+
 # Security Considerations
 
 TODO Security
