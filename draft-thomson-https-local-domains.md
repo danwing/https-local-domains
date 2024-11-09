@@ -118,12 +118,13 @@ are ignored for purposes of this specification.
 The general format is hostname, a period, a digit indicating the hash
 algorithm, and then the hash of the server's public key.  The binary
 hash output is base64url encoded ({{Section 5 of !RFC4648}}).
-Currently only SHA256 hash is defined with value "0" ({{iana}}).
+Currently only SHA512/256 hash is defined with the value "0" ({{iana}}),
+which is SHA512 truncated to 256 bits.
 
 ~~~~ abnf
 friendly-name = 1*63(ALPHA / DIGIT)
 
-hash-algorithm = 0   ; 0=SHA256
+hash-algorithm = 0   ; 0=SHA512/256
 
 hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
      ; valid chars from RFC3986.  62+1 octet limit from RFC1035
@@ -178,7 +179,7 @@ TODO Security
 
 # IANA Considerations {#iana}
 
-New registry for hash type, 0=SHA256, further extensions via IETF Action.
+New registry for hash type, 0=SHA512/256.  Extensions via IETF Action.
 
 
 --- back
@@ -188,7 +189,6 @@ New registry for hash type, 0=SHA256, further extensions via IETF Action.
 ## DTLS
 
 This should work for DTLS, as well?
-
 
 # Test Encoding {#test-encoding}
 
@@ -239,31 +239,34 @@ YwIDAQAB
 -----END PUBLIC KEY-----
 ~~~~~
 
-Converted to binary format (DER), then hashed with SHA256,
-gives this hex value:
+Using the binary format (DER) and hashed using SHA512/256 gives this
+hex value:
 
 ~~~~~
-21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
+f1695279106e84533080f1ffa7ea5e6d18128cce712ee17258dadfbe32654d82
 ~~~~~
 
 Converting that hex value to binary and base64url encoding gives:
 
 ~~~~~
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
+8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
 ~~~~~
 
-The hash algorithm digit is then prefixed to that base64url, giving:
+After the hash algorithm identification digit (0 for SHA512/256) is
+prefixed to that base64url, resulting in:
 
 ~~~~~
-0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
+8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
 ~~~~~
 
 Finally, if this is a printer named "printer" advertised using
-".local", the resulting FQDN would be:
+".local", the full FQDN for its unique name would be:
 
-~~~~
-printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg.local
-~~~~
+~~~~~
+printer.08WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI.local
+~~~~~
+
+and the full FQDN for its short name would be "printer.local".
 
 
 # Acknowledgments
@@ -271,5 +274,3 @@ printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg.local
 
 This Internet Draft started as a document published by Martin
 Thomson in 2007.
-
-
