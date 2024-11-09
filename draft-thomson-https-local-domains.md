@@ -116,13 +116,9 @@ are ignored for purposes of this specification.
 # Encoding Details {#encoding}
 
 The general format is hostname, a period, a digit indicating the hash
-algorithm, and then the hash.  The binary hash output is first base64
-encoded and then url encoded {{!RFC3986}} (as base64 encoding contains
-some reserved URI characters).  Currently only SHA256 hash is defined
-with value "0" and can be extended ({{iana}}).
-
-> Note there is no separator between the hash-algorithm identifier
-and the hash itself.  This reduces unecessary periods..
+algorithm, and then the hash of the server's public key.  The binary
+hash output is base64url encoded ({{Section 5 of !RFC4648}}).
+Currently only SHA256 hash is defined with value "0" ({{iana}}).
 
 ~~~~ abnf
 friendly-name = 1*63(ALPHA / DIGIT)
@@ -250,33 +246,30 @@ gives this hex value:
 21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 ~~~~~
 
-Converting that hex value to binary and base64 encoded gives:
+Converting that hex value to binary and base64url encoding gives:
 
 ~~~~~
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk+Whg=
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
 ~~~~~
 
-After urlencoding gives:
+The hash algorithm digit is then prefixed to that base64url, giving:
 
 ~~~~~
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A
-~~~~~
-
-The hash algorithm digit prefixes that urlencoded output, giving:
-
-~~~~~
-0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A
+0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
 ~~~~~
 
 Finally, if this is a printer named "printer" advertised using
 ".local", the resulting FQDN would be:
 
 ~~~~
-printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk%2BWhg%3D%0A.local
+printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg.local
 ~~~~
 
 
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+This Internet Draft started as a document published by Martin
+Thomson in 2007.
+
+
