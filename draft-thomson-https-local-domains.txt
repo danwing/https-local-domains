@@ -73,12 +73,15 @@ Table of Contents
    6.  Validation
    7.  Encoding Details
    8.  Short Names
-   9.  Local Domain Names
-   10. Security Considerations
-   11. IANA Considerations
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+   9.  Local Hosts
+     9.1.  Local Domain Names
+     9.2.  Local IP Addresses
+   10. Incremental Deployment
+   11. Security Considerations
+   12. IANA Considerations
+   13. References
+     13.1.  Normative References
+     13.2.  Informative References
    Appendix A.  Discussion Points
      A.1.  DTLS
    Appendix B.  Test Encoding
@@ -156,7 +159,7 @@ Table of Contents
    The general format is hostname, a period, a digit indicating the hash
    algorithm, and then the hash of the server's public key.  The binary
    hash output is base64url encoded (Section 5 of [RFC4648]).  Currently
-   only SHA512/256 hash is defined with the value "0" (Section 11),
+   only SHA512/256 hash is defined with the value "0" (Section 12),
    which is SHA512 truncated to 256 bits.
 
       friendly-name = 1*63(ALPHA / DIGIT)
@@ -190,7 +193,7 @@ Table of Contents
    The client need only look for matching short name and unique name
    within the same TLD domain name (that is, if a unique name is
    advertised with a ".local" domain, the client does not need to look
-   for its accompanying short name within ".internal".
+   for its accompanying short name within ".internal").
 
    To avoid the problems described in Section 4, the TLS data connection
    to the printer MUST always use the long name.  Thus, if the client
@@ -201,24 +204,57 @@ Table of Contents
    TLS handshake completes and the server MUST terminate the TLS
    handshake after the Finished message by sending TLS close_notify.
 
-9.  Local Domain Names
+9.  Local Hosts
 
-   The following domain name suffixes are considered "local" for
-   purposes of this document: ".local" ([mDNS]), ".home-arpa"
-   ([Homenet]) and ".internal" ([I-D.davies-internal-tld]).
+   This section defines the domain names and IP addresses considered
+   "local" which clients MAY use with this specification.  Other domain
+   names and other IP addresses SHOULD NOT be used with this
+   specification.
 
-10.  Security Considerations
+9.1.  Local Domain Names
+
+   The following domain name suffixes are considered "local":
+
+   *  ".local" (from [mDNS])
+
+   *  ".home-arpa" (from [Homenet])
+
+   *  ".internal" (from [I-D.davies-internal-tld])
+
+   *  both ".localhost" and "localhost" (Section 6.3 of [RFC6761])
+
+9.2.  Local IP Addresses
+
+   Additionally, if any host resolves to a local IP address and
+   connection is made to that address, those are also considered
+   "local":
+
+   *  10/8, 172.16/12, and 192.168/16 (from [RFC1918])
+
+   *  169.254/16 or fe80::/10 (from [RFC3927] and [RFC4291])
+
+   *  fc00::/7 (from [RFC4193])
+
+   *  127/8 and ::1/128 (from [RFC990] and [RFC4291])
+
+10.  Incremental Deployment
+
+   A motivated network administrator can change a server's hostname to
+   comply with this specification to provide immediate value to clients
+   supporting this specification.
+
+11.  Security Considerations
 
    TODO Security
 
-11.  IANA Considerations
+12.  IANA Considerations
 
    New registry for hash type, 0=SHA512/256.  Extensions via IETF
    Action.
 
-12.  References
+13.  References
 
-12.1.  Normative References
+13.1.  Normative References
 
    [DNS-SD]   Cheshire, S. and M. Krochmal, "DNS-Based Service
               Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
@@ -243,7 +279,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-12.2.  Informative References
+13.2.  Informative References
 
    [Homenet]  Pfister, P. and T. Lemon, "Special-Use Domain
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
@@ -259,6 +295,32 @@ Table of Contents
    [mDNS]     Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
               DOI 10.17487/RFC6762, February 2013,
               <https://www.rfc-editor.org/rfc/rfc6762>.
+
+   [RFC1918]  Rekhter, Y., Moskowitz, B., Karrenberg, D., de Groot, G.
+              J., and E. Lear, "Address Allocation for Private
+              Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
+              February 1996, <https://www.rfc-editor.org/rfc/rfc1918>.
+
+   [RFC3927]  Cheshire, S., Aboba, B., and E. Guttman, "Dynamic
+              Configuration of IPv4 Link-Local Addresses", RFC 3927,
+              DOI 10.17487/RFC3927, May 2005,
+              <https://www.rfc-editor.org/rfc/rfc3927>.
+
+   [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
+              Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
+              <https://www.rfc-editor.org/rfc/rfc4193>.
+
+   [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
+              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
+              2006, <https://www.rfc-editor.org/rfc/rfc4291>.
+
+   [RFC6761]  Cheshire, S. and M. Krochmal, "Special-Use Domain Names",
+              RFC 6761, DOI 10.17487/RFC6761, February 2013,
+              <https://www.rfc-editor.org/rfc/rfc6761>.
+
+   [RFC990]   Reynolds, J. and J. Postel, "Assigned numbers", RFC 990,
+              DOI 10.17487/RFC0990, November 1986,
+              <https://www.rfc-editor.org/rfc/rfc990>.
 
 Appendix A.  Discussion Points
 
