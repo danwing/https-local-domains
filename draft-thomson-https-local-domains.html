@@ -1340,12 +1340,13 @@ are ignored for purposes of this specification.<a href="#section-6-2" class="pil
 <p id="section-7-1">The general format is hostname, a period, a digit indicating the hash
 algorithm, and then the hash of the server's public key.  The binary
 hash output is base64url encoded (<span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).
-Currently only SHA256 hash is defined with value "0" (<a href="#iana" class="auto internal xref">Section 11</a>).<a href="#section-7-1" class="pilcrow">¶</a></p>
+Currently only SHA512/256 hash is defined with the value "0" (<a href="#iana" class="auto internal xref">Section 11</a>),
+which is SHA512 truncated to 256 bits.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <div class="alignCenter art-abnf art-text artwork" id="section-7-2">
 <pre>
 friendly-name = 1*63(ALPHA / DIGIT)
 
-hash-algorithm = 0   ; 0=SHA256
+hash-algorithm = 0   ; 0=SHA512/256
 
 hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
      ; valid chars from RFC3986.  62+1 octet limit from RFC1035
@@ -1411,7 +1412,7 @@ of this document: ".local" (<span>[<a href="#mDNS" class="cite xref">mDNS</a>]</
       <h2 id="name-iana-considerations">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-11-1">New registry for hash type, 0=SHA256, further extensions via IETF Action.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">New registry for hash type, 0=SHA512/256.  Extensions via IETF Action.<a href="#section-11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -1538,32 +1539,34 @@ YwIDAQAB
 -----END PUBLIC KEY-----
 </pre><a href="#appendix-B-4" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B-5">Converted to binary format (DER), then hashed with SHA256,
-gives this hex value:<a href="#appendix-B-5" class="pilcrow">¶</a></p>
+<p id="appendix-B-5">Using the binary format (DER) and hashed using SHA512/256 gives this
+hex value:<a href="#appendix-B-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-6">
 <pre>
-21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
+f1695279106e84533080f1ffa7ea5e6d18128cce712ee17258dadfbe32654d82
 </pre><a href="#appendix-B-6" class="pilcrow">¶</a>
 </div>
 <p id="appendix-B-7">Converting that hex value to binary and base64url encoding gives:<a href="#appendix-B-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-8">
 <pre>
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
+8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
 </pre><a href="#appendix-B-8" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B-9">The hash algorithm digit is then prefixed to that base64url, giving:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
+<p id="appendix-B-9">After the hash algorithm identification digit (0 for SHA512/256) is
+prefixed to that base64url, resulting in:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-10">
 <pre>
-0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
+8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
 </pre><a href="#appendix-B-10" class="pilcrow">¶</a>
 </div>
 <p id="appendix-B-11">Finally, if this is a printer named "printer" advertised using
-".local", the resulting FQDN would be:<a href="#appendix-B-11" class="pilcrow">¶</a></p>
+".local", the full FQDN for its unique name would be:<a href="#appendix-B-11" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-12">
 <pre>
-printer.0IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg.local
+printer.08WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI.local
 </pre><a href="#appendix-B-12" class="pilcrow">¶</a>
 </div>
+<p id="appendix-B-13">and the full FQDN for its short name would be "printer.local".<a href="#appendix-B-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="acknowledgments">
