@@ -166,7 +166,7 @@ connection to the short name MUST NOT be used by the client after the
 TLS handshake completes and the server MUST terminate the TLS
 handshake after the Finished message by sending TLS close_notify.
 
-# Local Hosts {#local}
+# Identifying Servers as Local {#local}
 
 This section defines the domain names and IP addresses considered
 "local" which clients MAY use with this specification.  Other domain
