@@ -73,7 +73,7 @@ Table of Contents
    6.  Validation
    7.  Encoding Details
    8.  Short Names
-   9.  Local Hosts
+   9.  Identifying Servers as Local
      9.1.  Local Domain Names
      9.2.  Local IP Addresses
    10. Incremental Deployment
@@ -204,7 +204,7 @@ Table of Contents
    TLS handshake completes and the server MUST terminate the TLS
    handshake after the Finished message by sending TLS close_notify.
 
-9.  Local Hosts
+9.  Identifying Servers as Local
 
    This section defines the domain names and IP addresses considered
    "local" which clients MAY use with this specification.  Other domain
