@@ -117,14 +117,14 @@ are ignored for purposes of this specification.
 
 The general format is hostname, a period, a digit indicating the hash
 algorithm, and then the hash of the server's public key.  The binary
-hash output is base64url encoded ({{Section 5 of !RFC4648}}).
-Currently only SHA512/256 hash is defined with the value "0" ({{iana}}),
-which is SHA512 truncated to 256 bits.
+hash output is base64url encoded ({{Section 5 of !RFC4648}}) without
+trailing "=" padding.  Currently only SHA256 hash is defined with the
+value "0" ({{iana}}).
 
 ~~~~ abnf
 friendly-name = 1*63(ALPHA / DIGIT)
 
-hash-algorithm = 0   ; 0=SHA512/256
+hash-algorithm = 0   ; 0=SHA256
 
 hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
      ; valid chars from RFC3986.  62+1 octet limit from RFC1035
@@ -206,7 +206,7 @@ TODO Security
 
 # IANA Considerations {#iana}
 
-New registry for hash type, 0=SHA512/256.  Extensions via IETF Action.
+New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
 
 --- back
@@ -219,7 +219,7 @@ This should work for DTLS, as well?
 
 # Test Encoding {#test-encoding}
 
-Server with private key of:
+Server with private key in PEM format is:
 
 ~~~~~
 -----BEGIN PRIVATE KEY-----
@@ -252,7 +252,7 @@ fOPfIBX8uLc3UtOm0+Gn1IQ=
 -----END PRIVATE KEY-----
 ~~~~~
 
-and public key in PEM (ASCII) format is:
+and public key in PEM format is:
 
 ~~~~~
 -----BEGIN PUBLIC KEY-----
@@ -266,17 +266,18 @@ YwIDAQAB
 -----END PUBLIC KEY-----
 ~~~~~
 
-Using the binary format (DER) and hashed using SHA512/256 gives this
+Using the binary format (DER) and hashed using SHA256 gives this
 hex value:
 
 ~~~~~
-f1695279106e84533080f1ffa7ea5e6d18128cce712ee17258dadfbe32654d82
+21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 ~~~~~
 
-Converting that hex value to binary and base64url encoding gives:
+Converting that hex value to binary and base64url encoded (without
+trailing "=") gives:
 
 ~~~~~
-8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
 ~~~~~
 
 After the hash algorithm identification digit (0 for SHA512/256) is
