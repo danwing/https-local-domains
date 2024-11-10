@@ -68,6 +68,8 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Operation
+     3.1.  Server Operation
+     3.2.  Client Operation
    4.  Unique Host Names
    5.  Raw Public Keys
    6.  Validation
@@ -102,13 +104,28 @@ Table of Contents
 
 3.  Operation
 
-   Server uses a unique host name that includes a hash of its public key
-   using a local domain name (Section 9).  When clients connect to such
-   a local domain name (Section 9) using TLS they validate the name's
-   hash matches the key in the TLS ServerHello, and continue
-   communication.
+3.1.  Server Operation
 
-   This system does not require storage on the client.
+   A server running on a local network (see Section 4) uses a unique
+   host name that includes a hash of its public key.  This unique name
+   is encoded as described in Section 7.
+
+   The server MAY also advertise its unique name using [DNS-SD].  It MAY
+   also advertise its short name as described in Section 8.
+
+3.2.  Client Operation
+
+   When clients connect to such a local domain name or IP address
+   (Section 9) using TLS they examine if the domain name starts with a
+   registered hash identifier in the second label and if the rest of
+   that label consists of an appropriate-length encoded hash.  If those
+   conditions apply, the client MAY send a TLS ClientHello with the Raw
+   Public Key extension [RFC7250].  When the client receives the
+   server's raw public key or certificate, the client checks if the hash
+   matches the public key received in the TLS ServerHello.  If they
+   match, the client authenticates the TLS connection.  If they do not
+   match, the client rejects authentication; in most cases the client
+   will ask the user to correct the authentication problem.
 
 4.  Unique Host Names
 

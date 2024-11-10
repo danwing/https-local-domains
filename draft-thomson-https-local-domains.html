@@ -1192,7 +1192,15 @@ is validated against the public key presented in the TLS handshake.<a href="#sec
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-operation" class="internal xref">Operation</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-operation" class="internal xref">Operation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-server-operation" class="internal xref">Server Operation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-client-operation" class="internal xref">Client Operation</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-unique-host-names" class="internal xref">Unique Host Names</a></p>
@@ -1285,11 +1293,36 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-operation">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-operation" class="section-name selfRef">Operation</a>
       </h2>
-<p id="section-3-1">Server uses a unique host name that includes a hash of its public key
-using a local domain name (<a href="#local" class="auto internal xref">Section 9</a>).  When clients connect to such a
-local domain name (<a href="#local" class="auto internal xref">Section 9</a>) using TLS they validate the name's hash
-matches the key in the TLS ServerHello, and continue communication.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">This system does not require storage on the client.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<div id="server-operation">
+<section id="section-3.1">
+        <h3 id="name-server-operation">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-server-operation" class="section-name selfRef">Server Operation</a>
+        </h3>
+<p id="section-3.1-1">A server running on a local network (see <a href="#unique" class="auto internal xref">Section 4</a>) uses a unique host
+name that includes a hash of its public key.  This unique name is encoded as
+described in <a href="#encoding" class="auto internal xref">Section 7</a>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The server <span class="bcp14">MAY</span> also advertise its unique name using <span>[<a href="#DNS-SD" class="cite xref">DNS-SD</a>]</span>.  It
+<span class="bcp14">MAY</span> also advertise its short name as described in <a href="#short" class="auto internal xref">Section 8</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="client-operation">
+<section id="section-3.2">
+        <h3 id="name-client-operation">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-client-operation" class="section-name selfRef">Client Operation</a>
+        </h3>
+<p id="section-3.2-1">When clients connect to such a local domain name or IP address
+(<a href="#local" class="auto internal xref">Section 9</a>) using TLS they examine if the domain name starts with a
+registered hash identifier in the second label and if the rest of that
+label consists of an appropriate-length encoded hash. If those
+conditions apply, the client <span class="bcp14">MAY</span> send a TLS ClientHello with the Raw
+Public Key extension <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span>. When the client receives the
+server's raw public key or certificate, the client checks if the hash
+matches the public key received in the TLS ServerHello. If they match,
+the client authenticates the TLS connection. If they do not match,
+the client rejects authentication; in most cases the client will
+ask the user to correct the authentication problem.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="unique">
