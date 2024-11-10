@@ -61,14 +61,28 @@ TODO Introduction
 
 # Operation
 
-Server uses a unique host name that includes a hash of its public key
-using a local domain name ({{local}}).  When clients connect to such a
-local domain name ({{local}}) using TLS they validate the name's hash
-matches the key in the TLS ServerHello, and continue communication.
+## Server Operation
 
-This system does not require storage on the client.
+A server running on a local network (see {{unique}}) uses a unique host
+name that includes a hash of its public key.  This unique name is encoded as
+described in {{encoding}}.
 
+The server MAY also advertise its unique name using {{?DNS-SD=RFC6763}}.  It
+MAY also advertise its short name as described in {{short}}.
 
+## Client Operation
+
+When clients connect to such a local domain name or IP address
+({{local}}) using TLS they examine if the domain name starts with a
+registered hash identifier in the second label and if the rest of that
+label consists of an appropriate-length encoded hash. If those
+conditions apply, the client MAY send a TLS ClientHello with the Raw
+Public Key extension {{?RFC7250}}. When the client receives the
+server's raw public key or certificate, the client checks if the hash
+matches the public key received in the TLS ServerHello. If they match,
+the client authenticates the TLS connection. If they do not match,
+the client rejects authentication; in most cases the client will
+ask the user to correct the authentication problem.
 
 # Unique Host Names {#unique}
 
