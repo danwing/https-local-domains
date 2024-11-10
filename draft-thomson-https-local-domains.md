@@ -45,7 +45,7 @@ informative:
 
 This specification eliminates security warnings when connecting to local domains
 using TLS.  Servers use a long hostname which encodes their public key that
-is validated against the public key presented in the TLS handshake.
+the client validates against the public key presented in the TLS handshake.
 
 --- middle
 
@@ -80,9 +80,10 @@ conditions apply, the client MAY send a TLS ClientHello with the Raw
 Public Key extension {{?RFC7250}}. When the client receives the
 server's raw public key or certificate, the client checks if the hash
 matches the public key received in the TLS ServerHello. If they match,
-the client authenticates the TLS connection. If they do not match,
-the client rejects authentication; in most cases the client will
-ask the user to correct the authentication problem.
+the client authenticates the TLS connection. If they do not match, the
+client behavior falls back to the client's normal handling of the
+presented TLS raw public key or certificate (which may well be valid).
+
 
 # Unique Host Names {#unique}
 
