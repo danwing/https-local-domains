@@ -216,7 +216,21 @@ supporting this specification.
 
 # Security Considerations
 
-TODO Security
+TODO: write more on security considerations
+
+Because the server's public key is encoded into its domain name,
+changing the public key would also change its domain name -- thus, its
+identity as known by client password managers and other configurations
+in clients (e.g., printer, SMB share, etc.).  As such an identity
+change is extremely disruptive, it needs to be avoided.  This means
+the public/private key pair on a server needs to stay static.  The
+tradeoff is servers are vulnerable to their private keys being stolen
+and an active attacker intercepting traffic to that server.  The
+alternatives are to continue using unencrypted communication to local
+servers, which is vulnerable to passive attack, or to condition users
+to validate self-signed certificates for local servers.
+
+
 
 
 # IANA Considerations {#iana}
