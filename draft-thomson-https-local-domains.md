@@ -105,6 +105,37 @@ Details on encoding are in {{encoding}}.
 To ease clients connecting to these long names, servers SHOULD
 advertise their long names on the local network {{?DNS-SD=RFC6763}}.
 
+
+# Short Host Names {#short}
+
+Long host names containing encoded public keys are awkward for users. This
+section describes how short names can also be advertised by servers and
+securely validated by clients, so that the short name is presented to
+users while the long name is used to actually connect.
+
+The server advertises both its (long) unique name and its short
+nickname using {{!DNS-SD=RFC6763}}.  The client connects to the long
+name and performs a full TLS handshake and validation
+({{validation}}).  The client then connects to the short nickname and
+performs a full TLS handshake. If the same public key was presented by
+both TLS connections, the client SHOULD present both the
+long name and short name to the user.
+
+The client need only look for matching short name and unique name
+within the same TLD domain name (that is, if a unique name is advertised
+with a ".local" domain, the client does not need to look for its
+accompanying short name within ".internal").
+
+To avoid the problems described in {{unique}}, the TLS data connection
+to the printer MUST always use the long name.  Thus, if the client has
+validated the short name as described above and a user attempts to
+connect to printer.local (by typing or by some other user
+interaction), the client MUST connect to the unique name.  The TLS
+connection to the short name MUST NOT be used by the client after the
+TLS handshake completes and the server MUST terminate the TLS
+handshake after the Finished message by sending TLS close_notify.
+
+
 # Raw Public Keys {#rpk}
 
 Todo:  rewrite this section
@@ -152,34 +183,6 @@ encoded-hostname = friendly-name "."
 
 An example encoding is shown in {{test-encoding}}.
 
-# Short Names {#short}
-
-Long host names containing encoded public keys are awkward for users. This
-section describes how short names can also be advertised by servers and
-securely validated by clients, so that the short name is presented to
-users while the long name is used to actually connect.
-
-The server advertises both its (long) unique name and its short
-nickname using {{!DNS-SD=RFC6763}}.  The client connects to the long
-name and performs a full TLS handshake and validation
-({{validation}}).  The client then connects to the short nickname and
-performs a full TLS handshake. If the same public key was presented by
-both TLS connections, the client SHOULD present both the
-long name and short name to the user.
-
-The client need only look for matching short name and unique name
-within the same TLD domain name (that is, if a unique name is advertised
-with a ".local" domain, the client does not need to look for its
-accompanying short name within ".internal").
-
-To avoid the problems described in {{unique}}, the TLS data connection
-to the printer MUST always use the long name.  Thus, if the client has
-validated the short name as described above and a user attempts to
-connect to printer.local (by typing or by some other user
-interaction), the client MUST connect to the unique name.  The TLS
-connection to the short name MUST NOT be used by the client after the
-TLS handshake completes and the server MUST terminate the TLS
-handshake after the Finished message by sending TLS close_notify.
 
 # Identifying Servers as Local {#local}
 
