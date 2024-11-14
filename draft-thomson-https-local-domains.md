@@ -213,9 +213,9 @@ connection is made to that address, those are also considered
 
 # Incremental Deployment
 
-A motivated network administrator can change a server's hostname to
-comply with this specification to provide immediate value to clients
-supporting this specification.
+Where a server's hostname can be configured, a motivated network
+administrator can configure server hostnames to comply with this
+specification to provide immediate value to supporting clients.
 
 # Security Considerations
 
