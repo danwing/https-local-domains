@@ -3,8 +3,8 @@
 set -e
 name="test-key"
 
-if ! command -v base32 2>&1 >/dev/null; then
-    echo "need to install base32.  On MacOS do 'brew install coreutils'"
+if ! command -v gbasenc 2>&1 >/dev/null; then
+    echo "need to install gbasenc.  On MacOS do 'brew install coreutils'"
     exit 1
 fi
 
@@ -21,8 +21,8 @@ openssl rsa -in $name.pem -pubout -outform der > $name.der 2>/dev/null
 
 
 sha256hash=$(shasum -b -a 256 < $name.der | awk '{print $1}')
-sha256url=$(echo -n $sha256hash | xxd -r -p | base64 | tr '+/' '-_' | tr -d "=")
-sha256b32=$(echo -n $sha256hash | xxd -r -p | base32 | tr -d "=")
+sha256url=$(echo -n $sha256hash | xxd -r -p | gbasenc --base64url | tr -d "=")
+sha256b32=$(echo -n $sha256hash | xxd -r -p | gbasenc --base32 | tr -d "=")
 
 echo "sha256 hash is          $sha256hash"
 echo "sha256 base64url is     $sha256url"
@@ -30,8 +30,8 @@ echo "sha256 base32 is        $sha256b32"
 echo 
 
 sha512256hash=$(shasum -b -a 512256 < $name.der | awk '{print $1}')
-sha512246url=$(echo -n $sha512256hash | xxd -r -p | base64 | tr '+/' '-_' | tr -d "=")
-sha512256b32=$(echo -n $sha512256hash | xxd -r -p | base32 | tr -d "=")
+sha512246url=$(echo -n $sha512256hash | xxd -r -p | gbasenc --base64url | tr -d "=")
+sha512256b32=$(echo -n $sha512256hash | xxd -r -p | gbasenc --base32 | tr -d "=")
 
 echo "sha512/256 hash is      $sha512256hash"
 echo "sha512/256 base64url is $sha512246url"
