@@ -1086,7 +1086,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Thomson &amp; Wing</td>
-<td class="center">Expires 18 May 2025</td>
+<td class="center">Expires 21 May 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1099,12 +1099,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-thomson-https-local-domains-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-14" class="published">14 November 2024</time>
+<time datetime="2024-11-17" class="published">17 November 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-18">18 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-05-21">21 May 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1156,7 +1156,7 @@ the client validates against the public key presented in the TLS handshake.<a hr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1253,6 +1253,9 @@ the client validates against the public key presented in the TLS handshake.<a hr
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
                 <p id="section-toc.1-1.14.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-dtls" class="internal xref">DTLS</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
+                <p id="section-toc.1-1.14.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-base32-base64-encoding" class="internal xref">base32 / base64 encoding</a></p>
 </li>
             </ul>
 </li>
@@ -1416,11 +1419,16 @@ algorithm, and then the hash of the server's public key.  The binary
 hash output is base64url encoded (<span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>) without
 trailing "=" padding.  Currently only SHA256 hash is defined with the
 value "0" (<a href="#iana" class="auto internal xref">Section 12</a>).<a href="#section-8-1" class="pilcrow">¶</a></p>
-<div class="alignCenter art-abnf art-text artwork" id="section-8-2">
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-8-2.1">
+          <p id="section-8-2.1.1">Note: seee discussion of base32/base64 encoding in <a href="#base32" class="auto internal xref">Appendix A.2</a>.<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<div class="alignCenter art-abnf art-text artwork" id="section-8-3">
 <pre>
 friendly-name = 1*63(ALPHA / DIGIT)
 
-hash-algorithm = 0   ; 0=SHA256
+hash-algorithm = DIGIT   ; 0=SHA256
 
 hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
      ; valid chars from RFC3986.  62+1 octet limit from RFC1035
@@ -1428,9 +1436,9 @@ hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
 encoded-hostname = friendly-name "."
                    hash-algorithm
                    hash
-</pre><a href="#section-8-2" class="pilcrow">¶</a>
+</pre><a href="#section-8-3" class="pilcrow">¶</a>
 </div>
-<p id="section-8-3">An example encoding is shown in <a href="#test-encoding" class="auto internal xref">Appendix B</a>.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">An example encoding is shown in <a href="#test-encoding" class="auto internal xref">Appendix B</a>.<a href="#section-8-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="local">
@@ -1619,6 +1627,25 @@ to validate self-signed certificates for local servers.<a href="#section-11-2" c
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-dtls" class="section-name selfRef">DTLS</a>
         </h3>
 <p id="appendix-A.1-1">This should work for DTLS, as well?<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="base32">
+<section id="appendix-A.2">
+        <h3 id="name-base32-base64-encoding">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-base32-base64-encoding" class="section-name selfRef">base32 / base64 encoding</a>
+        </h3>
+<p id="appendix-A.2-1">base32 is easier to read but 21% longer (52 instead of base64's 43
+characters).  The public key hash is already obnoxiously long so
+perhaps make a little longer with improved lagibility is worthwhile.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.2-2">
+<pre>
+base32
+EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA (52 characters)
+
+base64url,
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg (43 characters)
+</pre><a href="#appendix-A.2-2" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>

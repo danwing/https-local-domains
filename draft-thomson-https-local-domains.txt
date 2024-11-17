@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 18 May 2025                                Cloud Software Group
-                                                        14 November 2024
+Expires: 21 May 2025                                Cloud Software Group
+                                                        17 November 2024
 
 
                         HTTPS for Local Domains
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2025.
+   This Internet-Draft will expire on 21 May 2025.
 
 Copyright Notice
 
@@ -86,6 +86,7 @@ Table of Contents
      13.2.  Informative References
    Appendix A.  Discussion Points
      A.1.  DTLS
+     A.2.  base32 / base64 encoding
    Appendix B.  Test Encoding
    Acknowledgments
    Authors' Addresses
@@ -209,9 +210,11 @@ Table of Contents
    trailing "=" padding.  Currently only SHA256 hash is defined with the
    value "0" (Section 12).
 
+      Note: seee discussion of base32/base64 encoding in Appendix A.2.
+
       friendly-name = 1*63(ALPHA / DIGIT)
 
-      hash-algorithm = 0   ; 0=SHA256
+      hash-algorithm = DIGIT   ; 0=SHA256
 
       hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
            ; valid chars from RFC3986.  62+1 octet limit from RFC1035
@@ -357,6 +360,18 @@ Appendix A.  Discussion Points
 A.1.  DTLS
 
    This should work for DTLS, as well?
+
+A.2.  base32 / base64 encoding
+
+   base32 is easier to read but 21% longer (52 instead of base64's 43
+   characters).  The public key hash is already obnoxiously long so
+   perhaps make a little longer with improved lagibility is worthwhile.
+
+   base32
+   EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA (52 characters)
+
+   base64url,
+   IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg (43 characters)
 
 Appendix B.  Test Encoding
 
