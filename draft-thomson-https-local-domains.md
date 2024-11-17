@@ -167,10 +167,12 @@ hash output is base64url encoded ({{Section 5 of !RFC4648}}) without
 trailing "=" padding.  Currently only SHA256 hash is defined with the
 value "0" ({{iana}}).
 
+> Note: seee discussion of base32/base64 encoding in {{base32}}.
+
 ~~~~ abnf
 friendly-name = 1*63(ALPHA / DIGIT)
 
-hash-algorithm = 0   ; 0=SHA256
+hash-algorithm = DIGIT   ; 0=SHA256
 
 hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
      ; valid chars from RFC3986.  62+1 octet limit from RFC1035
@@ -248,6 +250,21 @@ New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 ## DTLS
 
 This should work for DTLS, as well?
+
+## base32 / base64 encoding {#base32}
+
+base32 is easier to read but 21% longer (52 instead of base64's 43
+characters).  The public key hash is already obnoxiously long so
+perhaps make a little longer with improved lagibility is worthwhile.
+
+~~~~~
+base32
+EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA (52 characters)
+
+base64url,
+IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg (43 characters)
+~~~~~
+
 
 # Test Encoding {#test-encoding}
 
