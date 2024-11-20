@@ -163,19 +163,21 @@ are ignored for purposes of this specification.
 
 The general format is hostname, a period, a digit indicating the hash
 algorithm, and then the hash of the server's public key.  The binary
-hash output is base64url encoded ({{Section 5 of !RFC4648}}) without
+hash output is base32 encoded ({{Section 6 of !RFC4648}}) without
 trailing "=" padding.  Currently only SHA256 hash is defined with the
-value "0" ({{iana}}).
-
-> Note: seee discussion of base32/base64 encoding in {{base32}}.
+value "0" ({{iana}}).  While base32 encoding is specified as uppercase,
+implementations should treat uppercase, lowercase, and mixed case
+the same.
 
 ~~~~ abnf
-friendly-name = 1*63(ALPHA / DIGIT)
+friendly-name = 1*63(ALPHA / DIGIT / "-")
 
 hash-algorithm = DIGIT   ; 0=SHA256
 
-hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
-     ; valid chars from RFC3986.  62+1 octet limit from RFC1035
+base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
+
+hash = 1*62(/ ALPHA / base32-digits )
+     ; 62+1 octet limit from RFC1035
 
 encoded-hostname = friendly-name "."
                    hash-algorithm
@@ -251,20 +253,6 @@ New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
 This should work for DTLS, as well?
 
-## base32 / base64 encoding {#base32}
-
-base32 is easier to read but 21% longer (52 instead of base64's 43
-characters).  The public key hash is already obnoxiously long so
-perhaps make a little longer with improved lagibility is worthwhile.
-
-~~~~~
-base32
-EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA (52 characters)
-
-base64url,
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg (43 characters)
-~~~~~
-
 
 # Test Encoding {#test-encoding}
 
@@ -322,25 +310,25 @@ hex value:
 21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 ~~~~~
 
-Converting that hex value to binary and base64url encoded (without
+Converting that hex value to binary and base32 encoded (without
 trailing "=") gives:
 
 ~~~~~
-IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
+EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 ~~~~~
 
 After the hash algorithm identification digit (0 for SHA512/256) is
 prefixed to that base64url, resulting in:
 
 ~~~~~
-8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
+0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 ~~~~~
 
 Finally, if this is a printer named "printer" advertised using
 ".local", the full FQDN for its unique name would be:
 
 ~~~~~
-printer.08WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI.local
+printer.0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA.local
 ~~~~~
 
 and the full FQDN for its short name would be "printer.local".
