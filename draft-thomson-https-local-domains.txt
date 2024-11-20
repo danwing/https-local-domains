@@ -86,7 +86,6 @@ Table of Contents
      13.2.  Informative References
    Appendix A.  Discussion Points
      A.1.  DTLS
-     A.2.  base32 / base64 encoding
    Appendix B.  Test Encoding
    Acknowledgments
    Authors' Addresses
@@ -206,22 +205,24 @@ Table of Contents
 
    The general format is hostname, a period, a digit indicating the hash
    algorithm, and then the hash of the server's public key.  The binary
-   hash output is base64url encoded (Section 5 of [RFC4648]) without
+   hash output is base32 encoded (Section 6 of [RFC4648]) without
    trailing "=" padding.  Currently only SHA256 hash is defined with the
-   value "0" (Section 12).
+   value "0" (Section 12).  While base32 encoding is specified as
+   uppercase, implementations should treat uppercase, lowercase, and
+   mixed case the same.
 
-      Note: seee discussion of base32/base64 encoding in Appendix A.2.
+             friendly-name = 1*63(ALPHA / DIGIT / "-")
 
-      friendly-name = 1*63(ALPHA / DIGIT)
+             hash-algorithm = DIGIT   ; 0=SHA256
 
-      hash-algorithm = DIGIT   ; 0=SHA256
+             base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
 
-      hash = 1*62(ALPHA / DIGIT / "-" / "." / "_" / "~")
-           ; valid chars from RFC3986.  62+1 octet limit from RFC1035
+             hash = 1*62(/ ALPHA / base32-digits )
+                  ; 62+1 octet limit from RFC1035
 
-      encoded-hostname = friendly-name "."
-                         hash-algorithm
-                         hash
+             encoded-hostname = friendly-name "."
+                                hash-algorithm
+                                hash
 
    An example encoding is shown in Appendix B.
 
@@ -361,18 +362,6 @@ A.1.  DTLS
 
    This should work for DTLS, as well?
 
-A.2.  base32 / base64 encoding
-
-   base32 is easier to read but 21% longer (52 instead of base64's 43
-   characters).  The public key hash is already obnoxiously long so
-   perhaps make a little longer with improved lagibility is worthwhile.
-
-   base32
-   EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA (52 characters)
-
-   base64url,
-   IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg (43 characters)
-
 Appendix B.  Test Encoding
 
    Server with private key in PEM format is:
@@ -423,20 +412,20 @@ Appendix B.  Test Encoding
 
    21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 
-   Converting that hex value to binary and base64url encoded (without
+   Converting that hex value to binary and base32 encoded (without
    trailing "=") gives:
 
-   IevA0A6Y48solzjiwJHlMsStgkDgNlsiBnoUSWk-Whg
+   EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 
    After the hash algorithm identification digit (0 for SHA512/256) is
    prefixed to that base64url, resulting in:
 
-   8WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI
+   0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 
    Finally, if this is a printer named "printer" advertised using
    ".local", the full FQDN for its unique name would be:
 
-   printer.08WlSeRBuhFMwgPH_p-pebRgSjM5xLuFyWNrfvjJlTYI.local
+   printer.0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA.local
 
    and the full FQDN for its short name would be "printer.local".
 
