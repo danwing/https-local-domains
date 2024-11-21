@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-19T01:44:18.214392+00:00",
+  "timestamp": "2024-11-21T01:42:50.787240+00:00",
   "repo": "danwing/https-local-domains",
   "labels": [
     {
@@ -49,6 +49,31 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDONLmaNM6faXWI",
+      "title": "base64url contains '_'",
+      "url": "https://github.com/danwing/https-local-domains/issues/1",
+      "state": "OPEN",
+      "author": "martinthomson",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This is not a valid character for an LDH label.\r\n\r\nSimilarly, names could start with \"--xn\" which might then lead to being interpreted as punycode.",
+      "createdAt": "2024-11-20T05:39:22Z",
+      "updatedAt": "2024-11-20T23:43:58Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "Switched to base32 encoding in 0833e190d978450eabba75322a887e5a709cee5e.",
+          "createdAt": "2024-11-20T23:43:58Z",
+          "updatedAt": "2024-11-20T23:43:58Z"
+        }
+      ]
+    }
+  ],
   "pulls": []
 }
