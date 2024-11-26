@@ -549,29 +549,48 @@ connection is made to that address, those are also considered
 * fc00::/7 (from {{?RFC4193}})
 * 127/8 and ::1/128 (from {{?RFC990}} and {{?RFC4291}})
 
-# Incremental Deployment
+# Operational Considerations
+
+## Incremental Deployment
 
 Where a server's hostname can be configured, a motivated network
 administrator can configure server hostnames to comply with this
 specification to provide immediate value to supporting clients.
 
+## Server Identity Change
+
+The server's public key is encoded into its domain name.
+Changing the public key would also change its domain name -- thus, its
+identity as known by client password managers and other configurations
+in clients (e.g., printer, SMB share, etc.). As such an identity
+change is extremely disruptive, it needs to be avoided.
+
+## Simplify DNS
+
+To simplify access to devices within a household, administrator can configure
+an in-house DNS server and create short, user-friendly DNS names that resolve
+to longer, more complex names. Configure the in-house DNS server to map
+these short names to their corresponding long names. This approach
+ensures that users can easily connect to the desired device using
+a simpler, more memorable DNS name.
+
+Implementing DNSSEC {{?RFC4033}} and using DNS over HTTPS (DoH) RFC 8484
+or DNS over TLS (DoT) {{?RFC7858}} for DNS queries can enhance the
+reliability of this system.
+
 # Security Considerations
 
 TODO: write more on security considerations
 
-Because the server's public key is encoded into its domain name,
-changing the public key would also change its domain name -- thus, its
-identity as known by client password managers and other configurations
-in clients (e.g., printer, SMB share, etc.).  As such an identity
-change is extremely disruptive, it needs to be avoided.  This means
-the public/private key pair on a server needs to stay static.  The
-tradeoff is servers are vulnerable to their private keys being stolen
-and an active attacker intercepting traffic to that server.  The
-alternatives are to continue using unencrypted communication to local
-servers, which is vulnerable to passive attack, or to condition users
-to validate self-signed certificates for local servers.
-
-
+Due to challenges in key rotation, the public/private key pair on a
+server needs to stay static. The tradeoff is servers are vulnerable
+to their private keys being stolen and an active attacker intercepting
+traffic to that server.  The alternatives are to continue using
+unencrypted communication to local servers, which is vulnerable to
+passive attack, or to condition users to validate self-signed certificates
+for local servers. In this case, the
+advantages of making HTTPS available would seem to far outweigh the
+risk of using a key over long periods.
 
 
 # IANA Considerations {#iana}
