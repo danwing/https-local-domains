@@ -8,8 +8,14 @@
 <meta content="Martin Thomson" name="author">
 <meta content="Dan Wing" name="author">
 <meta content="
-       Proposal to make origins with non-unique names like Printer.local or
-192.168.0.1 use an extended origin to allow them to use HTTPS. 
+       This document explores a method for providing secure HTTPS access
+to local domains without the need for traditional certificates.
+By leveraging local domain names embedded with public keys, this
+approach ensures secure communication within a local network. The
+method simplifies the setup process and enhances security by avoiding
+the complexities of certificate management by using raw public keys.
+This solution is particularly beneficial for local services that
+require HTTPS access without exposing them to the internet. 
     " name="description">
 <meta content="xml2rfc 3.24.0" name="generator">
 <meta content="next generation" name="keyword">
@@ -1084,8 +1090,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">HTTPS for Local Domains</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Proposal to make origins with non-unique names like Printer.local or
-192.168.0.1 use an extended origin to allow them to use HTTPS.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document explores a method for providing secure HTTPS access
+to local domains without the need for traditional certificates.
+By leveraging local domain names embedded with public keys, this
+approach ensures secure communication within a local network. The
+method simplifies the setup process and enhances security by avoiding
+the complexities of certificate management by using raw public keys.
+This solution is particularly beneficial for local services that
+require HTTPS access without exposing them to the internet.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">

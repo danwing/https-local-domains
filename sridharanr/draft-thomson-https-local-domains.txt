@@ -14,8 +14,14 @@ Expires: 30 May 2025                                Cloud Software Group
 
 Abstract
 
-   Proposal to make origins with non-unique names like Printer.local or
-   192.168.0.1 use an extended origin to allow them to use HTTPS.
+   This document explores a method for providing secure HTTPS access to
+   local domains without the need for traditional certificates.  By
+   leveraging local domain names embedded with public keys, this
+   approach ensures secure communication within a local network.  The
+   method simplifies the setup process and enhances security by avoiding
+   the complexities of certificate management by using raw public keys.
+   This solution is particularly beneficial for local services that
+   require HTTPS access without exposing them to the internet.
 
 About This Document
 
