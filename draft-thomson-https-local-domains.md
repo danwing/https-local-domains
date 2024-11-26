@@ -455,12 +455,29 @@ handshake after the Finished message by sending TLS close_notify.
 
 # Raw Public Keys {#rpk}
 
-Todo:  rewrite this section
+Raw public keys are used in various security protocols to facilitate
+authentication without the need for full certificate chains {{?RFC7250}}.
+This approach simplifies the certificate exchange process by
+transmitting only the necessary public key information.
 
-Certificates are complicated for most people. They also have an
-expiration date.  This system uses a public key for the lifetime
-of the device, which is hopefully years. A certificate is not
-appropriate; a raw public key is more approporiate.
+Certificates are complicated because they involve:
+
+  * Managing multiple levels of certificate authorities (CAs).
+  * Regular renewal and lifecycle management.
+  * Establishing and verifying trust with CAs.
+
+Raw public keys offer a simpler alternative:
+
+  * No need for complex certificate chains.
+  * Using raw public keys allows for direct authentication,
+  making it easier to implement and understand.
+  * Raw public keys use a public key for the lifetime of the device,
+   eliminating the need for renewal and longer lifetimes.
+  * Robust authentication through public key cryptography.
+
+Using raw public keys can streamline authentication processes while
+maintaining high levels of security, making them an attractive
+alternative to traditional certificates.
 
 # Validation {#validation}
 
