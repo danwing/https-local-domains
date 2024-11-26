@@ -1227,7 +1227,18 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-incremental-deployment" class="internal xref">Incremental Deployment</a></p>
+            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
+                <p id="section-toc.1-1.15.2.1.1"><a href="#section-15.1" class="auto internal xref">15.1</a>.  <a href="#name-incremental-deployment" class="internal xref">Incremental Deployment</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
+                <p id="section-toc.1-1.15.2.2.1"><a href="#section-15.2" class="auto internal xref">15.2</a>.  <a href="#name-server-identity-change" class="internal xref">Server Identity Change</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
+                <p id="section-toc.1-1.15.2.3.1"><a href="#section-15.3" class="auto internal xref">15.3</a>.  <a href="#name-simplify-dns" class="internal xref">Simplify DNS</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
             <p id="section-toc.1-1.16.1"><a href="#section-16" class="auto internal xref">16</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
@@ -1828,14 +1839,49 @@ connection is made to that address, those are also considered
 </div>
 </section>
 </div>
-<div id="incremental-deployment">
+<div id="operational-considerations">
 <section id="section-15">
-      <h2 id="name-incremental-deployment">
-<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-incremental-deployment" class="section-name selfRef">Incremental Deployment</a>
+      <h2 id="name-operational-considerations">
+<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
-<p id="section-15-1">Where a server's hostname can be configured, a motivated network
+<div id="incremental-deployment">
+<section id="section-15.1">
+        <h3 id="name-incremental-deployment">
+<a href="#section-15.1" class="section-number selfRef">15.1. </a><a href="#name-incremental-deployment" class="section-name selfRef">Incremental Deployment</a>
+        </h3>
+<p id="section-15.1-1">Where a server's hostname can be configured, a motivated network
 administrator can configure server hostnames to comply with this
-specification to provide immediate value to supporting clients.<a href="#section-15-1" class="pilcrow">¶</a></p>
+specification to provide immediate value to supporting clients.<a href="#section-15.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="server-identity-change">
+<section id="section-15.2">
+        <h3 id="name-server-identity-change">
+<a href="#section-15.2" class="section-number selfRef">15.2. </a><a href="#name-server-identity-change" class="section-name selfRef">Server Identity Change</a>
+        </h3>
+<p id="section-15.2-1">The server's public key is encoded into its domain name.
+Changing the public key would also change its domain name -- thus, its
+identity as known by client password managers and other configurations
+in clients (e.g., printer, SMB share, etc.). As such an identity
+change is extremely disruptive, it needs to be avoided.<a href="#section-15.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="simplify-dns">
+<section id="section-15.3">
+        <h3 id="name-simplify-dns">
+<a href="#section-15.3" class="section-number selfRef">15.3. </a><a href="#name-simplify-dns" class="section-name selfRef">Simplify DNS</a>
+        </h3>
+<p id="section-15.3-1">To simplify access to devices within a household, administrator can configure
+an in-house DNS server and create short, user-friendly DNS names that resolve
+to longer, more complex names. Configure the in-house DNS server to map
+these short names to their corresponding long names. This approach
+ensures that users can easily connect to the desired device using
+a simpler, more memorable DNS name.<a href="#section-15.3-1" class="pilcrow">¶</a></p>
+<p id="section-15.3-2">Implementing DNSSEC <span>[<a href="#RFC4033" class="cite xref">RFC4033</a>]</span> and using DNS over HTTPS (DoH) RFC 8484
+or DNS over TLS (DoT) <span>[<a href="#RFC7858" class="cite xref">RFC7858</a>]</span> for DNS queries can enhance the
+reliability of this system.<a href="#section-15.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
@@ -1844,17 +1890,15 @@ specification to provide immediate value to supporting clients.<a href="#section
 <a href="#section-16" class="section-number selfRef">16. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-16-1">TODO: write more on security considerations<a href="#section-16-1" class="pilcrow">¶</a></p>
-<p id="section-16-2">Because the server's public key is encoded into its domain name,
-changing the public key would also change its domain name -- thus, its
-identity as known by client password managers and other configurations
-in clients (e.g., printer, SMB share, etc.).  As such an identity
-change is extremely disruptive, it needs to be avoided.  This means
-the public/private key pair on a server needs to stay static.  The
-tradeoff is servers are vulnerable to their private keys being stolen
-and an active attacker intercepting traffic to that server.  The
-alternatives are to continue using unencrypted communication to local
-servers, which is vulnerable to passive attack, or to condition users
-to validate self-signed certificates for local servers.<a href="#section-16-2" class="pilcrow">¶</a></p>
+<p id="section-16-2">Due to challenges in key rotation, the public/private key pair on a
+server needs to stay static. The tradeoff is servers are vulnerable
+to their private keys being stolen and an active attacker intercepting
+traffic to that server.  The alternatives are to continue using
+unencrypted communication to local servers, which is vulnerable to
+passive attack, or to condition users to validate self-signed certificates
+for local servers. In this case, the
+advantages of making HTTPS available would seem to far outweigh the
+risk of using a key over long periods.<a href="#section-16-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
@@ -1933,6 +1977,10 @@ to validate self-signed certificates for local servers.<a href="#section-16-2" c
         <dd>
 <span class="refAuthor">Cheshire, S.</span>, <span class="refAuthor">Aboba, B.</span>, and <span class="refAuthor">E. Guttman</span>, <span class="refTitle">"Dynamic Configuration of IPv4 Link-Local Addresses"</span>, <span class="seriesInfo">RFC 3927</span>, <span class="seriesInfo">DOI 10.17487/RFC3927</span>, <time datetime="2005-05" class="refDate">May 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3927">https://www.rfc-editor.org/rfc/rfc3927</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC4033">[RFC4033]</dt>
+        <dd>
+<span class="refAuthor">Arends, R.</span>, <span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Larson, M.</span>, <span class="refAuthor">Massey, D.</span>, and <span class="refAuthor">S. Rose</span>, <span class="refTitle">"DNS Security Introduction and Requirements"</span>, <span class="seriesInfo">RFC 4033</span>, <span class="seriesInfo">DOI 10.17487/RFC4033</span>, <time datetime="2005-03" class="refDate">March 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4033">https://www.rfc-editor.org/rfc/rfc4033</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC4193">[RFC4193]</dt>
         <dd>
 <span class="refAuthor">Hinden, R.</span> and <span class="refAuthor">B. Haberman</span>, <span class="refTitle">"Unique Local IPv6 Unicast Addresses"</span>, <span class="seriesInfo">RFC 4193</span>, <span class="seriesInfo">DOI 10.17487/RFC4193</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4193">https://www.rfc-editor.org/rfc/rfc4193</a>&gt;</span>. </dd>
@@ -1952,6 +2000,10 @@ to validate self-signed certificates for local servers.<a href="#section-16-2" c
 <dt id="RFC7838">[RFC7838]</dt>
         <dd>
 <span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">McManus, P.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Alternative Services"</span>, <span class="seriesInfo">RFC 7838</span>, <span class="seriesInfo">DOI 10.17487/RFC7838</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7838">https://www.rfc-editor.org/rfc/rfc7838</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7858">[RFC7858]</dt>
+        <dd>
+<span class="refAuthor">Hu, Z.</span>, <span class="refAuthor">Zhu, L.</span>, <span class="refAuthor">Heidemann, J.</span>, <span class="refAuthor">Mankin, A.</span>, <span class="refAuthor">Wessels, D.</span>, and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Specification for DNS over Transport Layer Security (TLS)"</span>, <span class="seriesInfo">RFC 7858</span>, <span class="seriesInfo">DOI 10.17487/RFC7858</span>, <time datetime="2016-05" class="refDate">May 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7858">https://www.rfc-editor.org/rfc/rfc7858</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8164">[RFC8164]</dt>
         <dd>

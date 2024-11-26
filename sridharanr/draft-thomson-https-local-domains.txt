@@ -87,7 +87,10 @@ Table of Contents
    14. Identifying Servers as Local
      14.1.  Local Domain Names
      14.2.  Local IP Addresses
-   15. Incremental Deployment
+   15. Operational Considerations
+     15.1.  Incremental Deployment
+     15.2.  Server Identity Change
+     15.3.  Simplify DNS
    16. Security Considerations
    17. IANA Considerations
    18. References
@@ -592,28 +595,48 @@ Table of Contents
 
    *  127/8 and ::1/128 (from [RFC990] and [RFC4291])
 
-15.  Incremental Deployment
+15.  Operational Considerations
+
+15.1.  Incremental Deployment
 
    Where a server's hostname can be configured, a motivated network
    administrator can configure server hostnames to comply with this
    specification to provide immediate value to supporting clients.
 
+15.2.  Server Identity Change
+
+   The server's public key is encoded into its domain name.  Changing
+   the public key would also change its domain name -- thus, its
+   identity as known by client password managers and other
+   configurations in clients (e.g., printer, SMB share, etc.).  As such
+   an identity change is extremely disruptive, it needs to be avoided.
+
+15.3.  Simplify DNS
+
+   To simplify access to devices within a household, administrator can
+   configure an in-house DNS server and create short, user-friendly DNS
+   names that resolve to longer, more complex names.  Configure the in-
+   house DNS server to map these short names to their corresponding long
+   names.  This approach ensures that users can easily connect to the
+   desired device using a simpler, more memorable DNS name.
+
+   Implementing DNSSEC [RFC4033] and using DNS over HTTPS (DoH) RFC 8484
+   or DNS over TLS (DoT) [RFC7858] for DNS queries can enhance the
+   reliability of this system.
+
 16.  Security Considerations
 
    TODO: write more on security considerations
 
-   Because the server's public key is encoded into its domain name,
-   changing the public key would also change its domain name -- thus,
-   its identity as known by client password managers and other
-   configurations in clients (e.g., printer, SMB share, etc.).  As such
-   an identity change is extremely disruptive, it needs to be avoided.
-   This means the public/private key pair on a server needs to stay
-   static.  The tradeoff is servers are vulnerable to their private keys
-   being stolen and an active attacker intercepting traffic to that
-   server.  The alternatives are to continue using unencrypted
-   communication to local servers, which is vulnerable to passive
-   attack, or to condition users to validate self-signed certificates
-   for local servers.
+   Due to challenges in key rotation, the public/private key pair on a
+   server needs to stay static.  The tradeoff is servers are vulnerable
+   to their private keys being stolen and an active attacker
+   intercepting traffic to that server.  The alternatives are to
+   continue using unencrypted communication to local servers, which is
+   vulnerable to passive attack, or to condition users to validate self-
+   signed certificates for local servers.  In this case, the advantages
+   of making HTTPS available would seem to far outweigh the risk of
+   using a key over long periods.
 
 17.  IANA Considerations
 
@@ -686,6 +709,11 @@ Table of Contents
               DOI 10.17487/RFC3927, May 2005,
               <https://www.rfc-editor.org/rfc/rfc3927>.
 
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/rfc/rfc4033>.
+
    [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
               Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
               <https://www.rfc-editor.org/rfc/rfc4193>.
@@ -705,6 +733,11 @@ Table of Contents
    [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
+
+   [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
+              and P. Hoffman, "Specification for DNS over Transport
+              Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
+              2016, <https://www.rfc-editor.org/rfc/rfc7858>.
 
    [RFC8164]  Nottingham, M. and M. Thomson, "Opportunistic Security for
               HTTP/2", RFC 8164, DOI 10.17487/RFC8164, May 2017,
