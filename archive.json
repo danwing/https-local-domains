@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-26T01:44:43.484894+00:00",
+  "timestamp": "2024-11-28T01:45:52.010485+00:00",
   "repo": "danwing/https-local-domains",
   "labels": [
     {
@@ -75,5 +75,32 @@
       ]
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 2,
+      "id": "PR_kwDONLmaNM6DO6ju",
+      "title": "add text for raw public keys",
+      "url": "https://github.com/danwing/https-local-domains/pull/2",
+      "state": "OPEN",
+      "author": "sridharangirish91",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-11-26T19:02:10Z",
+      "updatedAt": "2024-11-26T20:51:56Z",
+      "baseRepository": "danwing/https-local-domains",
+      "baseRefName": "main",
+      "baseRefOid": "813ed328309da9cfb5b7d49c26a99c534881a2e2",
+      "headRepository": "danwing/https-local-domains",
+      "headRefName": "sridharanr",
+      "headRefOid": "9ca2a01800cc68c6cd2fb84d8361058cf2373913",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
