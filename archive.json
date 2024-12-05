@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-03T01:47:46.646300+00:00",
+  "timestamp": "2024-12-05T01:48:12.668948+00:00",
   "repo": "danwing/https-local-domains",
   "labels": [
     {
@@ -99,6 +99,34 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDONLmaNM6EHUPt",
+      "title": "mention short name could be implemented entirely on client",
+      "url": "https://github.com/danwing/https-local-domains/pull/3",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-12-05T01:46:08Z",
+      "updatedAt": "2024-12-05T01:46:33Z",
+      "baseRepository": "danwing/https-local-domains",
+      "baseRefName": "main",
+      "baseRefOid": "813ed328309da9cfb5b7d49c26a99c534881a2e2",
+      "headRepository": "danwing/https-local-domains",
+      "headRefName": "short_name_client",
+      "headRefOid": "019b6fad376e08ed845af20fc6eb5f15522fe557",
+      "closedAt": "2024-12-05T01:46:33Z",
+      "mergedAt": "2024-12-05T01:46:33Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "fe22c93d3feaea5c5832aa30096fb62a0dd615b7"
+      },
       "comments": [],
       "reviews": []
     }
