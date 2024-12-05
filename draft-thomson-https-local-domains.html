@@ -11,13 +11,13 @@
        Proposal to make origins with non-unique names like Printer.local or
 192.168.0.1 use an extended origin to allow them to use HTTPS. 
     " name="description">
-<meta content="xml2rfc 3.24.0" name="generator">
+<meta content="xml2rfc 3.25.0" name="generator">
 <meta content="next generation" name="keyword">
 <meta content="unicorn" name="keyword">
 <meta content="sparkling distributed ledger" name="keyword">
 <meta content="draft-thomson-https-local-domains-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.24.0
+  xml2rfc 3.25.0
     Python 3.12.7
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1044,11 +1044,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">HTTPS Local Domains</td>
-<td class="right">November 2024</td>
+<td class="right">December 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Thomson &amp; Wing</td>
-<td class="center">Expires 25 May 2025</td>
+<td class="center">Expires 8 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-thomson-https-local-domains-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-21" class="published">21 November 2024</time>
+<time datetime="2024-12-05" class="published">5 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-25">25 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-08">8 June 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,7 +1117,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1585,7 +1585,7 @@ and wish to preserve separation of origins.<a href="#section-7.3-1" class="pilcr
         </h3>
 <p id="section-7.4-1">As outlined in the construction of origins for local servers
 <a href="#origin-serialization" class="auto internal xref">Section 6</a>, the ergonomics of an origin that includes a
-SPKI hash is not always ideal.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+SPKI hash is not always ideal -- it is not human readable.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <p id="section-7.4-2">A mitigation for this issue is short names <a href="#short" class="auto internal xref">Section 10</a>.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1678,6 +1678,16 @@ interaction), the client <span class="bcp14">MUST</span> connect to the unique n
 connection to the short name <span class="bcp14">MUST NOT</span> be used by the client after the
 TLS handshake completes and the server <span class="bcp14">MUST</span> terminate the TLS
 handshake after the Finished message by sending TLS close_notify.<a href="#section-10-4" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-10-5.1">
+          <p id="section-10-5.1.1">Discussion: A short name could be entirely handled on the
+  client. The disadvantage to client-side handling is each client
+  might choose its own short name (one user chooses "office printer",
+  another chooses "downstairs printer", another doesn't bother
+  choosing a short name at all). While annoying to manage those
+  different names, it is not a severe problem.<a href="#section-10-5.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 </section>
 </div>
 <div id="rpk">
