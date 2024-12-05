@@ -370,7 +370,7 @@ and wish to preserve separation of origins.
 
 As outlined in the construction of origins for local servers
 {{origin-serialization}}, the ergonomics of an origin that includes a
-SPKI hash is not always ideal.
+SPKI hash is not always ideal -- it is not human readable.
 
 A mitigation for this issue is short names {{short}}.
 
@@ -451,6 +451,13 @@ interaction), the client MUST connect to the unique name.  The TLS
 connection to the short name MUST NOT be used by the client after the
 TLS handshake completes and the server MUST terminate the TLS
 handshake after the Finished message by sending TLS close_notify.
+
+> Discussion: A short name could be entirely handled on the
+  client. The disadvantage to client-side handling is each client
+  might choose its own short name (one user chooses "office printer",
+  another chooses "downstairs printer", another doesn't bother
+  choosing a short name at all). While annoying to manage those
+  different names, it is not a severe problem.
 
 
 # Raw Public Keys {#rpk}
