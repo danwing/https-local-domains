@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 8 June 2025                                Cloud Software Group
-                                                         5 December 2024
+Expires: 9 June 2025                                Cloud Software Group
+                                                         6 December 2024
 
 
                         HTTPS for Local Domains
@@ -14,8 +14,14 @@ Expires: 8 June 2025                                Cloud Software Group
 
 Abstract
 
-   Proposal to make origins with non-unique names like Printer.local or
-   192.168.0.1 use an extended origin to allow them to use HTTPS.
+   This document explores a method for providing secure HTTPS access to
+   local domains without the need for traditional certificates.  By
+   leveraging local domain names embedded with public keys, this
+   approach ensures secure communication within a local network.  The
+   method simplifies the setup process and enhances security by avoiding
+   the complexities of certificate management by using raw public keys.
+   This solution is particularly beneficial for local services that
+   require HTTPS access without exposing them to the internet.
 
 About This Document
 
@@ -45,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 June 2025.
+   This Internet-Draft will expire on 9 June 2025.
 
 Copyright Notice
 
@@ -87,7 +93,9 @@ Table of Contents
    14. Identifying Servers as Local
      14.1.  Local Domain Names
      14.2.  Local IP Addresses
-   15. Incremental Deployment
+   15. Operational Considerations
+     15.1.  Incremental Deployment
+     15.2.  Server Identity Change
    16. Security Considerations
    17. IANA Considerations
    18. References
@@ -498,12 +506,34 @@ Table of Contents
 
 11.  Raw Public Keys
 
-   Todo: rewrite this section
+   Raw public keys are used in various security protocols to facilitate
+   authentication without the need for full certificate chains
+   [RFC7250].  This approach simplifies the certificate exchange process
+   by transmitting only the necessary public key information.
 
-   Certificates are complicated for most people.  They also have an
-   expiration date.  This system uses a public key for the lifetime of
-   the device, which is hopefully years.  A certificate is not
-   appropriate; a raw public key is more approporiate.
+   Certificates are complicated because they involve:
+
+   *  Managing multiple levels of certificate authorities (CAs).
+
+   *  Regular renewal and lifecycle management.
+
+   *  Establishing and verifying trust with CAs.
+
+   Raw public keys offer a simpler alternative:
+
+   *  No need for complex certificate chains.
+
+   *  Using raw public keys allows for direct authentication, making it
+      easier to implement and understand.
+
+   *  Raw public keys use a public key for the lifetime of the device,
+      eliminating the need for renewal and longer lifetimes.
+
+   *  Robust authentication through public key cryptography.
+
+   Using raw public keys can streamline authentication processes while
+   maintaining high levels of security, making them an attractive
+   alternative to traditional certificates.
 
 12.  Validation
 
@@ -577,28 +607,35 @@ Table of Contents
 
    *  127/8 and ::1/128 (from [RFC990] and [RFC4291])
 
-15.  Incremental Deployment
+15.  Operational Considerations
+
+15.1.  Incremental Deployment
 
    Where a server's hostname can be configured, a motivated network
    administrator can configure server hostnames to comply with this
    specification to provide immediate value to supporting clients.
 
+15.2.  Server Identity Change
+
+   The server's public key is encoded into its domain name.  Changing
+   the public key would also change its domain name -- thus, its
+   identity as known by client password managers and other
+   configurations in clients (e.g., printer, SMB share, etc.).  As such
+   an identity change is extremely disruptive, it needs to be avoided.
+
 16.  Security Considerations
 
    TODO: write more on security considerations
 
-   Because the server's public key is encoded into its domain name,
-   changing the public key would also change its domain name -- thus,
-   its identity as known by client password managers and other
-   configurations in clients (e.g., printer, SMB share, etc.).  As such
-   an identity change is extremely disruptive, it needs to be avoided.
-   This means the public/private key pair on a server needs to stay
-   static.  The tradeoff is servers are vulnerable to their private keys
-   being stolen and an active attacker intercepting traffic to that
-   server.  The alternatives are to continue using unencrypted
-   communication to local servers, which is vulnerable to passive
-   attack, or to condition users to validate self-signed certificates
-   for local servers.
+   Due to challenges in key rotation, the public/private key pair on a
+   server needs to stay static.  The tradeoff is servers are vulnerable
+   to their private keys being stolen and an active attacker
+   intercepting traffic to that server.  The alternatives are to
+   continue using unencrypted communication to local servers, which is
+   vulnerable to passive attack, or to condition users to validate self-
+   signed certificates for local servers.  In this case, the advantages
+   of making HTTPS available would seem to far outweigh the risk of
+   using a key over long periods.
 
 17.  IANA Considerations
 
