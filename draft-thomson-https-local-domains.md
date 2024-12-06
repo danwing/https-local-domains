@@ -571,18 +571,6 @@ identity as known by client password managers and other configurations
 in clients (e.g., printer, SMB share, etc.). As such an identity
 change is extremely disruptive, it needs to be avoided.
 
-## Simplify DNS
-
-To simplify access to devices within a household, administrator can configure
-an in-house DNS server and create short, user-friendly DNS names that resolve
-to longer, more complex names. Configure the in-house DNS server to map
-these short names to their corresponding long names. This approach
-ensures that users can easily connect to the desired device using
-a simpler, more memorable DNS name.
-
-Implementing DNSSEC {{?RFC4033}} and using DNS over HTTPS (DoH) RFC 8484
-or DNS over TLS (DoT) {{?RFC7858}} for DNS queries can enhance the
-reliability of this system.
 
 # Security Considerations
 
