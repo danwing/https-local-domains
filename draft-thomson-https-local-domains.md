@@ -57,8 +57,14 @@ informative:
 
 --- abstract
 
-Proposal to make origins with non-unique names like Printer.local or
-192.168.0.1 use an extended origin to allow them to use HTTPS.
+This document explores a method for providing secure HTTPS access
+to local domains without the need for traditional certificates.
+By leveraging local domain names embedded with public keys, this
+approach ensures secure communication within a local network. The
+method simplifies the setup process and enhances security by avoiding
+the complexities of certificate management by using raw public keys.
+This solution is particularly beneficial for local services that
+require HTTPS access without exposing them to the internet.
 
 --- middle
 
@@ -462,12 +468,29 @@ handshake after the Finished message by sending TLS close_notify.
 
 # Raw Public Keys {#rpk}
 
-Todo:  rewrite this section
+Raw public keys are used in various security protocols to facilitate
+authentication without the need for full certificate chains {{?RFC7250}}.
+This approach simplifies the certificate exchange process by
+transmitting only the necessary public key information.
 
-Certificates are complicated for most people. They also have an
-expiration date.  This system uses a public key for the lifetime
-of the device, which is hopefully years. A certificate is not
-appropriate; a raw public key is more approporiate.
+Certificates are complicated because they involve:
+
+  * Managing multiple levels of certificate authorities (CAs).
+  * Regular renewal and lifecycle management.
+  * Establishing and verifying trust with CAs.
+
+Raw public keys offer a simpler alternative:
+
+  * No need for complex certificate chains.
+  * Using raw public keys allows for direct authentication,
+  making it easier to implement and understand.
+  * Raw public keys use a public key for the lifetime of the device,
+   eliminating the need for renewal and longer lifetimes.
+  * Robust authentication through public key cryptography.
+
+Using raw public keys can streamline authentication processes while
+maintaining high levels of security, making them an attractive
+alternative to traditional certificates.
 
 # Validation {#validation}
 
@@ -539,29 +562,36 @@ connection is made to that address, those are also considered
 * fc00::/7 (from {{?RFC4193}})
 * 127/8 and ::1/128 (from {{?RFC990}} and {{?RFC4291}})
 
-# Incremental Deployment
+# Operational Considerations
+
+## Incremental Deployment
 
 Where a server's hostname can be configured, a motivated network
 administrator can configure server hostnames to comply with this
 specification to provide immediate value to supporting clients.
 
+## Server Identity Change
+
+The server's public key is encoded into its domain name.
+Changing the public key would also change its domain name -- thus, its
+identity as known by client password managers and other configurations
+in clients (e.g., printer, SMB share, etc.). As such an identity
+change is extremely disruptive, it needs to be avoided.
+
+
 # Security Considerations
 
 TODO: write more on security considerations
 
-Because the server's public key is encoded into its domain name,
-changing the public key would also change its domain name -- thus, its
-identity as known by client password managers and other configurations
-in clients (e.g., printer, SMB share, etc.).  As such an identity
-change is extremely disruptive, it needs to be avoided.  This means
-the public/private key pair on a server needs to stay static.  The
-tradeoff is servers are vulnerable to their private keys being stolen
-and an active attacker intercepting traffic to that server.  The
-alternatives are to continue using unencrypted communication to local
-servers, which is vulnerable to passive attack, or to condition users
-to validate self-signed certificates for local servers.
-
-
+Due to challenges in key rotation, the public/private key pair on a
+server needs to stay static. The tradeoff is servers are vulnerable
+to their private keys being stolen and an active attacker intercepting
+traffic to that server.  The alternatives are to continue using
+unencrypted communication to local servers, which is vulnerable to
+passive attack, or to condition users to validate self-signed certificates
+for local servers. In this case, the
+advantages of making HTTPS available would seem to far outweigh the
+risk of using a key over long periods.
 
 
 # IANA Considerations {#iana}
