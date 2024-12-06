@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 30 May 2025                                Cloud Software Group
-                                                        26 November 2024
+Expires: 9 June 2025                                Cloud Software Group
+                                                         6 December 2024
 
 
                         HTTPS for Local Domains
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 May 2025.
+   This Internet-Draft will expire on 9 June 2025.
 
 Copyright Notice
 
@@ -96,7 +96,6 @@ Table of Contents
    15. Operational Considerations
      15.1.  Incremental Deployment
      15.2.  Server Identity Change
-     15.3.  Simplify DNS
    16. Security Considerations
    17. IANA Considerations
    18. References
@@ -617,19 +616,6 @@ Table of Contents
    configurations in clients (e.g., printer, SMB share, etc.).  As such
    an identity change is extremely disruptive, it needs to be avoided.
 
-15.3.  Simplify DNS
-
-   To simplify access to devices within a household, administrator can
-   configure an in-house DNS server and create short, user-friendly DNS
-   names that resolve to longer, more complex names.  Configure the in-
-   house DNS server to map these short names to their corresponding long
-   names.  This approach ensures that users can easily connect to the
-   desired device using a simpler, more memorable DNS name.
-
-   Implementing DNSSEC [RFC4033] and using DNS over HTTPS (DoH) RFC 8484
-   or DNS over TLS (DoT) [RFC7858] for DNS queries can enhance the
-   reliability of this system.
-
 16.  Security Considerations
 
    TODO: write more on security considerations
@@ -715,11 +701,6 @@ Table of Contents
               DOI 10.17487/RFC3927, May 2005,
               <https://www.rfc-editor.org/rfc/rfc3927>.
 
-   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements",
-              RFC 4033, DOI 10.17487/RFC4033, March 2005,
-              <https://www.rfc-editor.org/rfc/rfc4033>.
-
    [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
               Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
               <https://www.rfc-editor.org/rfc/rfc4193>.
@@ -739,11 +720,6 @@ Table of Contents
    [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
-
-   [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
-              and P. Hoffman, "Specification for DNS over Transport
-              Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
-              2016, <https://www.rfc-editor.org/rfc/rfc7858>.
 
    [RFC8164]  Nottingham, M. and M. Thomson, "Opportunistic Security for
               HTTP/2", RFC 8164, DOI 10.17487/RFC8164, May 2017,
