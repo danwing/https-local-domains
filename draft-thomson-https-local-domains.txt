@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 9 June 2025                                Cloud Software Group
-                                                         6 December 2024
+Expires: 10 June 2025                               Cloud Software Group
+                                                         7 December 2024
 
 
                         HTTPS for Local Domains
@@ -33,6 +33,11 @@ About This Document
    found at https://datatracker.ietf.org/doc/draft-thomson-https-local-
    domains/.
 
+   Discussion of this document takes place on the SETTLE mailing list
+   (mailto:settle@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/settle/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/settle/.
+
    Source for this draft and an issue tracker can be found at
    https://github.com/danwing/https-local-domains.
 
@@ -51,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 June 2025.
+   This Internet-Draft will expire on 10 June 2025.
 
 Copyright Notice
 
