@@ -16,10 +16,10 @@ keyword:
  - unicorn
  - sparkling distributed ledger
 venue:
-#  group: WG
-#  type: Working Group
-#  mail: WG@example.com
-#  arch: https://example.com/WG
+  group: SETTLE
+  type: ""
+  mail: settle@ietf.org
+  arch: https://mailarchive.ietf.org/arch/browse/settle/
   github: "danwing/https-local-domains"
   latest: "https://danwing.github.io/https-local-domains/draft-thomson-https-local-domains.html"
 
