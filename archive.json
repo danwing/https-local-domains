@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-05T01:48:12.668948+00:00",
+  "timestamp": "2024-12-08T01:54:30.571362+00:00",
   "repo": "danwing/https-local-domains",
   "labels": [
     {
@@ -81,26 +81,62 @@
       "id": "PR_kwDONLmaNM6DO6ju",
       "title": "add text for raw public keys",
       "url": "https://github.com/danwing/https-local-domains/pull/2",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "sridharangirish91",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-11-26T19:02:10Z",
-      "updatedAt": "2024-11-26T20:51:56Z",
+      "updatedAt": "2024-12-06T21:06:15Z",
       "baseRepository": "danwing/https-local-domains",
       "baseRefName": "main",
       "baseRefOid": "813ed328309da9cfb5b7d49c26a99c534881a2e2",
       "headRepository": "danwing/https-local-domains",
       "headRefName": "sridharanr",
-      "headRefOid": "9ca2a01800cc68c6cd2fb84d8361058cf2373913",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "ac67cb9f45b36b70a962b0c6e00afefa63d691de",
+      "closedAt": "2024-12-06T21:06:15Z",
+      "mergedAt": "2024-12-06T21:06:15Z",
+      "mergedBy": "sridharangirish91",
+      "mergeCommit": {
+        "oid": "fb46eaaf143892ac4ee94677b0bf987f69ec7948"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDONLmaNM6UKjDX",
+          "commit": {
+            "abbreviatedOid": "9ca2a01"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-12-06T20:23:38Z",
+          "updatedAt": "2024-12-06T20:23:38Z",
+          "comments": [
+            {
+              "originalPosition": 97,
+              "body": "```suggestion\r\n```\r\n\r\nNobody gunna run local DNS server; that's what Bonjour/DNS-SD solve. Nobody gunna run DNSSEC on a small network. Bonjour/DNS-SD don't have a good way to secure themselves, so I also would not bring them up.  So: delete this section.",
+              "createdAt": "2024-12-06T20:23:38Z",
+              "updatedAt": "2024-12-06T20:23:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDONLmaNM6UKjQU",
+          "commit": {
+            "abbreviatedOid": "9ca2a01"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "remove the 'run a local DNS server' section, and looks great!",
+          "createdAt": "2024-12-06T20:24:13Z",
+          "updatedAt": "2024-12-06T20:24:13Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3,
