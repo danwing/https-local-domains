@@ -1,6 +1,6 @@
 ---
-title: "HTTPS for Local Domains"
-abbrev: "HTTPS Local Domains"
+title: "Public Key Hash for Local Domains"
+abbrev: "PKH for Local Domains"
 category: std
 
 docname: draft-thomson-https-local-domains-latest
