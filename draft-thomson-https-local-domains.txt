@@ -5,11 +5,11 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 10 June 2025                               Cloud Software Group
-                                                         7 December 2024
+Expires: 12 June 2025                               Cloud Software Group
+                                                         9 December 2024
 
 
-                        HTTPS for Local Domains
+                   Public Key Hash for Local Domains
                 draft-thomson-https-local-domains-latest
 
 Abstract
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 June 2025.
+   This Internet-Draft will expire on 12 June 2025.
 
 Copyright Notice
 
