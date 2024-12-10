@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 12 June 2025                               Cloud Software Group
-                                                         9 December 2024
+Expires: 13 June 2025                               Cloud Software Group
+                                                        10 December 2024
 
 
                    Public Key Hash for Local Domains
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 June 2025.
+   This Internet-Draft will expire on 13 June 2025.
 
 Copyright Notice
 
