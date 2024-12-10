@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Public Key Hash for Local Domains</title>
+<title>Public Key Hash for Authenticating Local Domains</title>
 <meta content="Martin Thomson" name="author">
 <meta content="Dan Wing" name="author">
 <meta content="
@@ -15,7 +15,7 @@ approach ensures secure communication within a local network. The
 method simplifies the setup process and enhances security by avoiding
 the complexities of certificate management by using raw public keys.
 This solution is particularly beneficial for local services that
-require HTTPS access without exposing them to the internet. 
+require HTTPS access without exposing them to the Internet. 
     " name="description">
 <meta content="xml2rfc 3.25.0" name="generator">
 <meta content="next generation" name="keyword">
@@ -1053,7 +1053,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">PKH for Local Domains</td>
+<td class="center">PKH for Authenticating Local Domains</td>
 <td class="right">December 2024</td>
 </tr></thead>
 <tfoot><tr>
@@ -1086,12 +1086,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div class="author">
       <div class="author-name">D. Wing, <span class="editor">Ed.</span>
 </div>
-<div class="org">Cloud Software Group</div>
+<div class="org">Citrix</div>
 </div>
 </dd>
 </dl>
 </div>
-<h1 id="title">Public Key Hash for Local Domains</h1>
+<h1 id="title">Public Key Hash for Authenticating Local Domains</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document explores a method for providing secure HTTPS access
@@ -1101,7 +1101,7 @@ approach ensures secure communication within a local network. The
 method simplifies the setup process and enhances security by avoiding
 the complexities of certificate management by using raw public keys.
 This solution is particularly beneficial for local services that
-require HTTPS access without exposing them to the internet.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+require HTTPS access without exposing them to the Internet.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1311,17 +1311,20 @@ features (<span>[<a href="#secure-context" class="cite xref">secure-context</a>]
 origins.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">Non-HTTPS origins are vulnerable to a range of attacks, so all of this
 is easy to understand, however it means that local devices are left
-with UI that shows negative security indicators (e.g., 'not secure' on
-the URL bar, and diminished access to web features.<a href="#section-1-3" class="pilcrow">¶</a></p>
+with user interface that shows negative security indicators (e.g.,
+'not secure' on the URL bar) and diminished access to web features
+requiring secure context (e.g., Cookie Store API, Credential
+Management API, Web Bluetooth, Storage API, Push API, Notifications
+API, WebTransport API).<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">Servers that operate publicly accessible endpoints have few challenges
-with getting certificates that allow them to authenticate.  The real
-challenge is in giving servers that are less publicly available access
+with getting certificates that allow them to be authenticated.  The
+challenge is giving servers that are less publicly available access
 to the same opportunities without compromising the assurances provided
 to other servers.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">We could run HTTP over TLS without authenticating the server
 <span>[<a href="#RFC8164" class="cite xref">RFC8164</a>]</span>, which would provide some of the confidentiality and
 privacy benefits of HTTPS.  However, aside from the exposure to
-man-in-the-middle attack, a site using <span>[<a href="#RFC8164" class="cite xref">RFC8164</a>]</span> doesn’t gain an
+man-in-the-middle attack, a site using <span>[<a href="#RFC8164" class="cite xref">RFC8164</a>]</span> does not gain an
 HTTPS origin.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">What is really needed is a way to use HTTPS proper.<a href="#section-1-6" class="pilcrow">¶</a></p>
 </section>
@@ -1383,7 +1386,7 @@ Services (<span>[<a href="#RFC7838" class="cite xref">RFC7838</a>]</span>) can b
 that does not depend on the external server.  The design of
 alternative services ensures that this is used automatically when
 available.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
-<p id="section-2.1-8">This is a good solution.  But it isn’t without drawbacks.  The names
+<p id="section-2.1-8">This is a good solution but is not without drawbacks.  The names
 that are produced are not generally usable by humans as a consequence
 of a need to be globally unique.  Some deployments address this by
 providing a second service with a memorable name that manages
@@ -2112,7 +2115,7 @@ EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 </pre><a href="#appendix-B-8" class="pilcrow">¶</a>
 </div>
 <p id="appendix-B-9">After the hash algorithm identification digit (0 for SHA512/256) is
-prefixed to that base64url, resulting in:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
+prefixed to that base32 string, resulting in:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B-10">
 <pre>
 0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
@@ -2152,7 +2155,7 @@ Thomson in 2007.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 </address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Dan Wing (<span class="role">editor</span>)</span></div>
-<div dir="auto" class="left"><span class="org">Cloud Software Group Holdings, Inc.</span></div>
+<div dir="auto" class="left"><span class="org">Citrix</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:danwing@gmail.com" class="email">danwing@gmail.com</a>

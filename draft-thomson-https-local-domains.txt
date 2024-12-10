@@ -5,11 +5,11 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 13 June 2025                               Cloud Software Group
+Expires: 13 June 2025                                             Citrix
                                                         10 December 2024
 
 
-                   Public Key Hash for Local Domains
+            Public Key Hash for Authenticating Local Domains
                 draft-thomson-https-local-domains-latest
 
 Abstract
@@ -21,7 +21,7 @@ Abstract
    method simplifies the setup process and enhances security by avoiding
    the complexities of certificate management by using raw public keys.
    This solution is particularly beneficial for local services that
-   require HTTPS access without exposing them to the internet.
+   require HTTPS access without exposing them to the Internet.
 
 About This Document
 
@@ -126,19 +126,22 @@ Table of Contents
 
    Non-HTTPS origins are vulnerable to a range of attacks, so all of
    this is easy to understand, however it means that local devices are
-   left with UI that shows negative security indicators (e.g., 'not
-   secure' on the URL bar, and diminished access to web features.
+   left with user interface that shows negative security indicators
+   (e.g., 'not secure' on the URL bar) and diminished access to web
+   features requiring secure context (e.g., Cookie Store API, Credential
+   Management API, Web Bluetooth, Storage API, Push API, Notifications
+   API, WebTransport API).
 
    Servers that operate publicly accessible endpoints have few
-   challenges with getting certificates that allow them to authenticate.
-   The real challenge is in giving servers that are less publicly
-   available access to the same opportunities without compromising the
-   assurances provided to other servers.
+   challenges with getting certificates that allow them to be
+   authenticated.  The challenge is giving servers that are less
+   publicly available access to the same opportunities without
+   compromising the assurances provided to other servers.
 
    We could run HTTP over TLS without authenticating the server
    [RFC8164], which would provide some of the confidentiality and
    privacy benefits of HTTPS.  However, aside from the exposure to man-
-   in-the-middle attack, a site using [RFC8164] doesn’t gain an HTTPS
+   in-the-middle attack, a site using [RFC8164] does not gain an HTTPS
    origin.
 
    What is really needed is a way to use HTTPS proper.
@@ -201,9 +204,9 @@ Table of Contents
    not depend on the external server.  The design of alternative
    services ensures that this is used automatically when available.
 
-   This is a good solution.  But it isn’t without drawbacks.  The names
-   that are produced are not generally usable by humans as a consequence
-   of a need to be globally unique.  Some deployments address this by
+   This is a good solution but is not without drawbacks.  The names that
+   are produced are not generally usable by humans as a consequence of a
+   need to be globally unique.  Some deployments address this by
    providing a second service with a memorable name that manages
    rendezvous.  That in turn has consequences for privacy, because that
    service needs to mediate interactions between users and their
@@ -812,7 +815,7 @@ Appendix B.  Test Encoding
    EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 
    After the hash algorithm identification digit (0 for SHA512/256) is
-   prefixed to that base64url, resulting in:
+   prefixed to that base32 string, resulting in:
 
    0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 
@@ -836,5 +839,5 @@ Authors' Addresses
 
 
    Dan Wing (editor)
-   Cloud Software Group Holdings, Inc.
+   Citrix
    Email: danwing@gmail.com
