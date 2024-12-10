@@ -1,6 +1,6 @@
 ---
-title: "Public Key Hash for Local Domains"
-abbrev: "PKH for Local Domains"
+title: "Public Key Hash for Authenticating Local Domains"
+abbrev: "PKH for Authenticating Local Domains"
 category: std
 
 docname: draft-thomson-https-local-domains-latest
@@ -31,8 +31,8 @@ author:
  -
     ins: D. Wing
     name: Dan Wing
-    organization: Cloud Software Group Holdings, Inc.
-    abbrev: Cloud Software Group
+    organization: Citrix
+    abbrev: Citrix
     email: danwing@gmail.com
     role: editor
 
@@ -64,7 +64,7 @@ approach ensures secure communication within a local network. The
 method simplifies the setup process and enhances security by avoiding
 the complexities of certificate management by using raw public keys.
 This solution is particularly beneficial for local services that
-require HTTPS access without exposing them to the internet.
+require HTTPS access without exposing them to the Internet.
 
 --- middle
 
@@ -82,19 +82,22 @@ origins.
 
 Non-HTTPS origins are vulnerable to a range of attacks, so all of this
 is easy to understand, however it means that local devices are left
-with UI that shows negative security indicators (e.g., 'not secure' on
-the URL bar, and diminished access to web features.
+with user interface that shows negative security indicators (e.g.,
+'not secure' on the URL bar) and diminished access to web features
+requiring secure context (e.g., Cookie Store API, Credential
+Management API, Web Bluetooth, Storage API, Push API, Notifications
+API, WebTransport API).
 
 Servers that operate publicly accessible endpoints have few challenges
-with getting certificates that allow them to authenticate.  The real
-challenge is in giving servers that are less publicly available access
+with getting certificates that allow them to be authenticated.  The
+challenge is giving servers that are less publicly available access
 to the same opportunities without compromising the assurances provided
 to other servers.
 
 We could run HTTP over TLS without authenticating the server
 {{?RFC8164}}, which would provide some of the confidentiality and
 privacy benefits of HTTPS.  However, aside from the exposure to
-man-in-the-middle attack, a site using {{?RFC8164}} doesn’t gain an
+man-in-the-middle attack, a site using {{?RFC8164}} does not gain an
 HTTPS origin.
 
 What is really needed is a way to use HTTPS proper.
@@ -157,7 +160,7 @@ that does not depend on the external server.  The design of
 alternative services ensures that this is used automatically when
 available.
 
-This is a good solution.  But it isn’t without drawbacks.  The names
+This is a good solution but is not without drawbacks.  The names
 that are produced are not generally usable by humans as a consequence
 of a need to be globally unique.  Some deployments address this by
 providing a second service with a memorable name that manages
@@ -316,7 +319,6 @@ its own message to other servers (e.g., {{?mDNS=RFC6762}}).
 The other potential problem is that .local names are permitted to use
 a wider range of characters than domain names.  What sort of
 normalization do we do to avoid confusable characters?
-
 
 # Advantages and Drawbacks
 
@@ -672,7 +674,7 @@ EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 ~~~~~
 
 After the hash algorithm identification digit (0 for SHA512/256) is
-prefixed to that base64url, resulting in:
+prefixed to that base32 string, resulting in:
 
 ~~~~~
 0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
