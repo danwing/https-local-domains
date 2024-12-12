@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 13 June 2025                                             Citrix
-                                                        10 December 2024
+Expires: 15 June 2025                                             Citrix
+                                                        12 December 2024
 
 
             Public Key Hash for Authenticating Local Domains
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 June 2025.
+   This Internet-Draft will expire on 15 June 2025.
 
 Copyright Notice
 
@@ -761,7 +761,7 @@ A.1.  DTLS
 
 Appendix B.  Test Encoding
 
-   Server with private key in PEM format is:
+   Starting with this private key in PEM format:
 
    -----BEGIN PRIVATE KEY-----
    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCOkTU8TOKW/IZ6
@@ -792,7 +792,7 @@ Appendix B.  Test Encoding
    fOPfIBX8uLc3UtOm0+Gn1IQ=
    -----END PRIVATE KEY-----
 
-   and public key in PEM format is:
+   which results in this public key in PEM format:
 
    -----BEGIN PUBLIC KEY-----
    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjpE1PEzilvyGesIYcoYP
@@ -804,23 +804,23 @@ Appendix B.  Test Encoding
    YwIDAQAB
    -----END PUBLIC KEY-----
 
-   Using the binary format (DER) and hashed using SHA256 gives this hex
-   value:
+   Converting that public key to binary DER format and hashing with
+   SHA256 gives this 32-octet hex value:
 
    21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 
-   Converting that hex value to binary and base32 encoded (without
+   Converting that hex value to binary and base32 encoding (without
    trailing "=") gives:
 
    EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 
-   After the hash algorithm identification digit (0 for SHA512/256) is
-   prefixed to that base32 string, resulting in:
+   Then prefixing that hash with the hash algorithm identification
+   digit, which is 0 for SHA512/256, results in:
 
    0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 
-   Finally, if this is a printer named "printer" advertised using
-   ".local", the full FQDN for its unique name would be:
+   Finally, if this is a printer named "printer" advertised using the
+   domain name ".local", the full FQDN for its unique name would be:
 
    printer.0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA.local
 
