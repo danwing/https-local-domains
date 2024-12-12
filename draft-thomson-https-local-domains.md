@@ -612,7 +612,7 @@ This should work for DTLS, as well?
 
 # Test Encoding {#test-encoding}
 
-Server with private key in PEM format is:
+Starting with this private key in PEM format:
 
 ~~~~~
 -----BEGIN PRIVATE KEY-----
@@ -645,7 +645,7 @@ fOPfIBX8uLc3UtOm0+Gn1IQ=
 -----END PRIVATE KEY-----
 ~~~~~
 
-and public key in PEM format is:
+which results in this public key in PEM format:
 
 ~~~~~
 -----BEGIN PUBLIC KEY-----
@@ -659,29 +659,29 @@ YwIDAQAB
 -----END PUBLIC KEY-----
 ~~~~~
 
-Using the binary format (DER) and hashed using SHA256 gives this
-hex value:
+Converting that public key to binary DER format and hashing
+with SHA256 gives this 32-octet hex value:
 
 ~~~~~
 21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
 ~~~~~
 
-Converting that hex value to binary and base32 encoded (without
+Converting that hex value to binary and base32 encoding (without
 trailing "=") gives:
 
 ~~~~~
 EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 ~~~~~
 
-After the hash algorithm identification digit (0 for SHA512/256) is
-prefixed to that base32 string, resulting in:
+Then prefixing that hash with the hash algorithm identification digit,
+which is 0 for SHA512/256, results in:
 
 ~~~~~
 0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
 ~~~~~
 
-Finally, if this is a printer named "printer" advertised using
-".local", the full FQDN for its unique name would be:
+Finally, if this is a printer named "printer" advertised using the
+domain name ".local", the full FQDN for its unique name would be:
 
 ~~~~~
 printer.0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA.local
