@@ -55,6 +55,34 @@ informative:
       name: Chelsea Novak
     target: https://blog.mozilla.org/en/products/firefox/introducing-firefox-multi-account-containers/
 
+  MM24:
+    title: "Misbinding Raw Public Keys to Identities in TLS"
+    date: 2024
+    target: https://arxiv.org/pdf/2411.09770
+    author:
+    -
+      ins: M. Moustafa
+    -
+      ins: M. Sethi
+    -
+      ins: T. Aura
+
+  SIGMA:
+    title: "SIGMA: The ‘SIGn-and-MAc’ Approach to Authenticated Diffie-Hellman and Its Use in the IKE Protocols"
+    date: 2003
+    author:
+      name: Hugo Krawczyk
+    target: https://link.springer.com/chapter/10.1007/978-3-540-45146-4_24
+
+  tls-misbinding:
+    title: "TLS 1.3, Raw Public Keys, and Misbinding Attacks"
+    date: March 2024
+    author:
+      name: John Mattsson
+    target: https://mailarchive.ietf.org/arch/msg/tls/NaXngZTt_yTXhWGUNj85TBBdjQI/
+    seriesinfo:
+      "TLS WG": "mailing list thread"
+
 --- abstract
 
 This document explores a method for providing secure HTTPS access
@@ -544,7 +572,7 @@ This section defines the domain names and IP addresses considered
 names and other IP addresses SHOULD NOT be used with this
 specification.
 
-## Local Domain Names
+## Local Domain Names {#local-domain-names}
 
 The following domain name suffixes are considered "local":
 
@@ -552,6 +580,7 @@ The following domain name suffixes are considered "local":
 * ".home-arpa" (from {{?Homenet=RFC8375}})
 * ".internal" (from {{?I-D.davies-internal-tld}})
 * both ".localhost" and "localhost" (Section 6.3 of {{?RFC6761}})
+* domain name of the DNS search domain (for further discussion)
 
 ## Local IP Addresses
 
@@ -566,7 +595,7 @@ connection is made to that address, those are also considered
 
 # Operational Considerations
 
-## Incremental Deployment
+## Incremental Deployment {#incremental}
 
 Where a server's hostname can be configured, a motivated network
 administrator can configure server hostnames to comply with this
@@ -609,6 +638,30 @@ New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
 This should work for DTLS, as well?
 
+## Misbinding TLS Raw Public Keys
+
+> This section is for discussion: is mitigation of TLS misbinding
+attack necessary.  It appears to not have achieved consensus during
+the discussion on the TLS mailing list ({{tls-misbinding}}), but the method proposed in
+this draft has not yet been discussed.  Note also requiring the
+mitigation in this section prevents incremental deployment
+({{incremental}}) as it requires servers support the external_id_hash
+extension
+
+To prevent TLS misbinding attack {{MM24}} the server needs to include
+its identity to the client in the TLS handshake {{SIGMA}}.  The server
+can have several identities in different domains, see {{local-domain-names}}.
+
+To verify server identity, the client MUST include both the TLS Server
+Name Indication (SNI) and an empty external_id_hash {{!RFC8844}} in
+its ClientHello.  The server MUST include the hash of its identity
+matching the SNI in the external_id_hash extension of its response (in
+the EncryptedExtensions message if using TLS 1.3, as specified in
+{{RFC8844}}). If server does not have an identity matching the SNI and
+the ClientHello contains the external_id_hash extension, the server
+returns an empty external_id_hash. Upon receipt, the client verifies
+the external_id_hash matches the TLS SNI value sent earlier; if they
+mismatch the TLS session is aborted.
 
 # Test Encoding {#test-encoding}
 
