@@ -1058,7 +1058,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Thomson &amp; Wing</td>
-<td class="center">Expires 15 June 2025</td>
+<td class="center">Expires 16 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-thomson-https-local-domains-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-12-12" class="published">12 December 2024</time>
+<time datetime="2024-12-13" class="published">13 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-06-15">15 June 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-16">16 June 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1138,7 +1138,7 @@ require HTTPS access without exposing them to the Internet.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1659,6 +1659,12 @@ matches the public key received in the TLS ServerHello. If they match,
 the client authenticates the TLS connection. If they do not match, the
 client behavior falls back to the client's normal handling of the
 presented TLS raw public key or certificate (which may well be valid).<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">If the server does not support the TLS external_id_hash extension
+(<a href="#misbinding" class="auto internal xref">Appendix A.2</a>) and does return a SubjectAltName in the certificate,
+the client <span class="bcp14">MUST</span> validate the SubjectAltName matches the expected
+hostname, as normal.  If, however, the server does not support
+the TLS external_id_hash extension and returns a raw public key,
+the client <span class="bcp14">MUST</span> abort the TLS connection (see also <a href="#misbinding" class="auto internal xref">Appendix A.2</a>).<a href="#section-8.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2068,7 +2074,7 @@ risk of using a key over long periods.<a href="#section-16-2" class="pilcrow">¶
 <p id="appendix-A.1-1">This should work for DTLS, as well?<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="misbinding-tls-raw-public-keys">
+<div id="misbinding">
 <section id="appendix-A.2">
         <h3 id="name-misbinding-tls-raw-public-k">
 <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-misbinding-tls-raw-public-k" class="section-name selfRef">Misbinding TLS Raw Public Keys</a>
@@ -2078,17 +2084,16 @@ risk of using a key over long periods.<a href="#section-16-2" class="pilcrow">¶
             <p id="appendix-A.2-1.1.1">This section is for discussion: is mitigation of TLS misbinding
 attack necessary.  It appears to not have achieved consensus during
 the discussion on the TLS mailing list (<span>[<a href="#tls-misbinding" class="cite xref">tls-misbinding</a>]</span>), but the method proposed in
-this draft has not yet been discussed.  Note also requiring the
-mitigation in this section prevents incremental deployment
-(<a href="#incremental" class="auto internal xref">Section 15.1</a>) as it requires servers support the external_id_hash
-extension<a href="#appendix-A.2-1.1.1" class="pilcrow">¶</a></p>
+this draft has not yet been discussed.<a href="#appendix-A.2-1.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="appendix-A.2-2">To prevent TLS misbinding attack <span>[<a href="#MM24" class="cite xref">MM24</a>]</span> the server needs to include
-its identity to the client in the TLS handshake <span>[<a href="#SIGMA" class="cite xref">SIGMA</a>]</span>.  The server
-can have several identities in different domains, see <a href="#local-domain-names" class="auto internal xref">Section 14.1</a>.<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
+its identity to the client in the TLS handshake <span>[<a href="#SIGMA" class="cite xref">SIGMA</a>]</span>.  A server
+using raw public keys does not have its name encoded into that key.
+The server is expected to have several identities in different
+domains, see <a href="#local-domain-names" class="auto internal xref">Section 14.1</a>.<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
 <p id="appendix-A.2-3">To verify server identity, the client <span class="bcp14">MUST</span> include both the TLS Server
-Name Indication (SNI) and an empty external_id_hash <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span> in
+Name Indication (SNI) and an empty external_id_hash <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span> extension in
 its ClientHello.  The server <span class="bcp14">MUST</span> include the hash of its identity
 matching the SNI in the external_id_hash extension of its response (in
 the EncryptedExtensions message if using TLS 1.3, as specified in

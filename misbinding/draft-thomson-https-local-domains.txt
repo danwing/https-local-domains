@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 15 June 2025                                             Citrix
-                                                        12 December 2024
+Expires: 16 June 2025                                             Citrix
+                                                        13 December 2024
 
 
             Public Key Hash for Authenticating Local Domains
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 June 2025.
+   This Internet-Draft will expire on 16 June 2025.
 
 Copyright Notice
 
@@ -456,6 +456,13 @@ Table of Contents
    of the presented TLS raw public key or certificate (which may well be
    valid).
 
+   If the server does not support the TLS external_id_hash extension
+   (Appendix A.2) and does return a SubjectAltName in the certificate,
+   the client MUST validate the SubjectAltName matches the expected
+   hostname, as normal.  If, however, the server does not support the
+   TLS external_id_hash extension and returns a raw public key, the
+   client MUST abort the TLS connection (see also Appendix A.2).
+
 9.  Unique Host Names
 
    Web browsers and other application clients store per-host state using
@@ -788,24 +795,23 @@ A.2.  Misbinding TLS Raw Public Keys
       attack necessary.  It appears to not have achieved consensus
       during the discussion on the TLS mailing list ([tls-misbinding]),
       but the method proposed in this draft has not yet been discussed.
-      Note also requiring the mitigation in this section prevents
-      incremental deployment (Section 15.1) as it requires servers
-      support the external_id_hash extension
 
    To prevent TLS misbinding attack [MM24] the server needs to include
-   its identity to the client in the TLS handshake [SIGMA].  The server
-   can have several identities in different domains, see Section 14.1.
+   its identity to the client in the TLS handshake [SIGMA].  A server
+   using raw public keys does not have its name encoded into that key.
+   The server is expected to have several identities in different
+   domains, see Section 14.1.
 
    To verify server identity, the client MUST include both the TLS
    Server Name Indication (SNI) and an empty external_id_hash [RFC8844]
-   in its ClientHello.  The server MUST include the hash of its identity
-   matching the SNI in the external_id_hash extension of its response
-   (in the EncryptedExtensions message if using TLS 1.3, as specified in
-   [RFC8844]).  If server does not have an identity matching the SNI and
-   the ClientHello contains the external_id_hash extension, the server
-   returns an empty external_id_hash.  Upon receipt, the client verifies
-   the external_id_hash matches the TLS SNI value sent earlier; if they
-   mismatch the TLS session is aborted.
+   extension in its ClientHello.  The server MUST include the hash of
+   its identity matching the SNI in the external_id_hash extension of
+   its response (in the EncryptedExtensions message if using TLS 1.3, as
+   specified in [RFC8844]).  If server does not have an identity
+   matching the SNI and the ClientHello contains the external_id_hash
+   extension, the server returns an empty external_id_hash.  Upon
+   receipt, the client verifies the external_id_hash matches the TLS SNI
+   value sent earlier; if they mismatch the TLS session is aborted.
 
 Appendix B.  Test Encoding
 
