@@ -437,6 +437,12 @@ the client authenticates the TLS connection. If they do not match, the
 client behavior falls back to the client's normal handling of the
 presented TLS raw public key or certificate (which may well be valid).
 
+If the server does not support the TLS external_id_hash extension
+({{misbinding}}) and does return a SubjectAltName in the certificate,
+the client MUST validate the SubjectAltName matches the expected
+hostname, as normal.  If, however, the server does not support
+the TLS external_id_hash extension and returns a raw public key,
+the client MUST abort the TLS connection (see also {{misbinding}}).
 
 # Unique Host Names {#unique}
 
@@ -638,22 +644,21 @@ New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
 This should work for DTLS, as well?
 
-## Misbinding TLS Raw Public Keys
+## Misbinding TLS Raw Public Keys {#misbinding}
 
 > This section is for discussion: is mitigation of TLS misbinding
 attack necessary.  It appears to not have achieved consensus during
 the discussion on the TLS mailing list ({{tls-misbinding}}), but the method proposed in
-this draft has not yet been discussed.  Note also requiring the
-mitigation in this section prevents incremental deployment
-({{incremental}}) as it requires servers support the external_id_hash
-extension
+this draft has not yet been discussed.
 
 To prevent TLS misbinding attack {{MM24}} the server needs to include
-its identity to the client in the TLS handshake {{SIGMA}}.  The server
-can have several identities in different domains, see {{local-domain-names}}.
+its identity to the client in the TLS handshake {{SIGMA}}.  A server
+using raw public keys does not have its name encoded into that key.
+The server is expected to have several identities in different
+domains, see {{local-domain-names}}.
 
 To verify server identity, the client MUST include both the TLS Server
-Name Indication (SNI) and an empty external_id_hash {{!RFC8844}} in
+Name Indication (SNI) and an empty external_id_hash {{!RFC8844}} extension in
 its ClientHello.  The server MUST include the hash of its identity
 matching the SNI in the external_id_hash extension of its response (in
 the EncryptedExtensions message if using TLS 1.3, as specified in
