@@ -416,16 +416,14 @@ label consists of an appropriate-length encoded hash. If those
 conditions apply, the client MAY send a TLS ClientHello with the Raw
 Public Key extension {{?RFC7250}}.
 
-When the client receives the
-server's raw public key or certificate, the client checks if the public key hash
-matches the public key received in the TLS ServerHello. If they match,
-the client authenticates the TLS connection. If they do not match, the
-client behavior falls back to the client's normal handling of the
-presented TLS raw public key or certificate (which may well be valid).
-
-If the server returns a certificate (rather than a raw public key),
-the client validates the certificate as normal (e.g., validity date,
-signed by a trusted Certification Authority, and so on).
+When the client receives the server's raw public key or certificate,
+the client checks if the public key hash matches the public key
+received in the TLS ServerHello. If they match, the client
+authenticates the TLS connection. If they do not match and the
+response contains a raw public key, the TLS connection is aborted.  If
+they do not match and the response contains a certificate, the client
+validates or rejects the certificate using its normal procedures
+({{?RFC9525}}, {{?PKIX=RFC5280}}).
 
 # Unique Host Names {#unique}
 
@@ -614,7 +612,7 @@ risk of using a key over long periods.
 
 ## Misbinding TLS Raw Public Keys {#misbinding}
 
-When using Raw Public Keys, a misbinding attack (unknown key-share
+When using Raw Public Keys, a misbinding attack (also called unknown key-share
 attack) is possible when the server name is not cryptographically
 bound to the TLS handshake ({{MM24}}).  The mechanism described in
 this draft avoids such an attack because the public key is included in
