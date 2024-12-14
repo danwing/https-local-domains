@@ -614,7 +614,7 @@ risk of using a key over long periods.
 
 ## Misbinding TLS Raw Public Keys {#misbinding}
 
-When using Raw Public Keys a misbinding attack is possible when the
+When using Raw Public Keys, a misbinding attack is possible when the
 server name is not cryptographically bound to the TLS handshake
 ({{MM24}}).  The mechanism described in this draft avoids such a
 misbinding because the public key is included in the handshake, which
