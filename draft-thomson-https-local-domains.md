@@ -614,13 +614,13 @@ risk of using a key over long periods.
 
 ## Misbinding TLS Raw Public Keys {#misbinding}
 
-When using Raw Public Keys a misbinding attack is possible when the
-server name is not cryptographically bound to the TLS handshake
-({{MM24}}).  The mechanism described in this draft avoids such a
-misbinding because the public key is included in the handshake, which
-the client verifies matches the hash of the public key contained in
-the hostname.  This obviates the need for mitigations described in
-{{?RFC8844}}.
+When using Raw Public Keys a misbinding attack (unknown key-share
+attack) is possible when the server name is not cryptographically
+bound to the TLS handshake ({{MM24}}).  The mechanism described in
+this draft avoids such an attack because the public key is included in
+the handshake, which the client verifies matches the public key hash
+contained in the hostname.  This obviates the need for mitigations
+described in {{?RFC8844}}.
 
 # IANA Considerations {#iana}
 
