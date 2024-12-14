@@ -56,32 +56,16 @@ informative:
     target: https://blog.mozilla.org/en/products/firefox/introducing-firefox-multi-account-containers/
 
   MM24:
-    title: "Misbinding Raw Public Keys to Identities in TLS"
-    date: 2024
-    target: https://arxiv.org/pdf/2411.09770
-    author:
-    -
-      ins: M. Moustafa
-    -
-      ins: M. Sethi
-    -
-      ins: T. Aura
-
-  SIGMA:
-    title: "SIGMA: The ‘SIGn-and-MAc’ Approach to Authenticated Diffie-Hellman and Its Use in the IKE Protocols"
-    date: 2003
-    author:
-      name: Hugo Krawczyk
-    target: https://link.springer.com/chapter/10.1007/978-3-540-45146-4_24
-
-  tls-misbinding:
-    title: "TLS 1.3, Raw Public Keys, and Misbinding Attacks"
-    date: March 2024
-    author:
-      name: John Mattsson
-    target: https://mailarchive.ietf.org/arch/msg/tls/NaXngZTt_yTXhWGUNj85TBBdjQI/
-    seriesinfo:
-      "TLS WG": "mailing list thread"
+     title: "Misbinding Raw Public Keys to Identities in TLS"
+     date: 2024
+     target: https://arxiv.org/pdf/2411.09770
+     author:
+     -
+       ins: M. Moustafa
+     -
+       ins: M. Sethi
+     -
+       ins: T. Aura
 
 --- abstract
 
@@ -430,19 +414,18 @@ When clients connect to such a local domain name or IP address
 registered hash identifier in the second label and if the rest of that
 label consists of an appropriate-length encoded hash. If those
 conditions apply, the client MAY send a TLS ClientHello with the Raw
-Public Key extension {{?RFC7250}}. When the client receives the
-server's raw public key or certificate, the client checks if the hash
+Public Key extension {{?RFC7250}}.
+
+When the client receives the
+server's raw public key or certificate, the client checks if the public key hash
 matches the public key received in the TLS ServerHello. If they match,
 the client authenticates the TLS connection. If they do not match, the
 client behavior falls back to the client's normal handling of the
 presented TLS raw public key or certificate (which may well be valid).
 
-If the server does not support the TLS external_id_hash extension
-({{misbinding}}) and does return a SubjectAltName in the certificate,
-the client MUST validate the SubjectAltName matches the expected
-hostname, as normal.  If, however, the server does not support
-the TLS external_id_hash extension and returns a raw public key,
-the client MUST abort the TLS connection (see also {{misbinding}}).
+If the server returns a certificate (rather than a raw public key),
+the client validates the certificate as normal (e.g., validity date,
+signed by a trusted Certification Authority, and so on).
 
 # Unique Host Names {#unique}
 
@@ -578,7 +561,7 @@ This section defines the domain names and IP addresses considered
 names and other IP addresses SHOULD NOT be used with this
 specification.
 
-## Local Domain Names {#local-domain-names}
+## Local Domain Names
 
 The following domain name suffixes are considered "local":
 
@@ -586,7 +569,6 @@ The following domain name suffixes are considered "local":
 * ".home-arpa" (from {{?Homenet=RFC8375}})
 * ".internal" (from {{?I-D.davies-internal-tld}})
 * both ".localhost" and "localhost" (Section 6.3 of {{?RFC6761}})
-* domain name of the DNS search domain (for further discussion)
 
 ## Local IP Addresses
 
@@ -601,7 +583,7 @@ connection is made to that address, those are also considered
 
 # Operational Considerations
 
-## Incremental Deployment {#incremental}
+## Incremental Deployment
 
 Where a server's hostname can be configured, a motivated network
 administrator can configure server hostnames to comply with this
@@ -630,6 +612,15 @@ for local servers. In this case, the
 advantages of making HTTPS available would seem to far outweigh the
 risk of using a key over long periods.
 
+## Misbinding TLS Raw Public Keys {#misbinding}
+
+When using Raw Public Keys a misbinding attack is possible when the
+server name is not cryptographically bound to the TLS handshake
+({{MM24}}).  The mechanism described in this draft avoids such a
+misbinding because the public key is included in the handshake, which
+the client verifies matches the hash of the public key contained in
+the hostname.  This obviates the need for mitigations described in
+{{?RFC8844}}.
 
 # IANA Considerations {#iana}
 
@@ -644,29 +635,6 @@ New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
 This should work for DTLS, as well?
 
-## Misbinding TLS Raw Public Keys {#misbinding}
-
-> This section is for discussion: is mitigation of TLS misbinding
-attack necessary.  It appears to not have achieved consensus during
-the discussion on the TLS mailing list ({{tls-misbinding}}), but the method proposed in
-this draft has not yet been discussed.
-
-To prevent TLS misbinding attack {{MM24}} the server needs to include
-its identity to the client in the TLS handshake {{SIGMA}}.  A server
-using raw public keys does not have its name encoded into that key.
-The server is expected to have several identities in different
-domains, see {{local-domain-names}}.
-
-To verify server identity, the client MUST include both the TLS Server
-Name Indication (SNI) and an empty external_id_hash {{!RFC8844}} extension in
-its ClientHello.  The server MUST include the hash of its identity
-matching the SNI in the external_id_hash extension of its response (in
-the EncryptedExtensions message if using TLS 1.3, as specified in
-{{RFC8844}}). If server does not have an identity matching the SNI and
-the ClientHello contains the external_id_hash extension, the server
-returns an empty external_id_hash. Upon receipt, the client verifies
-the external_id_hash matches the TLS SNI value sent earlier; if they
-mismatch the TLS session is aborted.
 
 # Test Encoding {#test-encoding}
 
