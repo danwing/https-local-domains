@@ -519,20 +519,20 @@ implementations should treat uppercase, lowercase, and mixed case
 the same.
 
 ~~~~ abnf
-friendly-name = 1*63(ALPHA / DIGIT / "-")
+  friendly-name = 1*63(ALPHA / DIGIT / "-")
 
-hash-algorithm = DIGIT   ; 0=SHA256
+  hash-algorithm = DIGIT   ; 0=SHA256
 
-base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
+  base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
 
-hash = 1*62(/ ALPHA / base32-digits )
-     ; 62+1 octet limit from RFC1035
+  hash = 1*62(/ ALPHA / base32-digits )
+       ; 62+1 octet limit from RFC1035
 
-encoded-hostname = friendly-name "."
-                   hash-algorithm
-                   hash
+  encoded-hostname = friendly-name "."
+                     hash-algorithm
+                     hash
 ~~~~~
-{: artwork-align="center" artwork-name="encoding"}
+{: artwork-align="left" artwork-name="encoding"}
 
 An example encoding is shown in {{test-encoding}}.
 
@@ -552,6 +552,7 @@ The following domain name suffixes are considered "local":
 * ".home-arpa" (from {{?Homenet=RFC8375}})
 * ".internal" (from {{?I-D.davies-internal-tld}})
 * both ".localhost" and "localhost" (Section 6.3 of {{?RFC6761}})
+* domain name of the DNS search domain ({{?RFC6106}}, {{?RFC3397}}) (for further discussion)
 
 ## Local IP Addresses
 
