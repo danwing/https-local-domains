@@ -55,6 +55,18 @@ informative:
       name: Chelsea Novak
     target: https://blog.mozilla.org/en/products/firefox/introducing-firefox-multi-account-containers/
 
+  MM24:
+     title: "Misbinding Raw Public Keys to Identities in TLS"
+     date: 2024
+     target: https://arxiv.org/pdf/2411.09770
+     author:
+     -
+       ins: M. Moustafa
+     -
+       ins: M. Sethi
+     -
+       ins: T. Aura
+
 --- abstract
 
 This document explores a method for providing secure HTTPS access
@@ -402,13 +414,16 @@ When clients connect to such a local domain name or IP address
 registered hash identifier in the second label and if the rest of that
 label consists of an appropriate-length encoded hash. If those
 conditions apply, the client MAY send a TLS ClientHello with the Raw
-Public Key extension {{?RFC7250}}. When the client receives the
-server's raw public key or certificate, the client checks if the hash
-matches the public key received in the TLS ServerHello. If they match,
-the client authenticates the TLS connection. If they do not match, the
-client behavior falls back to the client's normal handling of the
-presented TLS raw public key or certificate (which may well be valid).
+Public Key extension {{?RFC7250}}.
 
+When the client receives the server's raw public key or certificate,
+the client checks if the public key hash matches the public key
+received in the TLS ServerHello. If they match, the client
+authenticates the TLS connection. If they do not match and the
+response contains a raw public key, the TLS connection is aborted.  If
+they do not match and the response contains a certificate, the client
+validates or rejects the certificate using its normal procedures
+({{?RFC9525}}, {{?PKIX=RFC5280}}).
 
 # Unique Host Names {#unique}
 
@@ -596,6 +611,15 @@ for local servers. In this case, the
 advantages of making HTTPS available would seem to far outweigh the
 risk of using a key over long periods.
 
+## Misbinding TLS Raw Public Keys {#misbinding}
+
+When using Raw Public Keys, a misbinding attack (also called unknown key-share
+attack) is possible when the server name is not cryptographically
+bound to the TLS handshake ({{MM24}}).  The mechanism described in
+this draft avoids such an attack because the public key is included in
+the handshake which the client verifies matches the public key hash
+contained in the hostname.  This obviates the need for mitigations
+described in {{?RFC8844}}.
 
 # IANA Considerations {#iana}
 
