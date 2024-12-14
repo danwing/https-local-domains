@@ -453,13 +453,11 @@ Table of Contents
    When the client receives the server's raw public key or certificate,
    the client checks if the public key hash matches the public key
    received in the TLS ServerHello.  If they match, the client
-   authenticates the TLS connection.  If they do not match, the client
-   behavior falls back to the client's normal handling of the presented
-   TLS raw public key or certificate (which may well be valid).
-
-   If the server returns a certificate (rather than a raw public key),
-   the client validates the certificate as normal (e.g., validity date,
-   signed by a trusted Certification Authority, and so on).
+   authenticates the TLS connection.  If they do not match and the
+   response contains a raw public key, the TLS connection is aborted.
+   If they do not match and the response contains a certificate, the
+   client validates or rejects the certificate using its normal
+   procedures ([RFC9525], [PKIX]).
 
 9.  Unique Host Names
 
@@ -653,13 +651,13 @@ Table of Contents
 
 16.1.  Misbinding TLS Raw Public Keys
 
-   When using Raw Public Keys, a misbinding attack (unknown key-share
-   attack) is possible when the server name is not cryptographically
-   bound to the TLS handshake ([MM24]).  The mechanism described in this
-   draft avoids such an attack because the public key is included in the
-   handshake which the client verifies matches the public key hash
-   contained in the hostname.  This obviates the need for mitigations
-   described in [RFC8844].
+   When using Raw Public Keys, a misbinding attack (also called unknown
+   key-share attack) is possible when the server name is not
+   cryptographically bound to the TLS handshake ([MM24]).  The mechanism
+   described in this draft avoids such an attack because the public key
+   is included in the handshake which the client verifies matches the
+   public key hash contained in the hostname.  This obviates the need
+   for mitigations described in [RFC8844].
 
 17.  IANA Considerations
 
@@ -726,6 +724,12 @@ Table of Contents
               Public Keys to Identities in TLS", 2024,
               <https://arxiv.org/pdf/2411.09770>.
 
+   [PKIX]     Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <https://www.rfc-editor.org/rfc/rfc5280>.
+
    [RFC1918]  Rekhter, Y., Moskowitz, B., Karrenberg, D., de Groot, G.
               J., and E. Lear, "Address Allocation for Private
               Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
@@ -768,6 +772,10 @@ Table of Contents
               Uses of TLS with the Session Description Protocol (SDP)",
               RFC 8844, DOI 10.17487/RFC8844, January 2021,
               <https://www.rfc-editor.org/rfc/rfc8844>.
+
+   [RFC9525]  Saint-Andre, P. and R. Salz, "Service Identity in TLS",
+              RFC 9525, DOI 10.17487/RFC9525, November 2023,
+              <https://www.rfc-editor.org/rfc/rfc9525>.
 
    [RFC990]   Reynolds, J. and J. Postel, "Assigned numbers", RFC 990,
               DOI 10.17487/RFC0990, November 1986,

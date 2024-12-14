@@ -1656,15 +1656,14 @@ registered hash identifier in the second label and if the rest of that
 label consists of an appropriate-length encoded hash. If those
 conditions apply, the client <span class="bcp14">MAY</span> send a TLS ClientHello with the Raw
 Public Key extension <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">When the client receives the
-server's raw public key or certificate, the client checks if the public key hash
-matches the public key received in the TLS ServerHello. If they match,
-the client authenticates the TLS connection. If they do not match, the
-client behavior falls back to the client's normal handling of the
-presented TLS raw public key or certificate (which may well be valid).<a href="#section-8.2-2" class="pilcrow">¶</a></p>
-<p id="section-8.2-3">If the server returns a certificate (rather than a raw public key),
-the client validates the certificate as normal (e.g., validity date,
-signed by a trusted Certification Authority, and so on).<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">When the client receives the server's raw public key or certificate,
+the client checks if the public key hash matches the public key
+received in the TLS ServerHello. If they match, the client
+authenticates the TLS connection. If they do not match and the
+response contains a raw public key, the TLS connection is aborted.  If
+they do not match and the response contains a certificate, the client
+validates or rejects the certificate using its normal procedures
+(<span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span>, <span>[<a href="#PKIX" class="cite xref">PKIX</a>]</span>).<a href="#section-8.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1928,7 +1927,7 @@ risk of using a key over long periods.<a href="#section-16-2" class="pilcrow">¶
         <h3 id="name-misbinding-tls-raw-public-k">
 <a href="#section-16.1" class="section-number selfRef">16.1. </a><a href="#name-misbinding-tls-raw-public-k" class="section-name selfRef">Misbinding TLS Raw Public Keys</a>
         </h3>
-<p id="section-16.1-1">When using Raw Public Keys, a misbinding attack (unknown key-share
+<p id="section-16.1-1">When using Raw Public Keys, a misbinding attack (also called unknown key-share
 attack) is possible when the server name is not cryptographically
 bound to the TLS handshake (<span>[<a href="#MM24" class="cite xref">MM24</a>]</span>).  The mechanism described in
 this draft avoids such an attack because the public key is included in
@@ -2011,6 +2010,10 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
         <dd>
 <span class="refAuthor">Moustafa, M.</span>, <span class="refAuthor">Sethi, M.</span>, and <span class="refAuthor">T. Aura</span>, <span class="refTitle">"Misbinding Raw Public Keys to Identities in TLS"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://arxiv.org/pdf/2411.09770">https://arxiv.org/pdf/2411.09770</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="PKIX">[PKIX]</dt>
+        <dd>
+<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC1918">[RFC1918]</dt>
         <dd>
 <span class="refAuthor">Rekhter, Y.</span>, <span class="refAuthor">Moskowitz, B.</span>, <span class="refAuthor">Karrenberg, D.</span>, <span class="refAuthor">de Groot, G. J.</span>, and <span class="refAuthor">E. Lear</span>, <span class="refTitle">"Address Allocation for Private Internets"</span>, <span class="seriesInfo">BCP 5</span>, <span class="seriesInfo">RFC 1918</span>, <span class="seriesInfo">DOI 10.17487/RFC1918</span>, <time datetime="1996-02" class="refDate">February 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1918">https://www.rfc-editor.org/rfc/rfc1918</a>&gt;</span>. </dd>
@@ -2050,6 +2053,10 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
 <dt id="RFC8844">[RFC8844]</dt>
         <dd>
 <span class="refAuthor">Thomson, M.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"Unknown Key-Share Attacks on Uses of TLS with the Session Description Protocol (SDP)"</span>, <span class="seriesInfo">RFC 8844</span>, <span class="seriesInfo">DOI 10.17487/RFC8844</span>, <time datetime="2021-01" class="refDate">January 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8844">https://www.rfc-editor.org/rfc/rfc8844</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9525">[RFC9525]</dt>
+        <dd>
+<span class="refAuthor">Saint-Andre, P.</span> and <span class="refAuthor">R. Salz</span>, <span class="refTitle">"Service Identity in TLS"</span>, <span class="seriesInfo">RFC 9525</span>, <span class="seriesInfo">DOI 10.17487/RFC9525</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9525">https://www.rfc-editor.org/rfc/rfc9525</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC990">[RFC990]</dt>
         <dd>
