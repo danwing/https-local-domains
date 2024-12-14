@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 15 June 2025                                             Citrix
-                                                        12 December 2024
+Expires: 17 June 2025                                             Citrix
+                                                        14 December 2024
 
 
             Public Key Hash for Authenticating Local Domains
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 June 2025.
+   This Internet-Draft will expire on 17 June 2025.
 
 Copyright Notice
 
@@ -567,18 +567,18 @@ Table of Contents
    uppercase, implementations should treat uppercase, lowercase, and
    mixed case the same.
 
-             friendly-name = 1*63(ALPHA / DIGIT / "-")
+     friendly-name = 1*63(ALPHA / DIGIT / "-")
 
-             hash-algorithm = DIGIT   ; 0=SHA256
+     hash-algorithm = DIGIT   ; 0=SHA256
 
-             base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
+     base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
 
-             hash = 1*62(/ ALPHA / base32-digits )
-                  ; 62+1 octet limit from RFC1035
+     hash = 1*62(/ ALPHA / base32-digits )
+          ; 62+1 octet limit from RFC1035
 
-             encoded-hostname = friendly-name "."
-                                hash-algorithm
-                                hash
+     encoded-hostname = friendly-name "."
+                        hash-algorithm
+                        hash
 
    An example encoding is shown in Appendix B.
 
@@ -600,6 +600,9 @@ Table of Contents
    *  ".internal" (from [I-D.davies-internal-tld])
 
    *  both ".localhost" and "localhost" (Section 6.3 of [RFC6761])
+
+   *  domain name of the DNS search domain ([RFC6106], [RFC3397]) (for
+      further discussion)
 
 14.2.  Local IP Addresses
 
@@ -711,6 +714,11 @@ Table of Contents
               Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
               February 1996, <https://www.rfc-editor.org/rfc/rfc1918>.
 
+   [RFC3397]  Aboba, B. and S. Cheshire, "Dynamic Host Configuration
+              Protocol (DHCP) Domain Search Option", RFC 3397,
+              DOI 10.17487/RFC3397, November 2002,
+              <https://www.rfc-editor.org/rfc/rfc3397>.
+
    [RFC3927]  Cheshire, S., Aboba, B., and E. Guttman, "Dynamic
               Configuration of IPv4 Link-Local Addresses", RFC 3927,
               DOI 10.17487/RFC3927, May 2005,
@@ -723,6 +731,11 @@ Table of Contents
    [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
               Architecture", RFC 4291, DOI 10.17487/RFC4291, February
               2006, <https://www.rfc-editor.org/rfc/rfc4291>.
+
+   [RFC6106]  Jeong, J., Park, S., Beloeil, L., and S. Madanapalli,
+              "IPv6 Router Advertisement Options for DNS Configuration",
+              RFC 6106, DOI 10.17487/RFC6106, November 2010,
+              <https://www.rfc-editor.org/rfc/rfc6106>.
 
    [RFC6761]  Cheshire, S. and M. Krochmal, "Special-Use Domain Names",
               RFC 6761, DOI 10.17487/RFC6761, February 2013,
