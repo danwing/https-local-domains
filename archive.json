@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-12T01:47:39.383652+00:00",
+  "timestamp": "2024-12-15T01:54:19.571190+00:00",
   "repo": "danwing/https-local-domains",
   "labels": [
     {
@@ -165,6 +165,55 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDONLmaNM6FEfW1",
+      "title": "add text on mitigating TLS misbinding attack",
+      "url": "https://github.com/danwing/https-local-domains/pull/4",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-12-12T20:56:55Z",
+      "updatedAt": "2024-12-14T01:12:06Z",
+      "baseRepository": "danwing/https-local-domains",
+      "baseRefName": "main",
+      "baseRefOid": "acc1f1e46d0aac912a6ac9fb902e7221e3bb42ba",
+      "headRepository": "danwing/https-local-domains",
+      "headRefName": "misbinding",
+      "headRefOid": "56661624f2382c310a13e09eb0815f12d5e0958c",
+      "closedAt": "2024-12-14T01:12:05Z",
+      "mergedAt": "2024-12-14T01:12:05Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "624a3ae9a132e51285ad1e939681af3cb87242f2"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDONLmaNM6VNyHB",
+          "commit": {
+            "abbreviatedOid": "0a8d932"
+          },
+          "author": "sridharangirish91",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-12-14T00:25:41Z",
+          "updatedAt": "2024-12-14T00:25:42Z",
+          "comments": [
+            {
+              "originalPosition": 46,
+              "body": "```suggestion\r\nWhen using Raw Public Keys, a misbinding attack is possible when the\r\n```",
+              "createdAt": "2024-12-14T00:25:41Z",
+              "updatedAt": "2024-12-14T00:25:42Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
