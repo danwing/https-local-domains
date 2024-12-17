@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-15T01:54:19.571190+00:00",
+  "timestamp": "2024-12-17T01:47:24.294311+00:00",
   "repo": "danwing/https-local-domains",
   "labels": [
     {
@@ -214,6 +214,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDONLmaNM6FbN_C",
+      "title": "local partition",
+      "url": "https://github.com/danwing/https-local-domains/pull/5",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-12-17T00:09:34Z",
+      "updatedAt": "2024-12-17T00:09:34Z",
+      "baseRepository": "danwing/https-local-domains",
+      "baseRefName": "main",
+      "baseRefOid": "624a3ae9a132e51285ad1e939681af3cb87242f2",
+      "headRepository": "danwing/https-local-domains",
+      "headRefName": "dwing-partitioning",
+      "headRefOid": "ce0f57b4ba841fce2f420caeb541306a728fb621",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
