@@ -1579,9 +1579,10 @@ reset, leading to the more alarming user notice.<a href="#section-7.2-2" class="
         </h3>
 <p id="section-8.1-1">When clients connect to a local domain name or IP address (as
 discussed in <a href="#local" class="auto internal xref">Section 9</a>) using TLS the client includes the server's
-name in the TLS SNI extension.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">The client validates the certificate's before and after dates,
-validates the SubjectAltName matches the previously-transmitted TLS
+name in the TLS Server Name Indication (SNI) extension (<span><a href="https://rfc-editor.org/rfc/rfc6066#section-3" class="relref">Section 3</a> of [<a href="#RFC6066" class="cite xref">RFC6066</a>]</span>).<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">Upon receipt of the server's certificate, the client validates the
+certificate's before and after dates, validates one of the
+certificate's SubjectAltName matches the previously-transmitted TLS
 SNI, and extracts the public key from the certificate.  That public
 key is internally associated with the server's name to become the
 server's origin.  By doing this the client's web forms, cookies,
@@ -1784,6 +1785,10 @@ risk of using a key over long periods.<a href="#section-11-2" class="pilcrow">¶
 <dt id="RFC5890">[RFC5890]</dt>
         <dd>
 <span class="refAuthor">Klensin, J.</span>, <span class="refTitle">"Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework"</span>, <span class="seriesInfo">RFC 5890</span>, <span class="seriesInfo">DOI 10.17487/RFC5890</span>, <time datetime="2010-08" class="refDate">August 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5890">https://www.rfc-editor.org/rfc/rfc5890</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6066">[RFC6066]</dt>
+        <dd>
+<span class="refAuthor">Eastlake 3rd, D.</span>, <span class="refTitle">"Transport Layer Security (TLS) Extensions: Extension Definitions"</span>, <span class="seriesInfo">RFC 6066</span>, <span class="seriesInfo">DOI 10.17487/RFC6066</span>, <time datetime="2011-01" class="refDate">January 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6066">https://www.rfc-editor.org/rfc/rfc6066</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6106">[RFC6106]</dt>
         <dd>
