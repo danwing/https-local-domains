@@ -4,18 +4,14 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Public Key Hash for Authenticating Local Domains</title>
+<title>Extended Origins for Local Domains</title>
 <meta content="Martin Thomson" name="author">
 <meta content="Dan Wing" name="author">
 <meta content="
-       This document explores a method for providing secure HTTPS access
-to local domains without the need for traditional certificates.
-By leveraging local domain names embedded with public keys, this
-approach ensures secure communication within a local network. The
-method simplifies the setup process and enhances security by avoiding
-the complexities of certificate management by using raw public keys.
-This solution is particularly beneficial for local services that
-require HTTPS access without exposing them to the Internet. 
+       This document explores a method for providing secure HTTPS access to
+local domains without the need for traditional certificate validation.
+By leveraging local domain names and their embedded public keys, this
+approach ensures secure communication within a local network. 
     " name="description">
 <meta content="xml2rfc 3.25.0" name="generator">
 <meta content="next generation" name="keyword">
@@ -1053,12 +1049,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">PKH for Authenticating Local Domains</td>
+<td class="center">Extended Origins for Local Domains</td>
 <td class="right">December 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Thomson &amp; Wing</td>
-<td class="center">Expires 17 June 2025</td>
+<td class="center">Expires 20 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-thomson-https-local-domains-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-12-14" class="published">14 December 2024</time>
+<time datetime="2024-12-17" class="published">17 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-06-17">17 June 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-20">20 June 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1091,17 +1087,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Public Key Hash for Authenticating Local Domains</h1>
+<h1 id="title">Extended Origins for Local Domains</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document explores a method for providing secure HTTPS access
-to local domains without the need for traditional certificates.
-By leveraging local domain names embedded with public keys, this
-approach ensures secure communication within a local network. The
-method simplifies the setup process and enhances security by avoiding
-the complexities of certificate management by using raw public keys.
-This solution is particularly beneficial for local services that
-require HTTPS access without exposing them to the Internet.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document explores a method for providing secure HTTPS access to
+local domains without the need for traditional certificate validation.
+By leveraging local domain names and their embedded public keys, this
+approach ensures secure communication within a local network.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1138,7 +1130,7 @@ require HTTPS access without exposing them to the Internet.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1202,100 +1194,68 @@ require HTTPS access without exposing them to the Internet.<a href="#section-abs
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-key-changes-key-rotation" class="internal xref">Key Changes (Key Rotation)</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-address-changes" class="internal xref">Address Changes</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
-                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-ergonomics-of-origins" class="internal xref">Ergonomics of Origins</a></p>
-</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-operation" class="internal xref">Operation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-server-operation" class="internal xref">Server Operation</a></p>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-client-operation" class="internal xref">Client Operation</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-client-operation" class="internal xref">Client Operation</a></p>
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-server-operation" class="internal xref">Server Operation</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-unique-host-names" class="internal xref">Unique Host Names</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-raw-public-keys" class="internal xref">Raw Public Keys</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-short-host-names" class="internal xref">Short Host Names</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-identifying-servers-as-local" class="internal xref">Identifying Servers as Local</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-local-domain-names" class="internal xref">Local Domain Names</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-local-ip-addresses" class="internal xref">Local IP Addresses</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-raw-public-keys" class="internal xref">Raw Public Keys</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-server-identity-change" class="internal xref">Server Identity Change</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-validation" class="internal xref">Validation</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-misbinding-tls-raw-public-k" class="internal xref">Misbinding TLS Raw Public Keys</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-encoding-details" class="internal xref">Encoding Details</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-identifying-servers-as-local" class="internal xref">Identifying Servers as Local</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
-                <p id="section-toc.1-1.14.2.1.1"><a href="#section-14.1" class="auto internal xref">14.1</a>.  <a href="#name-local-domain-names" class="internal xref">Local Domain Names</a></p>
+                <p id="section-toc.1-1.14.2.1.1"><a href="#section-14.1" class="auto internal xref">14.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
-                <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-local-ip-addresses" class="internal xref">Local IP Addresses</a></p>
+                <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
-                <p id="section-toc.1-1.15.2.1.1"><a href="#section-15.1" class="auto internal xref">15.1</a>.  <a href="#name-incremental-deployment" class="internal xref">Incremental Deployment</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
-                <p id="section-toc.1-1.15.2.2.1"><a href="#section-15.2" class="auto internal xref">15.2</a>.  <a href="#name-server-identity-change" class="internal xref">Server Identity Change</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.15.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#section-16" class="auto internal xref">16</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
-                <p id="section-toc.1-1.16.2.1.1"><a href="#section-16.1" class="auto internal xref">16.1</a>.  <a href="#name-misbinding-tls-raw-public-k" class="internal xref">Misbinding TLS Raw Public Keys</a></p>
-</li>
-            </ul>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#section-17" class="auto internal xref">17</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#section-18" class="auto internal xref">18</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.1">
-                <p id="section-toc.1-1.18.2.1.1"><a href="#section-18.1" class="auto internal xref">18.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.2">
-                <p id="section-toc.1-1.18.2.2.1"><a href="#section-18.2" class="auto internal xref">18.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-discussion-points" class="internal xref">Discussion Points</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.1">
-                <p id="section-toc.1-1.19.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-dtls" class="internal xref">DTLS</a></p>
-</li>
-            </ul>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20">
-            <p id="section-toc.1-1.20.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-test-encoding" class="internal xref">Test Encoding</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.21">
-            <p id="section-toc.1-1.21.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.22">
-            <p id="section-toc.1-1.22.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.16.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1455,7 +1415,7 @@ printer is entitled to claim the name printer.local and use it.  Thus,
 any server has a legitimate claim to that name. If we are to make
 https://printer.local a viable origin, how do we ensure that it is
 unique?<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Extending the origin makes this possible. A web origin is defined as a
+<p id="section-4-2">Extending the origin -- internally on the client -- makes this possible. A web origin is defined as a
 tuple of scheme, host and port. This is a capability that browsers are
 building to enable a range of use cases, such as the creation of
 separate browsing contexts (see e.g., <span>[<a href="#containers" class="cite xref">containers</a>]</span>). By adding an
@@ -1479,7 +1439,7 @@ origin.<a href="#section-4-4" class="pilcrow">¶</a></p>
       <h2 id="name-identifying-servers-as-loca">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-identifying-servers-as-loca" class="section-name selfRef">Identifying Servers as Local</a>
       </h2>
-<p id="section-5-1">The idea here is to do this only for names that are not inherently
+<p id="section-5-1">The idea here is to do this only for names that are <em>not</em> inherently
 unique. Domain names like example.com are unique and therefore would
 not get this treatment.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">Servers with .local (<span>[<a href="#RFC6762" class="cite xref">RFC6762</a>]</span>), .home.arpa (<span>[<a href="#RFC8375" class="cite xref">RFC8375</a>]</span>), or
@@ -1529,15 +1489,22 @@ servers so that it includes a hash of the server’s public key
 information (SPKI).  This is added to the ASCII and Unicode
 serializations of the origin.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">For example, this might use the underscore convention to add the SPKI
-hash to the domain name,
+hash to the domain name for internal representation on the client,
 https://_NPNE4IG2GJ4VAL4DCHL64YSM5BII4A2X.printer.local, or it could
-use a separator of some sort to partition off space for a key.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">TBD: Does this need a new scheme? Is it a new field, or can it be
+use a separator of some sort to partition off space for a key (e.g.,
+"lh--" (<span><a href="https://rfc-editor.org/rfc/rfc5890#section-3.2.1" class="relref">Section 3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>), taking care of each label not
+exceeding 63 octets (<span><a href="https://rfc-editor.org/rfc/rfc1035#section-2.3.1" class="relref">Section 2.3.1</a> of [<a href="#RFC1035" class="cite xref">RFC1035</a>]</span>) if the internal
+representation has such restriction).<a href="#section-6-4" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-6-5.1">
+          <p id="section-6-5.1.1">TBD: Does this need a new scheme? Is it a new field, or can it be
 added to the domain name? What separator would this use? How should
 the SPKI hash be encoded (base64url, base32, hex)? How many bits are
 enough? Do we need to signal hash function?  Is this a new field at
 the end, a change to the name, or something else? Should SPKI go in
-the middle to discourage prefix-matching?<a href="#section-6-5" class="pilcrow">¶</a></p>
+the middle to discourage prefix-matching?<a href="#section-6-5.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 <p id="section-6-6">Adding a non-backwards compatible serialization for origins makes
 these APIs harder to use.  For instance, sending a message to a
 printer.local requires learning this value. This is partly
@@ -1572,15 +1539,18 @@ printer.local at home has a password, then moving to a different
 network exposes the user to a phishing-type attack where a different
 printer.local attempts to retrieve the password for the home printer.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">This is why there is a warning shown on first connection to servers
-and an enhanced warning is shown after a name-collision.  It is
+and an enhanced warning is shown after a name collision to a server
+with a different public key, such as visiting another network that
+has a server with the same name.  It is
 possible that other security UX might be enhanced to better signal the
 status of local servers. For instance, showing the identicon in the
 above examples next to the server’s chosen favicon.  For password
-stealing, using a reliable password manager should help. It might be
+stealing, using a reliable password manager -- which also does internal
+partioning based on the server's public key -- should help. It might be
 necessary to include notices warning users about the server identity.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
 <p id="section-7.1-3">Third-party password managers would need to be enhanced to recognize
-the additional information in the origin and properly segment the
-namespace. A password manager that looks at window.location.host is
+the additional information in the origin and properly segment their
+internal namespace. A password manager that looks at window.location.host is
 likely to broadcast passwords inappropriately.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">To mitigate this risk we might consider blocking concurrent use of the
 same name with different keys if a password manager is installed.
@@ -1603,29 +1573,6 @@ risk of using a key over long periods.<a href="#section-7.2-1" class="pilcrow">�
 reset, leading to the more alarming user notice.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="address-changes">
-<section id="section-7.3">
-        <h3 id="name-address-changes">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-address-changes" class="section-name selfRef">Address Changes</a>
-        </h3>
-<p id="section-7.3-1">Devices that are identified by their IP address will receive a new
-identity when their assigned address changes.  This is a consequence
-of extending the origin tuple to include a public key.  This is
-intentional: a device might intentionally operate multiple identities
-and wish to preserve separation of origins.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="ergonomics-of-origins">
-<section id="section-7.4">
-        <h3 id="name-ergonomics-of-origins">
-<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-ergonomics-of-origins" class="section-name selfRef">Ergonomics of Origins</a>
-        </h3>
-<p id="section-7.4-1">As outlined in the construction of origins for local servers
-<a href="#origin-serialization" class="auto internal xref">Section 6</a>, the ergonomics of an origin that includes a
-SPKI hash is not always ideal -- it is not human readable.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<p id="section-7.4-2">A mitigation for this issue is short names <a href="#short" class="auto internal xref">Section 10</a>.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
-</section>
-</div>
 </section>
 </div>
 <div id="operation">
@@ -1633,248 +1580,140 @@ SPKI hash is not always ideal -- it is not human readable.<a href="#section-7.4-
       <h2 id="name-operation">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-operation" class="section-name selfRef">Operation</a>
       </h2>
-<div id="server-operation">
-<section id="section-8.1">
-        <h3 id="name-server-operation">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-server-operation" class="section-name selfRef">Server Operation</a>
-        </h3>
-<p id="section-8.1-1">A server running on a local network (see <a href="#unique" class="auto internal xref">Section 9</a>) uses a unique host
-name that includes a hash of its public key.  This unique name is encoded as
-described in <a href="#encoding" class="auto internal xref">Section 13</a>.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">The server <span class="bcp14">MAY</span> also advertise its unique name using <span>[<a href="#DNS-SD" class="cite xref">DNS-SD</a>]</span>.  It
-<span class="bcp14">MAY</span> also advertise its short name as described in <a href="#short" class="auto internal xref">Section 10</a>.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="client-operation">
-<section id="section-8.2">
+<section id="section-8.1">
         <h3 id="name-client-operation">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-client-operation" class="section-name selfRef">Client Operation</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-client-operation" class="section-name selfRef">Client Operation</a>
         </h3>
-<p id="section-8.2-1">When clients connect to such a local domain name or IP address
-(<a href="#local" class="auto internal xref">Section 14</a>) using TLS they examine if the domain name starts with a
-registered hash identifier in the second label and if the rest of that
-label consists of an appropriate-length encoded hash. If those
-conditions apply, the client <span class="bcp14">MAY</span> send a TLS ClientHello with the Raw
-Public Key extension <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">When the client receives the server's raw public key or certificate,
-the client checks if the public key hash matches the public key
-received in the TLS ServerHello. If they match, the client
-authenticates the TLS connection. If they do not match and the
-response contains a raw public key, the TLS connection is aborted.  If
-they do not match and the response contains a certificate, the client
-validates or rejects the certificate using its normal procedures
-(<span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span>, <span>[<a href="#PKIX" class="cite xref">PKIX</a>]</span>).<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">When clients connect to a local domain name or IP address (as discussed
+in <a href="#local" class="auto internal xref">Section 10</a>)
+using TLS the client requests a raw public key <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> from the
+server and also includes the server's name in the TLS SNI extension.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">If the client receives a raw public key in response, the client
+includes that public key as part of that server's origin.  By doing
+this the client's web forms, cookies, passwords, local storage, and
+other origin-specific data are all associated with both the server's name (as
+is typical)
+<em>and</em> its public key.  On the client, this might be easiest to accomplish by
+internally encoding the server's raw public key in base32 as part of the
+server's name.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="server-operation">
+<section id="section-8.2">
+        <h3 id="name-server-operation">
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-server-operation" class="section-name selfRef">Server Operation</a>
+        </h3>
+<p id="section-8.2-1">If an incoming TLS ClientHello includes the Raw Public Key extension
+(<span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span>) and includes the Server Name Indication extension (SNI,
+<span>[<a href="#RFC8744" class="cite xref">RFC8744</a>]</span>) matching one of the server's names, the server
+responds with its raw public key.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">If an incoming TLS ClientHello includes the Raw Public Key extension
+but does not have include a Service Name Indication extension, or its
+Server Name Indication does not match one of the server's names,
+the Raw Public Key extension is ignored. This will typically cause
+the server to respond with a (self-signed) certificate.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="unique">
-<section id="section-9">
-      <h2 id="name-unique-host-names">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-unique-host-names" class="section-name selfRef">Unique Host Names</a>
-      </h2>
-<p id="section-9-1">Web browsers and other application clients store per-host state using
-the host name, including cached form data such as passwords,
-integrated and 3rd party password managers, cookies, and other data.
-When a name collision occurs (e.g., the same printer.local name on
-two different networks) the client cannot recognize a different host
-is being encountered.  While it is possible to extend all of these
-clients to extend their index to include the server's public key, this
-seems to lack business justification for the engineering effort to
-solely improve the user experience (short name, <a href="#short" class="auto internal xref">Section 10</a>) on local networks.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">A unique name can be created by embedding the hash of the public
-key into the name itself.  This achieves uniqueness and is also
-used by the client to validate the server's public key <a href="#validation" class="auto internal xref">Section 12</a>.
-Details on encoding are in <a href="#encoding" class="auto internal xref">Section 13</a>.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">To ease clients connecting to these long names, servers <span class="bcp14">SHOULD</span>
-advertise their long names on the local network <span>[<a href="#DNS-SD" class="cite xref">DNS-SD</a>]</span>.<a href="#section-9-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="short">
-<section id="section-10">
-      <h2 id="name-short-host-names">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-short-host-names" class="section-name selfRef">Short Host Names</a>
-      </h2>
-<p id="section-10-1">Long host names containing encoded public keys are awkward for users. This
-section describes how short names can also be advertised by servers and
-securely validated by clients, so that the short name is presented to
-users while the long name is used to actually connect.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">The server advertises both its (long) unique name and its short
-nickname using <span>[<a href="#DNS-SD" class="cite xref">DNS-SD</a>]</span>.  The client connects to the long
-name and performs a full TLS handshake and validation
-(<a href="#validation" class="auto internal xref">Section 12</a>).  The client then connects to the short nickname and
-performs a full TLS handshake. If the same public key was presented by
-both TLS connections, the client <span class="bcp14">SHOULD</span> present both the
-long name and short name to the user.<a href="#section-10-2" class="pilcrow">¶</a></p>
-<p id="section-10-3">The client need only look for matching short name and unique name
-within the same TLD domain name (that is, if a unique name is advertised
-with a ".local" domain, the client does not need to look for its
-accompanying short name within ".internal").<a href="#section-10-3" class="pilcrow">¶</a></p>
-<p id="section-10-4">To avoid the problems described in <a href="#unique" class="auto internal xref">Section 9</a>, the TLS data connection
-to the printer <span class="bcp14">MUST</span> always use the long name.  Thus, if the client has
-validated the short name as described above and a user attempts to
-connect to printer.local (by typing or by some other user
-interaction), the client <span class="bcp14">MUST</span> connect to the unique name.  The TLS
-connection to the short name <span class="bcp14">MUST NOT</span> be used by the client after the
-TLS handshake completes and the server <span class="bcp14">MUST</span> terminate the TLS
-handshake after the Finished message by sending TLS close_notify.<a href="#section-10-4" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-10-5.1">
-          <p id="section-10-5.1.1">Discussion: A short name could be entirely handled on the
-  client. The disadvantage to client-side handling is each client
-  might choose its own short name (one user chooses "office printer",
-  another chooses "downstairs printer", another doesn't bother
-  choosing a short name at all). While annoying to manage those
-  different names, it is not a severe problem.<a href="#section-10-5.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
 </section>
 </div>
 <div id="rpk">
-<section id="section-11">
+<section id="section-9">
       <h2 id="name-raw-public-keys">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-raw-public-keys" class="section-name selfRef">Raw Public Keys</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-raw-public-keys" class="section-name selfRef">Raw Public Keys</a>
       </h2>
-<p id="section-11-1">Raw public keys are used in various security protocols to facilitate
+<p id="section-9-1">Raw public keys are used in various security protocols to facilitate
 authentication without the need for full certificate chains <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span>.
 This approach simplifies the certificate exchange process by
-transmitting only the necessary public key information.<a href="#section-11-1" class="pilcrow">¶</a></p>
-<p id="section-11-2">Certificates are complicated because they involve:<a href="#section-11-2" class="pilcrow">¶</a></p>
+transmitting only the necessary public key information.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">Certificates are complicated because they involve:<a href="#section-9-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11-3.1">
-          <p id="section-11-3.1.1">Managing multiple levels of certificate authorities (CAs).<a href="#section-11-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9-3.1">
+          <p id="section-9-3.1.1">Managing multiple levels of certificate authorities (CAs).<a href="#section-9-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-11-3.2">
-          <p id="section-11-3.2.1">Regular renewal and lifecycle management.<a href="#section-11-3.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-9-3.2">
+          <p id="section-9-3.2.1">Regular renewal and lifecycle management.<a href="#section-9-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-11-3.3">
-          <p id="section-11-3.3.1">Establishing and verifying trust with CAs.<a href="#section-11-3.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-9-3.3">
+          <p id="section-9-3.3.1">Establishing and verifying trust with CAs.<a href="#section-9-3.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-11-4">Raw public keys offer a simpler alternative:<a href="#section-11-4" class="pilcrow">¶</a></p>
+<p id="section-9-4">Raw public keys offer a simpler alternative:<a href="#section-9-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11-5.1">
-          <p id="section-11-5.1.1">No need for complex certificate chains.<a href="#section-11-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9-5.1">
+          <p id="section-9-5.1.1">No need for complex certificate chains.<a href="#section-9-5.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-11-5.2">
-          <p id="section-11-5.2.1">Using raw public keys allows for direct authentication,
-  making it easier to implement and understand.<a href="#section-11-5.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-9-5.2">
+          <p id="section-9-5.2.1">Using raw public keys allows for direct authentication,
+  making it easier to implement and understand.<a href="#section-9-5.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-11-5.3">
-          <p id="section-11-5.3.1">Raw public keys use a public key for the lifetime of the device,
-   eliminating the need for renewal and longer lifetimes.<a href="#section-11-5.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-9-5.3">
+          <p id="section-9-5.3.1">Raw public keys use a public key for the lifetime of the device,
+   eliminating the need for renewal and longer lifetimes.<a href="#section-9-5.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-11-5.4">
-          <p id="section-11-5.4.1">Robust authentication through public key cryptography.<a href="#section-11-5.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-9-5.4">
+          <p id="section-9-5.4.1">Robust authentication through public key cryptography.<a href="#section-9-5.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-11-6">Using raw public keys can streamline authentication processes while
+<p id="section-9-6">Using raw public keys can streamline authentication processes while
 maintaining high levels of security, making them an attractive
-alternative to traditional certificates.<a href="#section-11-6" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="validation">
-<section id="section-12">
-      <h2 id="name-validation">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-validation" class="section-name selfRef">Validation</a>
-      </h2>
-<p id="section-12-1">The client connects to a unique hostname and sends a TLS ClientHello.
-As the client only needs the raw public key, the request <span class="bcp14">MAY</span> include
-a request for a raw public key <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span>.  The client parses
-the returned certificate or raw public key to extract the public key
-and compare its hash with the hash contained in the hostname. If
-they match, the TLS session continues. If they do not match, the
-client might warn the user (as is common today) or simply abandon
-the TLS connection.<a href="#section-12-1" class="pilcrow">¶</a></p>
-<p id="section-12-2">If a certificate is returned both its 'NotBefore' and 'NotAfter' dates
-are ignored for purposes of this specification.<a href="#section-12-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="encoding">
-<section id="section-13">
-      <h2 id="name-encoding-details">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-encoding-details" class="section-name selfRef">Encoding Details</a>
-      </h2>
-<p id="section-13-1">The general format is hostname, a period, a digit indicating the hash
-algorithm, and then the hash of the server's public key.  The binary
-hash output is base32 encoded (<span><a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>) without
-trailing "=" padding.  Currently only SHA256 hash is defined with the
-value "0" (<a href="#iana" class="auto internal xref">Section 17</a>).  While base32 encoding is specified as uppercase,
-implementations should treat uppercase, lowercase, and mixed case
-the same.<a href="#section-13-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-abnf art-text artwork" id="section-13-2">
-<pre>
-  friendly-name = 1*63(ALPHA / DIGIT / "-")
-
-  hash-algorithm = DIGIT   ; 0=SHA256
-
-  base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
-
-  hash = 1*62(/ ALPHA / base32-digits )
-       ; 62+1 octet limit from RFC1035
-
-  encoded-hostname = friendly-name "."
-                     hash-algorithm
-                     hash
-</pre><a href="#section-13-2" class="pilcrow">¶</a>
-</div>
-<p id="section-13-3">An example encoding is shown in <a href="#test-encoding" class="auto internal xref">Appendix B</a>.<a href="#section-13-3" class="pilcrow">¶</a></p>
+alternative to traditional certificates.<a href="#section-9-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="local">
-<section id="section-14">
+<section id="section-10">
       <h2 id="name-identifying-servers-as-local">
-<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-identifying-servers-as-local" class="section-name selfRef">Identifying Servers as Local</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-identifying-servers-as-local" class="section-name selfRef">Identifying Servers as Local</a>
       </h2>
-<p id="section-14-1">This section defines the domain names and IP addresses considered
+<p id="section-10-1">This section defines the domain names and IP addresses considered
 "local" which clients <span class="bcp14">MAY</span> use with this specification.  Other domain
 names and other IP addresses <span class="bcp14">SHOULD NOT</span> be used with this
-specification.<a href="#section-14-1" class="pilcrow">¶</a></p>
+specification.<a href="#section-10-1" class="pilcrow">¶</a></p>
 <div id="local-domain-names">
-<section id="section-14.1">
+<section id="section-10.1">
         <h3 id="name-local-domain-names">
-<a href="#section-14.1" class="section-number selfRef">14.1. </a><a href="#name-local-domain-names" class="section-name selfRef">Local Domain Names</a>
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-local-domain-names" class="section-name selfRef">Local Domain Names</a>
         </h3>
-<p id="section-14.1-1">The following domain name suffixes are considered "local":<a href="#section-14.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-1">The following domain name suffixes are considered "local":<a href="#section-10.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-14.1-2.1">
-            <p id="section-14.1-2.1.1">".local" (from <span>[<a href="#mDNS" class="cite xref">mDNS</a>]</span>)<a href="#section-14.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-10.1-2.1">
+            <p id="section-10.1-2.1.1">".local" (from <span>[<a href="#mDNS" class="cite xref">mDNS</a>]</span>)<a href="#section-10.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.1-2.2">
-            <p id="section-14.1-2.2.1">".home-arpa" (from <span>[<a href="#Homenet" class="cite xref">Homenet</a>]</span>)<a href="#section-14.1-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.1-2.2">
+            <p id="section-10.1-2.2.1">".home-arpa" (from <span>[<a href="#Homenet" class="cite xref">Homenet</a>]</span>)<a href="#section-10.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.1-2.3">
-            <p id="section-14.1-2.3.1">".internal" (from <span>[<a href="#I-D.davies-internal-tld" class="cite xref">I-D.davies-internal-tld</a>]</span>)<a href="#section-14.1-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.1-2.3">
+            <p id="section-10.1-2.3.1">".internal" (from <span>[<a href="#I-D.davies-internal-tld" class="cite xref">I-D.davies-internal-tld</a>]</span>)<a href="#section-10.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.1-2.4">
-            <p id="section-14.1-2.4.1">both ".localhost" and "localhost" (Section 6.3 of <span>[<a href="#RFC6761" class="cite xref">RFC6761</a>]</span>)<a href="#section-14.1-2.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.1-2.4">
+            <p id="section-10.1-2.4.1">both ".localhost" and "localhost" (Section 6.3 of <span>[<a href="#RFC6761" class="cite xref">RFC6761</a>]</span>)<a href="#section-10.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.1-2.5">
-            <p id="section-14.1-2.5.1">domain name of the DNS search domain (<span>[<a href="#RFC6106" class="cite xref">RFC6106</a>]</span>, <span>[<a href="#RFC3397" class="cite xref">RFC3397</a>]</span>) (for further discussion)<a href="#section-14.1-2.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.1-2.5">
+            <p id="section-10.1-2.5.1">domain name of the DNS search domain (<span>[<a href="#RFC6106" class="cite xref">RFC6106</a>]</span>, <span>[<a href="#RFC3397" class="cite xref">RFC3397</a>]</span>) (for further discussion)<a href="#section-10.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="local-ip-addresses">
-<section id="section-14.2">
+<section id="section-10.2">
         <h3 id="name-local-ip-addresses">
-<a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-local-ip-addresses" class="section-name selfRef">Local IP Addresses</a>
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-local-ip-addresses" class="section-name selfRef">Local IP Addresses</a>
         </h3>
-<p id="section-14.2-1">Additionally, if any host resolves to a local IP address and
+<p id="section-10.2-1">Additionally, if any host resolves to a local IP address and
 connection is made to that address, those are also considered
-"local":<a href="#section-14.2-1" class="pilcrow">¶</a></p>
+"local":<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-14.2-2.1">
-            <p id="section-14.2-2.1.1">10/8, 172.16/12, and 192.168/16 (from <span>[<a href="#RFC1918" class="cite xref">RFC1918</a>]</span>)<a href="#section-14.2-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-10.2-2.1">
+            <p id="section-10.2-2.1.1">10/8, 172.16/12, and 192.168/16 (from <span>[<a href="#RFC1918" class="cite xref">RFC1918</a>]</span>)<a href="#section-10.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.2-2.2">
-            <p id="section-14.2-2.2.1">169.254/16 and fe80::/10 (from <span>[<a href="#RFC3927" class="cite xref">RFC3927</a>]</span> and <span>[<a href="#RFC4291" class="cite xref">RFC4291</a>]</span>)<a href="#section-14.2-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-2.2">
+            <p id="section-10.2-2.2.1">169.254/16 and fe80::/10 (from <span>[<a href="#RFC3927" class="cite xref">RFC3927</a>]</span> and <span>[<a href="#RFC4291" class="cite xref">RFC4291</a>]</span>)<a href="#section-10.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.2-2.3">
-            <p id="section-14.2-2.3.1">fc00::/7 (from <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>)<a href="#section-14.2-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-2.3">
+            <p id="section-10.2-2.3.1">fc00::/7 (from <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>)<a href="#section-10.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.2-2.4">
-            <p id="section-14.2-2.4.1">127/8 and ::1/128 (from <span>[<a href="#RFC990" class="cite xref">RFC990</a>]</span> and <span>[<a href="#RFC4291" class="cite xref">RFC4291</a>]</span>)<a href="#section-14.2-2.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-2.4">
+            <p id="section-10.2-2.4.1">127/8 and ::1/128 (from <span>[<a href="#RFC990" class="cite xref">RFC990</a>]</span> and <span>[<a href="#RFC4291" class="cite xref">RFC4291</a>]</span>)<a href="#section-10.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1882,41 +1721,31 @@ connection is made to that address, those are also considered
 </section>
 </div>
 <div id="operational-considerations">
-<section id="section-15">
+<section id="section-11">
       <h2 id="name-operational-considerations">
-<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
-<div id="incremental-deployment">
-<section id="section-15.1">
-        <h3 id="name-incremental-deployment">
-<a href="#section-15.1" class="section-number selfRef">15.1. </a><a href="#name-incremental-deployment" class="section-name selfRef">Incremental Deployment</a>
-        </h3>
-<p id="section-15.1-1">Where a server's hostname can be configured, a motivated network
-administrator can configure server hostnames to comply with this
-specification to provide immediate value to supporting clients.<a href="#section-15.1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="server-identity-change">
-<section id="section-15.2">
+<section id="section-11.1">
         <h3 id="name-server-identity-change">
-<a href="#section-15.2" class="section-number selfRef">15.2. </a><a href="#name-server-identity-change" class="section-name selfRef">Server Identity Change</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-server-identity-change" class="section-name selfRef">Server Identity Change</a>
         </h3>
-<p id="section-15.2-1">The server's public key is encoded into its domain name.
-Changing the public key would also change its domain name -- thus, its
+<p id="section-11.1-1">This specification effectively encodes the server's public key as part of its identity.
+Changing the public key would also change the internal representation on clients -- thus, its
 identity as known by client password managers and other configurations
 in clients (e.g., printer, SMB share, etc.). As such an identity
-change is extremely disruptive, it needs to be avoided.<a href="#section-15.2-1" class="pilcrow">¶</a></p>
+change is extremely disruptive, changing the server's public key needs to be avoided.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-16">
+<section id="section-12">
       <h2 id="name-security-considerations">
-<a href="#section-16" class="section-number selfRef">16. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-16-1">TODO: write more on security considerations<a href="#section-16-1" class="pilcrow">¶</a></p>
-<p id="section-16-2">Due to challenges in key rotation, the public/private key pair on a
+<p id="section-12-1">TODO: write more on security considerations<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-2">Due to challenges in key rotation, the public/private key pair on a
 server needs to stay static. The tradeoff is servers are vulnerable
 to their private keys being stolen and an active attacker intercepting
 traffic to that server.  The alternatives are to continue using
@@ -1924,57 +1753,43 @@ unencrypted communication to local servers, which is vulnerable to
 passive attack, or to condition users to validate self-signed certificates
 for local servers. In this case, the
 advantages of making HTTPS available would seem to far outweigh the
-risk of using a key over long periods.<a href="#section-16-2" class="pilcrow">¶</a></p>
+risk of using a key over long periods.<a href="#section-12-2" class="pilcrow">¶</a></p>
 <div id="misbinding">
-<section id="section-16.1">
+<section id="section-12.1">
         <h3 id="name-misbinding-tls-raw-public-k">
-<a href="#section-16.1" class="section-number selfRef">16.1. </a><a href="#name-misbinding-tls-raw-public-k" class="section-name selfRef">Misbinding TLS Raw Public Keys</a>
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-misbinding-tls-raw-public-k" class="section-name selfRef">Misbinding TLS Raw Public Keys</a>
         </h3>
-<p id="section-16.1-1">When using Raw Public Keys, a misbinding attack (also called unknown key-share
+<p id="section-12.1-1">When using Raw Public Keys, a misbinding attack (also called unknown key-share
 attack) is possible when the server name is not cryptographically
-bound to the TLS handshake (<span>[<a href="#MM24" class="cite xref">MM24</a>]</span>).  The mechanism described in
-this draft avoids such an attack because the public key is included in
-the handshake which the client verifies matches the public key hash
-contained in the hostname.  This obviates the need for mitigations
-described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a href="#section-16.1-1" class="pilcrow">¶</a></p>
+bound to the TLS handshake (<span>[<a href="#MM24" class="cite xref">MM24</a>]</span>).  The attack is mitigated in this
+draft by requiring the client and server to use TLS SNI when requesting
+the server's raw public key.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="iana">
-<section id="section-17">
+<section id="section-13">
       <h2 id="name-iana-considerations">
-<a href="#section-17" class="section-number selfRef">17. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-17-1">New registry for hash type, 0=SHA256.  Extensions via IETF Action.<a href="#section-17-1" class="pilcrow">¶</a></p>
+<p id="section-13-1">New registry for hash type, 0=SHA256.  Extensions via IETF Action.<a href="#section-13-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-18">
+<section id="section-14">
       <h2 id="name-references">
-<a href="#section-18" class="section-number selfRef">18. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-18.1">
+<section id="section-14.1">
         <h3 id="name-normative-references">
-<a href="#section-18.1" class="section-number selfRef">18.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-14.1" class="section-number selfRef">14.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="DNS-SD">[DNS-SD]</dt>
-        <dd>
-<span class="refAuthor">Cheshire, S.</span> and <span class="refAuthor">M. Krochmal</span>, <span class="refTitle">"DNS-Based Service Discovery"</span>, <span class="seriesInfo">RFC 6763</span>, <span class="seriesInfo">DOI 10.17487/RFC6763</span>, <time datetime="2013-02" class="refDate">February 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6763">https://www.rfc-editor.org/rfc/rfc6763</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC4648">[RFC4648]</dt>
-        <dd>
-<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7250">[RFC7250]</dt>
-        <dd>
-<span class="refAuthor">Wouters, P., Ed.</span>, <span class="refAuthor">Tschofenig, H., Ed.</span>, <span class="refAuthor">Gilmore, J.</span>, <span class="refAuthor">Weiler, S.</span>, and <span class="refAuthor">T. Kivinen</span>, <span class="refTitle">"Using Raw Public Keys in Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)"</span>, <span class="seriesInfo">RFC 7250</span>, <span class="seriesInfo">DOI 10.17487/RFC7250</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7250">https://www.rfc-editor.org/rfc/rfc7250</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
@@ -1984,9 +1799,9 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-18.2">
+<section id="section-14.2">
         <h3 id="name-informative-references">
-<a href="#section-18.2" class="section-number selfRef">18.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="containers">[containers]</dt>
@@ -2013,9 +1828,9 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
         <dd>
 <span class="refAuthor">Moustafa, M.</span>, <span class="refAuthor">Sethi, M.</span>, and <span class="refAuthor">T. Aura</span>, <span class="refTitle">"Misbinding Raw Public Keys to Identities in TLS"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://arxiv.org/pdf/2411.09770">https://arxiv.org/pdf/2411.09770</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="PKIX">[PKIX]</dt>
+<dt id="RFC1035">[RFC1035]</dt>
         <dd>
-<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
+<span class="refAuthor">Mockapetris, P.</span>, <span class="refTitle">"Domain names - implementation and specification"</span>, <span class="seriesInfo">STD 13</span>, <span class="seriesInfo">RFC 1035</span>, <span class="seriesInfo">DOI 10.17487/RFC1035</span>, <time datetime="1987-11" class="refDate">November 1987</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1035">https://www.rfc-editor.org/rfc/rfc1035</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1918">[RFC1918]</dt>
         <dd>
@@ -2037,6 +1852,10 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
         <dd>
 <span class="refAuthor">Hinden, R.</span> and <span class="refAuthor">S. Deering</span>, <span class="refTitle">"IP Version 6 Addressing Architecture"</span>, <span class="seriesInfo">RFC 4291</span>, <span class="seriesInfo">DOI 10.17487/RFC4291</span>, <time datetime="2006-02" class="refDate">February 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4291">https://www.rfc-editor.org/rfc/rfc4291</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC5890">[RFC5890]</dt>
+        <dd>
+<span class="refAuthor">Klensin, J.</span>, <span class="refTitle">"Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework"</span>, <span class="seriesInfo">RFC 5890</span>, <span class="seriesInfo">DOI 10.17487/RFC5890</span>, <time datetime="2010-08" class="refDate">August 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5890">https://www.rfc-editor.org/rfc/rfc5890</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6106">[RFC6106]</dt>
         <dd>
 <span class="refAuthor">Jeong, J.</span>, <span class="refAuthor">Park, S.</span>, <span class="refAuthor">Beloeil, L.</span>, and <span class="refAuthor">S. Madanapalli</span>, <span class="refTitle">"IPv6 Router Advertisement Options for DNS Configuration"</span>, <span class="seriesInfo">RFC 6106</span>, <span class="seriesInfo">DOI 10.17487/RFC6106</span>, <time datetime="2010-11" class="refDate">November 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6106">https://www.rfc-editor.org/rfc/rfc6106</a>&gt;</span>. </dd>
@@ -2048,6 +1867,10 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
 <dt id="RFC6762">[RFC6762]</dt>
         <dd>
 <span class="refAuthor">Cheshire, S.</span> and <span class="refAuthor">M. Krochmal</span>, <span class="refTitle">"Multicast DNS"</span>, <span class="seriesInfo">RFC 6762</span>, <span class="seriesInfo">DOI 10.17487/RFC6762</span>, <time datetime="2013-02" class="refDate">February 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6762">https://www.rfc-editor.org/rfc/rfc6762</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7250">[RFC7250]</dt>
+        <dd>
+<span class="refAuthor">Wouters, P., Ed.</span>, <span class="refAuthor">Tschofenig, H., Ed.</span>, <span class="refAuthor">Gilmore, J.</span>, <span class="refAuthor">Weiler, S.</span>, and <span class="refAuthor">T. Kivinen</span>, <span class="refTitle">"Using Raw Public Keys in Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)"</span>, <span class="seriesInfo">RFC 7250</span>, <span class="seriesInfo">DOI 10.17487/RFC7250</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7250">https://www.rfc-editor.org/rfc/rfc7250</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7838">[RFC7838]</dt>
         <dd>
@@ -2061,13 +1884,9 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
         <dd>
 <span class="refAuthor">Pfister, P.</span> and <span class="refAuthor">T. Lemon</span>, <span class="refTitle">"Special-Use Domain 'home.arpa.'"</span>, <span class="seriesInfo">RFC 8375</span>, <span class="seriesInfo">DOI 10.17487/RFC8375</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8375">https://www.rfc-editor.org/rfc/rfc8375</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC8844">[RFC8844]</dt>
+<dt id="RFC8744">[RFC8744]</dt>
         <dd>
-<span class="refAuthor">Thomson, M.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"Unknown Key-Share Attacks on Uses of TLS with the Session Description Protocol (SDP)"</span>, <span class="seriesInfo">RFC 8844</span>, <span class="seriesInfo">DOI 10.17487/RFC8844</span>, <time datetime="2021-01" class="refDate">January 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8844">https://www.rfc-editor.org/rfc/rfc8844</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC9525">[RFC9525]</dt>
-        <dd>
-<span class="refAuthor">Saint-Andre, P.</span> and <span class="refAuthor">R. Salz</span>, <span class="refTitle">"Service Identity in TLS"</span>, <span class="seriesInfo">RFC 9525</span>, <span class="seriesInfo">DOI 10.17487/RFC9525</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9525">https://www.rfc-editor.org/rfc/rfc9525</a>&gt;</span>. </dd>
+<span class="refAuthor">Huitema, C.</span>, <span class="refTitle">"Issues and Requirements for Server Name Identification (SNI) Encryption in TLS"</span>, <span class="seriesInfo">RFC 8744</span>, <span class="seriesInfo">DOI 10.17487/RFC8744</span>, <time datetime="2020-07" class="refDate">July 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8744">https://www.rfc-editor.org/rfc/rfc8744</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC990">[RFC990]</dt>
         <dd>
@@ -2082,115 +1901,17 @@ described in <span>[<a href="#RFC8844" class="cite xref">RFC8844</a>]</span>.<a 
 </div>
 </section>
 </div>
-<div id="discussion-points">
-<section id="appendix-A">
-      <h2 id="name-discussion-points">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-discussion-points" class="section-name selfRef">Discussion Points</a>
-      </h2>
-<div id="dtls">
-<section id="appendix-A.1">
-        <h3 id="name-dtls">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-dtls" class="section-name selfRef">DTLS</a>
-        </h3>
-<p id="appendix-A.1-1">This should work for DTLS, as well?<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
-<div id="test-encoding">
-<section id="appendix-B">
-      <h2 id="name-test-encoding">
-<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-test-encoding" class="section-name selfRef">Test Encoding</a>
-      </h2>
-<p id="appendix-B-1">Starting with this private key in PEM format:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-2">
-<pre>
------BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCOkTU8TOKW/IZ6
-whhyhg+1I4u0jm019z4SVUKAwKyOtFPtoEvRGPdKYUoLaPZmVyN/VTYlubVn7dE8
-IYpibwkDhs38DKmyo0vdWjUaopQOaygtLB+PZ12l/XaSCE1cWsl45ShUvktcVR/D
-DKwv7DWEIZrRTLKy6M+8Ne4x++kKXmwbSj8WsNQ4kU4uFhS+JXHXToZvhvoQLkTs
-486XXPn4SJPLyTN62b6KHTLM1vb7RY4i4U7N6hS1UWe7bIxZNZ0vnf4vZ7A6SR7W
-nM31DoaW5XCBH7CL56MSdn7dmuksRimfNmnsEmvBXZmuQMHnUZghBLMHPC9xmHhT
-8q3pSY5jAgMBAAECggEANiAY1vDVob7zi01/HJObCQkatAzSl4drUGiAHAOKP49k
-wbV2s0bIM7vl8ZkC2u3AM0p1iTMNFQzrv+l38VD4WhdmwodIMeLfHYVu3dLVZPf3
-w9aZkMcMfcVRq7VtMV/iV3ygqDOqxr4mldWM1ZDW7HgZn9Z/jX7nxyuuZ9mcquuH
-Brl8pcUba7666jcz+F9NNjXTPCwfm7ihCPkTeYr1NflQGTR5PJ+D5dywb53iulm1
-ZTk2zBXJMujbIyTL0p+MqdEKXci7oQJqf7bQsxsO2ZUD24CmzYldsE6vmYUFxJpw
-ZbYzO/a/Mv0mXQhcUTWKkJkU78QT2Us7SuSL+IPGSQKBgQDC5iRKtlYulUgxV9gu
-TmX30R0W7R0nnsEjolNAqUwcIoUMHk8ODXEsp7jVOSFMJhHRMXL+VKYiBsiIV7vk
-GlTbLRP34HgK54auRF6PTxBfNAkF+FQxl2mzWxj7wi5mg0g+tCJTLereUXULz8+r
-h5Vqp4BCjcoumlyY0xlLtbr9/wKBgQC7Qx2Lb70XCL5eivdokMh2lRint9cfxC2W
-fJ6QOnJgsN9XIQGTUAk3cLvmrKg3UOmJXXq+Q6djVB/3Op3+TFzsGS2ORMel9r6o
-kAHYG/qdairlW9uTDsnwUP8UtE0lidhSXLGIAy71eMDbDg/c/yyrWTvysXf5kAiJ
-CzTnyvY3nQKBgBt+Va5IbH3jxyxWxQM7Qf0kfaMHTe6R4ZMCShY8C6WIZRZhjCti
-UA3JlzRU+9J/KFJHVH52OH1iUZWSMsopwMCuaju0aZq4MHKS6Hf04k1bzM4Pyui4
-AEwx1KNnMB579IwL4y+ysYgtG4LQDO6YkMZb3KcG03ehhOB2HwJkH33HAoGATOw3
-8bQ3v4OG970r/lcjEZsTYqnhA5qJg3yzgdmQbGmbhOX5CLNi5dQ4S3x3KSnilNvC
-dO/DjcjbzKnWhsSFkzKQhRV50ZH3JbTqHQT5QLqA3nCKVPFJQJ90+ONLoXTrWIHd
-J1rvakRtLE6tc4GartRcDMib2PcymmDxHZpA4/0CgYEAs0XF1G0gmnef8oEYuwZT
-c+vr4wnD7YCP1h8nsNSgRHLk1e7k727iHGvruX3qrKsY26RHKi2+i1P6A39I4F5s
-3Dme4HGXTyoc/qKp+/GAx5XYVG4c3Z3sdBejkpkhPTSlsSsDOHbjaiFV1zCyEdg5
-fOPfIBX8uLc3UtOm0+Gn1IQ=
------END PRIVATE KEY-----
-</pre><a href="#appendix-B-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-3">which results in this public key in PEM format:<a href="#appendix-B-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-4">
-<pre>
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjpE1PEzilvyGesIYcoYP
-tSOLtI5tNfc+ElVCgMCsjrRT7aBL0Rj3SmFKC2j2Zlcjf1U2Jbm1Z+3RPCGKYm8J
-A4bN/AypsqNL3Vo1GqKUDmsoLSwfj2ddpf12kghNXFrJeOUoVL5LXFUfwwysL+w1
-hCGa0UyysujPvDXuMfvpCl5sG0o/FrDUOJFOLhYUviVx106Gb4b6EC5E7OPOl1z5
-+EiTy8kzetm+ih0yzNb2+0WOIuFOzeoUtVFnu2yMWTWdL53+L2ewOkke1pzN9Q6G
-luVwgR+wi+ejEnZ+3ZrpLEYpnzZp7BJrwV2ZrkDB51GYIQSzBzwvcZh4U/Kt6UmO
-YwIDAQAB
------END PUBLIC KEY-----
-</pre><a href="#appendix-B-4" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-5">Converting that public key to binary DER format and hashing
-with SHA256 gives this 32-octet hex value:<a href="#appendix-B-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-6">
-<pre>
-21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
-</pre><a href="#appendix-B-6" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-7">Converting that hex value to binary and base32 encoding (without
-trailing "=") gives:<a href="#appendix-B-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-8">
-<pre>
-EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
-</pre><a href="#appendix-B-8" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-9">Then prefixing that hash with the hash algorithm identification digit,
-which is 0 for SHA512/256, results in:<a href="#appendix-B-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-10">
-<pre>
-0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
-</pre><a href="#appendix-B-10" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-11">Finally, if this is a printer named "printer" advertised using the
-domain name ".local", the full FQDN for its unique name would be:<a href="#appendix-B-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B-12">
-<pre>
-printer.0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA.local
-</pre><a href="#appendix-B-12" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B-13">and the full FQDN for its short name would be "printer.local".<a href="#appendix-B-13" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="acknowledgments">
-<section id="appendix-C">
+<section id="appendix-A">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-C-1">This Internet Draft started as a document published by Martin
-Thomson in 2007.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">This Internet Draft started as a document published by Martin
+Thomson in 2007.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-D">
+<section id="appendix-B">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
