@@ -375,10 +375,12 @@ reset, leading to the more alarming user notice.
 
 When clients connect to a local domain name or IP address (as
 discussed in {{local}}) using TLS the client includes the server's
-name in the TLS SNI extension.
+name in the TLS Server Name Indication (SNI) extension ({{Section 3 of
+?RFC6066}}).
 
-The client validates the certificate's before and after dates,
-validates the SubjectAltName matches the previously-transmitted TLS
+Upon receipt of the server's certificate, the client validates the
+certificate's before and after dates, validates one of the
+certificate's SubjectAltName matches the previously-transmitted TLS
 SNI, and extracts the public key from the certificate.  That public
 key is internally associated with the server's name to become the
 server's origin.  By doing this the client's web forms, cookies,
