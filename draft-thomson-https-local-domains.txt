@@ -85,18 +85,16 @@ Table of Contents
    8.  Operation
      8.1.  Client Operation
      8.2.  Server Operation
-   9.  Raw Public Keys
-   10. Identifying Servers as Local
-     10.1.  Local Domain Names
-     10.2.  Local IP Addresses
-   11. Operational Considerations
-     11.1.  Server Identity Change
-   12. Security Considerations
-     12.1.  Misbinding TLS Raw Public Keys
-   13. IANA Considerations
-   14. References
-     14.1.  Normative References
-     14.2.  Informative References
+   9.  Identifying Servers as Local
+     9.1.  Local Domain Names
+     9.2.  Local IP Addresses
+   10. Operational Considerations
+     10.1.  Server Identity Change
+   11. Security Considerations
+   12. IANA Considerations
+   13. References
+     13.1.  Normative References
+     13.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -413,70 +411,35 @@ Table of Contents
 8.1.  Client Operation
 
    When clients connect to a local domain name or IP address (as
-   discussed in Section 10) using TLS the client requests a raw public
-   key [RFC7250] from the server and also includes the server's name in
-   the TLS SNI extension.
+   discussed in Section 9) using TLS the client includes the server's
+   name in the TLS SNI extension.
 
-   If the client receives a raw public key in response, the client
-   includes that public key as part of that server's origin.  By doing
-   this the client's web forms, cookies, passwords, local storage, and
-   other origin-specific data are all associated with both the server's
-   name (as is typical) _and_ its public key.  On the client, this might
-   be easiest to accomplish by internally encoding the server's raw
-   public key in base32 as part of the server's name.
+   The client validates the certificate's before and after dates,
+   validates the SubjectAltName matches the previously-transmitted TLS
+   SNI, and extracts the public key from the certificate.  That public
+   key is internally associated with the server's name to become the
+   server's origin.  By doing this the client's web forms, cookies,
+   passwords, local storage, and other origin-specific data are all
+   associated with both the server's name (as is typical) _and_ its
+   public key.  In so doing, the client avoids warning about a self-
+   signed certificate because the Certification Authority signature is
+   not what validates this certificate: rather, because the name or
+   destination IP address are local (Section 9) a unique name is formed
+   internally in the client which partitions data for that origin.
 
 8.2.  Server Operation
 
-   If an incoming TLS ClientHello includes the Raw Public Key extension
-   ([RFC7250]) and includes the Server Name Indication extension (SNI,
-   [RFC8744]) matching one of the server's names, the server responds
-   with its raw public key.
+   The server operates normally and is unaware of the client
+   implementing this draft.
 
-   If an incoming TLS ClientHello includes the Raw Public Key extension
-   but does not have include a Service Name Indication extension, or its
-   Server Name Indication does not match one of the server's names, the
-   Raw Public Key extension is ignored.  This will typically cause the
-   server to respond with a (self-signed) certificate.
-
-9.  Raw Public Keys
-
-   Raw public keys are used in various security protocols to facilitate
-   authentication without the need for full certificate chains
-   [RFC7250].  This approach simplifies the certificate exchange process
-   by transmitting only the necessary public key information.
-
-   Certificates are complicated because they involve:
-
-   *  Managing multiple levels of certificate authorities (CAs).
-
-   *  Regular renewal and lifecycle management.
-
-   *  Establishing and verifying trust with CAs.
-
-   Raw public keys offer a simpler alternative:
-
-   *  No need for complex certificate chains.
-
-   *  Using raw public keys allows for direct authentication, making it
-      easier to implement and understand.
-
-   *  Raw public keys use a public key for the lifetime of the device,
-      eliminating the need for renewal and longer lifetimes.
-
-   *  Robust authentication through public key cryptography.
-
-   Using raw public keys can streamline authentication processes while
-   maintaining high levels of security, making them an attractive
-   alternative to traditional certificates.
-
-10.  Identifying Servers as Local
+9.  Identifying Servers as Local
 
    This section defines the domain names and IP addresses considered
    "local" which clients MAY use with this specification.  Other domain
    names and other IP addresses SHOULD NOT be used with this
    specification.
 
-10.1.  Local Domain Names
+9.1.  Local Domain Names
 
    The following domain name suffixes are considered "local":
 
@@ -491,7 +454,7 @@ Table of Contents
    *  domain name of the DNS search domain ([RFC6106], [RFC3397]) (for
       further discussion)
 
-10.2.  Local IP Addresses
+9.2.  Local IP Addresses
 
    Additionally, if any host resolves to a local IP address and
    connection is made to that address, those are also considered
@@ -505,9 +468,9 @@ Table of Contents
 
    *  127/8 and ::1/128 (from [RFC990] and [RFC4291])
 
-11.  Operational Considerations
+10.  Operational Considerations
 
-11.1.  Server Identity Change
+10.1.  Server Identity Change
 
    This specification effectively encodes the server's public key as
    part of its identity.  Changing the public key would also change the
@@ -516,7 +479,7 @@ Table of Contents
    printer, SMB share, etc.).  As such an identity change is extremely
    disruptive, changing the server's public key needs to be avoided.
 
-12.  Security Considerations
+11.  Security Considerations
 
    TODO: write more on security considerations
 
@@ -530,21 +493,13 @@ Table of Contents
    of making HTTPS available would seem to far outweigh the risk of
    using a key over long periods.
 
-12.1.  Misbinding TLS Raw Public Keys
-
-   When using Raw Public Keys, a misbinding attack (also called unknown
-   key-share attack) is possible when the server name is not
-   cryptographically bound to the TLS handshake ([MM24]).  The attack is
-   mitigated in this draft by requiring the client and server to use TLS
-   SNI when requesting the server's raw public key.
-
-13.  IANA Considerations
+12.  IANA Considerations
 
    New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
-14.  References
+13.  References
 
-14.1.  Normative References
+13.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -555,7 +510,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-14.2.  Informative References
+13.2.  Informative References
 
    [containers]
               Novak, C., "Put your multiple online personalities in
@@ -584,10 +539,6 @@ Table of Contents
    [mDNS]     Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
               DOI 10.17487/RFC6762, February 2013,
               <https://www.rfc-editor.org/rfc/rfc6762>.
-
-   [MM24]     Moustafa, M., Sethi, M., and T. Aura, "Misbinding Raw
-              Public Keys to Identities in TLS", 2024,
-              <https://arxiv.org/pdf/2411.09770>.
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
@@ -634,12 +585,6 @@ Table of Contents
               DOI 10.17487/RFC6762, February 2013,
               <https://www.rfc-editor.org/rfc/rfc6762>.
 
-   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
-              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
-              Transport Layer Security (TLS) and Datagram Transport
-              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
-              June 2014, <https://www.rfc-editor.org/rfc/rfc7250>.
-
    [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
@@ -651,11 +596,6 @@ Table of Contents
    [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
               <https://www.rfc-editor.org/rfc/rfc8375>.
-
-   [RFC8744]  Huitema, C., "Issues and Requirements for Server Name
-              Identification (SNI) Encryption in TLS", RFC 8744,
-              DOI 10.17487/RFC8744, July 2020,
-              <https://www.rfc-editor.org/rfc/rfc8744>.
 
    [RFC990]   Reynolds, J. and J. Postel, "Assigned numbers", RFC 990,
               DOI 10.17487/RFC0990, November 1986,
