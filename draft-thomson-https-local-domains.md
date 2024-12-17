@@ -1,6 +1,6 @@
 ---
-title: "Public Key Hash for Authenticating Local Domains"
-abbrev: "PKH for Authenticating Local Domains"
+title: "Extended Origins for Local Domains"
+abbrev: "Extended Origins for Local Domains"
 category: std
 
 docname: draft-thomson-https-local-domains-latest
@@ -69,14 +69,10 @@ informative:
 
 --- abstract
 
-This document explores a method for providing secure HTTPS access
-to local domains without the need for traditional certificates.
-By leveraging local domain names embedded with public keys, this
-approach ensures secure communication within a local network. The
-method simplifies the setup process and enhances security by avoiding
-the complexities of certificate management by using raw public keys.
-This solution is particularly beneficial for local services that
-require HTTPS access without exposing them to the Internet.
+This document explores a method for providing secure HTTPS access to
+local domains without the need for traditional certificate validation.
+By leveraging local domain names and their embedded public keys, this
+approach ensures secure communication within a local network.
 
 --- middle
 
@@ -227,7 +223,7 @@ any server has a legitimate claim to that name. If we are to make
 https://printer.local a viable origin, how do we ensure that it is
 unique?
 
-Extending the origin makes this possible. A web origin is defined as a
+Extending the origin -- internally on the client -- makes this possible. A web origin is defined as a
 tuple of scheme, host and port. This is a capability that browsers are
 building to enable a range of use cases, such as the creation of
 separate browsing contexts (see e.g., {{containers}}). By adding an
@@ -247,10 +243,9 @@ not be used by the other printer.  The same separation applies to
 permissions, storage, cookies and other state associated with the
 origin.
 
-
 # Identifying Servers as Local
 
-The idea here is to do this only for names that are not inherently
+The idea here is to do this only for names that are *not* inherently
 unique. Domain names like example.com are unique and therefore would
 not get this treatment.
 
@@ -307,11 +302,14 @@ information (SPKI).  This is added to the ASCII and Unicode
 serializations of the origin.
 
 For example, this might use the underscore convention to add the SPKI
-hash to the domain name,
+hash to the domain name for internal representation on the client,
 https://_NPNE4IG2GJ4VAL4DCHL64YSM5BII4A2X.printer.local, or it could
-use a separator of some sort to partition off space for a key.
+use a separator of some sort to partition off space for a key (e.g.,
+"lh--" ({{Section 3.2.1 of ?RFC5890}}), taking care of each label not
+exceeding 63 octets ({{Section 2.3.1 of ?RFC1035}}) if the internal
+representation has such restriction).
 
-TBD: Does this need a new scheme? Is it a new field, or can it be
+> TBD: Does this need a new scheme? Is it a new field, or can it be
 added to the domain name? What separator would this use? How should
 the SPKI hash be encoded (base64url, base32, hex)? How many bits are
 enough? Do we need to signal hash function?  Is this a new field at
@@ -349,16 +347,19 @@ network exposes the user to a phishing-type attack where a different
 printer.local attempts to retrieve the password for the home printer.
 
 This is why there is a warning shown on first connection to servers
-and an enhanced warning is shown after a name-collision.  It is
+and an enhanced warning is shown after a name collision to a server
+with a different public key, such as visiting another network that
+has a server with the same name.  It is
 possible that other security UX might be enhanced to better signal the
 status of local servers. For instance, showing the identicon in the
 above examples next to the server’s chosen favicon.  For password
-stealing, using a reliable password manager should help. It might be
+stealing, using a reliable password manager -- which also does internal
+partioning based on the server's public key -- should help. It might be
 necessary to include notices warning users about the server identity.
 
 Third-party password managers would need to be enhanced to recognize
-the additional information in the origin and properly segment the
-namespace. A password manager that looks at window.location.host is
+the additional information in the origin and properly segment their
+internal namespace. A password manager that looks at window.location.host is
 likely to broadcast passwords inappropriately.
 
 To mitigate this risk we might consider blocking concurrent use of the
@@ -378,109 +379,38 @@ risk of using a key over long periods.
 It is also possible that a reset of the device might cause keys to be
 reset, leading to the more alarming user notice.
 
-## Address Changes
-
-Devices that are identified by their IP address will receive a new
-identity when their assigned address changes.  This is a consequence
-of extending the origin tuple to include a public key.  This is
-intentional: a device might intentionally operate multiple identities
-and wish to preserve separation of origins.
-
-## Ergonomics of Origins
-
-As outlined in the construction of origins for local servers
-{{origin-serialization}}, the ergonomics of an origin that includes a
-SPKI hash is not always ideal -- it is not human readable.
-
-A mitigation for this issue is short names {{short}}.
-
 
 
 # Operation
 
-## Server Operation
-
-A server running on a local network (see {{unique}}) uses a unique host
-name that includes a hash of its public key.  This unique name is encoded as
-described in {{encoding}}.
-
-The server MAY also advertise its unique name using {{?DNS-SD=RFC6763}}.  It
-MAY also advertise its short name as described in {{short}}.
-
 ## Client Operation
 
-When clients connect to such a local domain name or IP address
-({{local}}) using TLS they examine if the domain name starts with a
-registered hash identifier in the second label and if the rest of that
-label consists of an appropriate-length encoded hash. If those
-conditions apply, the client MAY send a TLS ClientHello with the Raw
-Public Key extension {{?RFC7250}}.
+When clients connect to a local domain name or IP address (as discussed
+in {{local}})
+using TLS the client requests a raw public key {{?RFC7250}} from the
+server and also includes the server's name in the TLS SNI extension.
 
-When the client receives the server's raw public key or certificate,
-the client checks if the public key hash matches the public key
-received in the TLS ServerHello. If they match, the client
-authenticates the TLS connection. If they do not match and the
-response contains a raw public key, the TLS connection is aborted.  If
-they do not match and the response contains a certificate, the client
-validates or rejects the certificate using its normal procedures
-({{?RFC9525}}, {{?PKIX=RFC5280}}).
+If the client receives a raw public key in response, the client
+includes that public key as part of that server's origin.  By doing
+this the client's web forms, cookies, passwords, local storage, and
+other origin-specific data are all associated with both the server's name (as
+is typical)
+*and* its public key.  On the client, this might be easiest to accomplish by
+internally encoding the server's raw public key in base32 as part of the
+server's name.
 
-# Unique Host Names {#unique}
+## Server Operation
 
-Web browsers and other application clients store per-host state using
-the host name, including cached form data such as passwords,
-integrated and 3rd party password managers, cookies, and other data.
-When a name collision occurs (e.g., the same printer.local name on
-two different networks) the client cannot recognize a different host
-is being encountered.  While it is possible to extend all of these
-clients to extend their index to include the server's public key, this
-seems to lack business justification for the engineering effort to
-solely improve the user experience (short name, {{short}}) on local networks.
+If an incoming TLS ClientHello includes the Raw Public Key extension
+({{?RFC7250}}) and includes the Server Name Indication extension (SNI,
+{{?RFC8744}}) matching one of the server's names, the server
+responds with its raw public key.
 
-A unique name can be created by embedding the hash of the public
-key into the name itself.  This achieves uniqueness and is also
-used by the client to validate the server's public key {{validation}}.
-Details on encoding are in {{encoding}}.
-
-To ease clients connecting to these long names, servers SHOULD
-advertise their long names on the local network {{?DNS-SD=RFC6763}}.
-
-
-# Short Host Names {#short}
-
-Long host names containing encoded public keys are awkward for users. This
-section describes how short names can also be advertised by servers and
-securely validated by clients, so that the short name is presented to
-users while the long name is used to actually connect.
-
-The server advertises both its (long) unique name and its short
-nickname using {{!DNS-SD=RFC6763}}.  The client connects to the long
-name and performs a full TLS handshake and validation
-({{validation}}).  The client then connects to the short nickname and
-performs a full TLS handshake. If the same public key was presented by
-both TLS connections, the client SHOULD present both the
-long name and short name to the user.
-
-The client need only look for matching short name and unique name
-within the same TLD domain name (that is, if a unique name is advertised
-with a ".local" domain, the client does not need to look for its
-accompanying short name within ".internal").
-
-To avoid the problems described in {{unique}}, the TLS data connection
-to the printer MUST always use the long name.  Thus, if the client has
-validated the short name as described above and a user attempts to
-connect to printer.local (by typing or by some other user
-interaction), the client MUST connect to the unique name.  The TLS
-connection to the short name MUST NOT be used by the client after the
-TLS handshake completes and the server MUST terminate the TLS
-handshake after the Finished message by sending TLS close_notify.
-
-> Discussion: A short name could be entirely handled on the
-  client. The disadvantage to client-side handling is each client
-  might choose its own short name (one user chooses "office printer",
-  another chooses "downstairs printer", another doesn't bother
-  choosing a short name at all). While annoying to manage those
-  different names, it is not a severe problem.
+If an incoming TLS ClientHello includes the Raw Public Key extension
+but does not have include a Service Name Indication extension, or its
+Server Name Indication does not match one of the server's names,
+the Raw Public Key extension is ignored. This will typically cause
+the server to respond with a (self-signed) certificate.
 
 
 # Raw Public Keys {#rpk}
@@ -508,49 +438,6 @@ Raw public keys offer a simpler alternative:
 Using raw public keys can streamline authentication processes while
 maintaining high levels of security, making them an attractive
 alternative to traditional certificates.
-
-# Validation {#validation}
-
-The client connects to a unique hostname and sends a TLS ClientHello.
-As the client only needs the raw public key, the request MAY include
-a request for a raw public key {{!RFC7250}}.  The client parses
-the returned certificate or raw public key to extract the public key
-and compare its hash with the hash contained in the hostname. If
-they match, the TLS session continues. If they do not match, the
-client might warn the user (as is common today) or simply abandon
-the TLS connection.
-
-If a certificate is returned both its 'NotBefore' and 'NotAfter' dates
-are ignored for purposes of this specification.
-
-# Encoding Details {#encoding}
-
-The general format is hostname, a period, a digit indicating the hash
-algorithm, and then the hash of the server's public key.  The binary
-hash output is base32 encoded ({{Section 6 of !RFC4648}}) without
-trailing "=" padding.  Currently only SHA256 hash is defined with the
-value "0" ({{iana}}).  While base32 encoding is specified as uppercase,
-implementations should treat uppercase, lowercase, and mixed case
-the same.
-
-~~~~ abnf
-  friendly-name = 1*63(ALPHA / DIGIT / "-")
-
-  hash-algorithm = DIGIT   ; 0=SHA256
-
-  base32-digits = "2" / "3" / "4" / "5" / "6" / "7"
-
-  hash = 1*62(/ ALPHA / base32-digits )
-       ; 62+1 octet limit from RFC1035
-
-  encoded-hostname = friendly-name "."
-                     hash-algorithm
-                     hash
-~~~~~
-{: artwork-align="left" artwork-name="encoding"}
-
-An example encoding is shown in {{test-encoding}}.
-
 
 # Identifying Servers as Local {#local}
 
@@ -582,19 +469,13 @@ connection is made to that address, those are also considered
 
 # Operational Considerations
 
-## Incremental Deployment
-
-Where a server's hostname can be configured, a motivated network
-administrator can configure server hostnames to comply with this
-specification to provide immediate value to supporting clients.
-
 ## Server Identity Change
 
-The server's public key is encoded into its domain name.
-Changing the public key would also change its domain name -- thus, its
+This specification effectively encodes the server's public key as part of its identity.
+Changing the public key would also change the internal representation on clients -- thus, its
 identity as known by client password managers and other configurations
 in clients (e.g., printer, SMB share, etc.). As such an identity
-change is extremely disruptive, it needs to be avoided.
+change is extremely disruptive, changing the server's public key needs to be avoided.
 
 
 # Security Considerations
@@ -615,11 +496,11 @@ risk of using a key over long periods.
 
 When using Raw Public Keys, a misbinding attack (also called unknown key-share
 attack) is possible when the server name is not cryptographically
-bound to the TLS handshake ({{MM24}}).  The mechanism described in
-this draft avoids such an attack because the public key is included in
-the handshake which the client verifies matches the public key hash
-contained in the hostname.  This obviates the need for mitigations
-described in {{?RFC8844}}.
+bound to the TLS handshake ({{MM24}}).  The attack is mitigated in this
+draft by requiring the client and server to use TLS SNI when requesting
+the server's raw public key.
+
+
 
 # IANA Considerations {#iana}
 
@@ -627,92 +508,6 @@ New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
 
 --- back
-
-# Discussion Points
-
-## DTLS
-
-This should work for DTLS, as well?
-
-
-# Test Encoding {#test-encoding}
-
-Starting with this private key in PEM format:
-
-~~~~~
------BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCOkTU8TOKW/IZ6
-whhyhg+1I4u0jm019z4SVUKAwKyOtFPtoEvRGPdKYUoLaPZmVyN/VTYlubVn7dE8
-IYpibwkDhs38DKmyo0vdWjUaopQOaygtLB+PZ12l/XaSCE1cWsl45ShUvktcVR/D
-DKwv7DWEIZrRTLKy6M+8Ne4x++kKXmwbSj8WsNQ4kU4uFhS+JXHXToZvhvoQLkTs
-486XXPn4SJPLyTN62b6KHTLM1vb7RY4i4U7N6hS1UWe7bIxZNZ0vnf4vZ7A6SR7W
-nM31DoaW5XCBH7CL56MSdn7dmuksRimfNmnsEmvBXZmuQMHnUZghBLMHPC9xmHhT
-8q3pSY5jAgMBAAECggEANiAY1vDVob7zi01/HJObCQkatAzSl4drUGiAHAOKP49k
-wbV2s0bIM7vl8ZkC2u3AM0p1iTMNFQzrv+l38VD4WhdmwodIMeLfHYVu3dLVZPf3
-w9aZkMcMfcVRq7VtMV/iV3ygqDOqxr4mldWM1ZDW7HgZn9Z/jX7nxyuuZ9mcquuH
-Brl8pcUba7666jcz+F9NNjXTPCwfm7ihCPkTeYr1NflQGTR5PJ+D5dywb53iulm1
-ZTk2zBXJMujbIyTL0p+MqdEKXci7oQJqf7bQsxsO2ZUD24CmzYldsE6vmYUFxJpw
-ZbYzO/a/Mv0mXQhcUTWKkJkU78QT2Us7SuSL+IPGSQKBgQDC5iRKtlYulUgxV9gu
-TmX30R0W7R0nnsEjolNAqUwcIoUMHk8ODXEsp7jVOSFMJhHRMXL+VKYiBsiIV7vk
-GlTbLRP34HgK54auRF6PTxBfNAkF+FQxl2mzWxj7wi5mg0g+tCJTLereUXULz8+r
-h5Vqp4BCjcoumlyY0xlLtbr9/wKBgQC7Qx2Lb70XCL5eivdokMh2lRint9cfxC2W
-fJ6QOnJgsN9XIQGTUAk3cLvmrKg3UOmJXXq+Q6djVB/3Op3+TFzsGS2ORMel9r6o
-kAHYG/qdairlW9uTDsnwUP8UtE0lidhSXLGIAy71eMDbDg/c/yyrWTvysXf5kAiJ
-CzTnyvY3nQKBgBt+Va5IbH3jxyxWxQM7Qf0kfaMHTe6R4ZMCShY8C6WIZRZhjCti
-UA3JlzRU+9J/KFJHVH52OH1iUZWSMsopwMCuaju0aZq4MHKS6Hf04k1bzM4Pyui4
-AEwx1KNnMB579IwL4y+ysYgtG4LQDO6YkMZb3KcG03ehhOB2HwJkH33HAoGATOw3
-8bQ3v4OG970r/lcjEZsTYqnhA5qJg3yzgdmQbGmbhOX5CLNi5dQ4S3x3KSnilNvC
-dO/DjcjbzKnWhsSFkzKQhRV50ZH3JbTqHQT5QLqA3nCKVPFJQJ90+ONLoXTrWIHd
-J1rvakRtLE6tc4GartRcDMib2PcymmDxHZpA4/0CgYEAs0XF1G0gmnef8oEYuwZT
-c+vr4wnD7YCP1h8nsNSgRHLk1e7k727iHGvruX3qrKsY26RHKi2+i1P6A39I4F5s
-3Dme4HGXTyoc/qKp+/GAx5XYVG4c3Z3sdBejkpkhPTSlsSsDOHbjaiFV1zCyEdg5
-fOPfIBX8uLc3UtOm0+Gn1IQ=
------END PRIVATE KEY-----
-~~~~~
-
-which results in this public key in PEM format:
-
-~~~~~
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjpE1PEzilvyGesIYcoYP
-tSOLtI5tNfc+ElVCgMCsjrRT7aBL0Rj3SmFKC2j2Zlcjf1U2Jbm1Z+3RPCGKYm8J
-A4bN/AypsqNL3Vo1GqKUDmsoLSwfj2ddpf12kghNXFrJeOUoVL5LXFUfwwysL+w1
-hCGa0UyysujPvDXuMfvpCl5sG0o/FrDUOJFOLhYUviVx106Gb4b6EC5E7OPOl1z5
-+EiTy8kzetm+ih0yzNb2+0WOIuFOzeoUtVFnu2yMWTWdL53+L2ewOkke1pzN9Q6G
-luVwgR+wi+ejEnZ+3ZrpLEYpnzZp7BJrwV2ZrkDB51GYIQSzBzwvcZh4U/Kt6UmO
-YwIDAQAB
------END PUBLIC KEY-----
-~~~~~
-
-Converting that public key to binary DER format and hashing
-with SHA256 gives this 32-octet hex value:
-
-~~~~~
-21ebc0d00e98e3cb289738e2c091e532c4ad8240e0365b22067a1449693e5a18
-~~~~~
-
-Converting that hex value to binary and base32 encoding (without
-trailing "=") gives:
-
-~~~~~
-EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
-~~~~~
-
-Then prefixing that hash with the hash algorithm identification digit,
-which is 0 for SHA512/256, results in:
-
-~~~~~
-0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA
-~~~~~
-
-Finally, if this is a printer named "printer" advertised using the
-domain name ".local", the full FQDN for its unique name would be:
-
-~~~~~
-printer.0EHV4BUAOTDR4WKEXHDRMBEPFGLCK3ASA4A3FWIQGPIKES2J6LIMA.local
-~~~~~
-
-and the full FQDN for its short name would be "printer.local".
 
 
 # Acknowledgments
