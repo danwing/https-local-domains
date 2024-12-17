@@ -85,16 +85,13 @@ Table of Contents
    8.  Operation
      8.1.  Client Operation
      8.2.  Server Operation
-   9.  Identifying Servers as Local
-     9.1.  Local Domain Names
-     9.2.  Local IP Addresses
-   10. Operational Considerations
-     10.1.  Server Identity Change
-   11. Security Considerations
-   12. IANA Considerations
-   13. References
-     13.1.  Normative References
-     13.2.  Informative References
+   9.  Operational Considerations
+     9.1.  Server Identity Change
+   10. Security Considerations
+   11. IANA Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -411,7 +408,7 @@ Table of Contents
 8.1.  Client Operation
 
    When clients connect to a local domain name or IP address (as
-   discussed in Section 9) using TLS the client includes the server's
+   discussed in Section 5) using TLS the client includes the server's
    name in the TLS Server Name Indication (SNI) extension (Section 3 of
    [RFC6066]).
 
@@ -426,7 +423,7 @@ Table of Contents
    public key.  In so doing, the client avoids warning about a self-
    signed certificate because the Certification Authority signature is
    not what validates this certificate: rather, because the name or
-   destination IP address are local (Section 9) a unique name is formed
+   destination IP address are local (Section 5) a unique name is formed
    internally in the client which partitions data for that origin.
 
 8.2.  Server Operation
@@ -434,45 +431,9 @@ Table of Contents
    The server operates normally and is unaware of the client
    implementing this draft.
 
-9.  Identifying Servers as Local
+9.  Operational Considerations
 
-   This section defines the domain names and IP addresses considered
-   "local" which clients MAY use with this specification.  Other domain
-   names and other IP addresses SHOULD NOT be used with this
-   specification.
-
-9.1.  Local Domain Names
-
-   The following domain name suffixes are considered "local":
-
-   *  ".local" (from [mDNS])
-
-   *  ".home-arpa" (from [Homenet])
-
-   *  ".internal" (from [I-D.davies-internal-tld])
-
-   *  both ".localhost" and "localhost" (Section 6.3 of [RFC6761])
-
-   *  domain name of the DNS search domain ([RFC6106], [RFC3397]) (for
-      further discussion)
-
-9.2.  Local IP Addresses
-
-   Additionally, if any host resolves to a local IP address and
-   connection is made to that address, those are also considered
-   "local":
-
-   *  10/8, 172.16/12, and 192.168/16 (from [RFC1918])
-
-   *  169.254/16 and fe80::/10 (from [RFC3927] and [RFC4291])
-
-   *  fc00::/7 (from [RFC4193])
-
-   *  127/8 and ::1/128 (from [RFC990] and [RFC4291])
-
-10.  Operational Considerations
-
-10.1.  Server Identity Change
+9.1.  Server Identity Change
 
    This specification effectively encodes the server's public key as
    part of its identity.  Changing the public key would also change the
@@ -481,7 +442,7 @@ Table of Contents
    printer, SMB share, etc.).  As such an identity change is extremely
    disruptive, changing the server's public key needs to be avoided.
 
-11.  Security Considerations
+10.  Security Considerations
 
    TODO: write more on security considerations
 
@@ -495,13 +456,13 @@ Table of Contents
    of making HTTPS available would seem to far outweigh the risk of
    using a key over long periods.
 
-12.  IANA Considerations
+11.  IANA Considerations
 
    New registry for hash type, 0=SHA256.  Extensions via IETF Action.
 
-13.  References
+12.  References
 
-13.1.  Normative References
+12.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -512,17 +473,13 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-13.2.  Informative References
+12.2.  Informative References
 
    [containers]
               Novak, C., "Put your multiple online personalities in
               Firefox Multi-Account Containers", September 2017,
               <https://blog.mozilla.org/en/products/firefox/introducing-
               firefox-multi-account-containers/>.
-
-   [Homenet]  Pfister, P. and T. Lemon, "Special-Use Domain
-              'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
-              <https://www.rfc-editor.org/rfc/rfc8375>.
 
    [I-D.davies-internal-tld]
               Davies, K. and A. McConachie, "A Top-level Domain for
@@ -551,24 +508,6 @@ Table of Contents
               Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
               February 1996, <https://www.rfc-editor.org/rfc/rfc1918>.
 
-   [RFC3397]  Aboba, B. and S. Cheshire, "Dynamic Host Configuration
-              Protocol (DHCP) Domain Search Option", RFC 3397,
-              DOI 10.17487/RFC3397, November 2002,
-              <https://www.rfc-editor.org/rfc/rfc3397>.
-
-   [RFC3927]  Cheshire, S., Aboba, B., and E. Guttman, "Dynamic
-              Configuration of IPv4 Link-Local Addresses", RFC 3927,
-              DOI 10.17487/RFC3927, May 2005,
-              <https://www.rfc-editor.org/rfc/rfc3927>.
-
-   [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
-              Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
-              <https://www.rfc-editor.org/rfc/rfc4193>.
-
-   [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
-              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
-              2006, <https://www.rfc-editor.org/rfc/rfc4291>.
-
    [RFC5890]  Klensin, J., "Internationalized Domain Names for
               Applications (IDNA): Definitions and Document Framework",
               RFC 5890, DOI 10.17487/RFC5890, August 2010,
@@ -578,15 +517,6 @@ Table of Contents
               Extensions: Extension Definitions", RFC 6066,
               DOI 10.17487/RFC6066, January 2011,
               <https://www.rfc-editor.org/rfc/rfc6066>.
-
-   [RFC6106]  Jeong, J., Park, S., Beloeil, L., and S. Madanapalli,
-              "IPv6 Router Advertisement Options for DNS Configuration",
-              RFC 6106, DOI 10.17487/RFC6106, November 2010,
-              <https://www.rfc-editor.org/rfc/rfc6106>.
-
-   [RFC6761]  Cheshire, S. and M. Krochmal, "Special-Use Domain Names",
-              RFC 6761, DOI 10.17487/RFC6761, February 2013,
-              <https://www.rfc-editor.org/rfc/rfc6761>.
 
    [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
               DOI 10.17487/RFC6762, February 2013,
@@ -603,10 +533,6 @@ Table of Contents
    [RFC8375]  Pfister, P. and T. Lemon, "Special-Use Domain
               'home.arpa.'", RFC 8375, DOI 10.17487/RFC8375, May 2018,
               <https://www.rfc-editor.org/rfc/rfc8375>.
-
-   [RFC990]   Reynolds, J. and J. Postel, "Assigned numbers", RFC 990,
-              DOI 10.17487/RFC0990, November 1986,
-              <https://www.rfc-editor.org/rfc/rfc990>.
 
    [secure-context]
               W3C, "Web Platform Design Principles", June 2024,
