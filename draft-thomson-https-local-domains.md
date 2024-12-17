@@ -55,18 +55,6 @@ informative:
       name: Chelsea Novak
     target: https://blog.mozilla.org/en/products/firefox/introducing-firefox-multi-account-containers/
 
-  MM24:
-     title: "Misbinding Raw Public Keys to Identities in TLS"
-     date: 2024
-     target: https://arxiv.org/pdf/2411.09770
-     author:
-     -
-       ins: M. Moustafa
-     -
-       ins: M. Sethi
-     -
-       ins: T. Aura
-
 --- abstract
 
 This document explores a method for providing secure HTTPS access to
@@ -385,59 +373,27 @@ reset, leading to the more alarming user notice.
 
 ## Client Operation
 
-When clients connect to a local domain name or IP address (as discussed
-in {{local}})
-using TLS the client requests a raw public key {{?RFC7250}} from the
-server and also includes the server's name in the TLS SNI extension.
+When clients connect to a local domain name or IP address (as
+discussed in {{local}}) using TLS the client includes the server's
+name in the TLS SNI extension.
 
-If the client receives a raw public key in response, the client
-includes that public key as part of that server's origin.  By doing
-this the client's web forms, cookies, passwords, local storage, and
-other origin-specific data are all associated with both the server's name (as
-is typical)
-*and* its public key.  On the client, this might be easiest to accomplish by
-internally encoding the server's raw public key in base32 as part of the
-server's name.
+The client validates the certificate's before and after dates,
+validates the SubjectAltName matches the previously-transmitted TLS
+SNI, and extracts the public key from the certificate.  That public
+key is internally associated with the server's name to become the
+server's origin.  By doing this the client's web forms, cookies,
+passwords, local storage, and other origin-specific data are all
+associated with both the server's name (as is typical) *and* its
+public key.  In so doing, the client avoids warning about a
+self-signed certificate because the Certification Authority signature
+is not what validates this certificate: rather, because the name or
+destination IP address are local ({{local}}) a unique name is formed
+internally in the client which partitions data for that origin.
 
 ## Server Operation
 
-If an incoming TLS ClientHello includes the Raw Public Key extension
-({{?RFC7250}}) and includes the Server Name Indication extension (SNI,
-{{?RFC8744}}) matching one of the server's names, the server
-responds with its raw public key.
-
-If an incoming TLS ClientHello includes the Raw Public Key extension
-but does not have include a Service Name Indication extension, or its
-Server Name Indication does not match one of the server's names,
-the Raw Public Key extension is ignored. This will typically cause
-the server to respond with a (self-signed) certificate.
-
-
-# Raw Public Keys {#rpk}
-
-Raw public keys are used in various security protocols to facilitate
-authentication without the need for full certificate chains {{?RFC7250}}.
-This approach simplifies the certificate exchange process by
-transmitting only the necessary public key information.
-
-Certificates are complicated because they involve:
-
-  * Managing multiple levels of certificate authorities (CAs).
-  * Regular renewal and lifecycle management.
-  * Establishing and verifying trust with CAs.
-
-Raw public keys offer a simpler alternative:
-
-  * No need for complex certificate chains.
-  * Using raw public keys allows for direct authentication,
-  making it easier to implement and understand.
-  * Raw public keys use a public key for the lifetime of the device,
-   eliminating the need for renewal and longer lifetimes.
-  * Robust authentication through public key cryptography.
-
-Using raw public keys can streamline authentication processes while
-maintaining high levels of security, making them an attractive
-alternative to traditional certificates.
+The server operates normally and is unaware of the client implementing
+this draft.
 
 # Identifying Servers as Local {#local}
 
@@ -491,15 +447,6 @@ passive attack, or to condition users to validate self-signed certificates
 for local servers. In this case, the
 advantages of making HTTPS available would seem to far outweigh the
 risk of using a key over long periods.
-
-## Misbinding TLS Raw Public Keys {#misbinding}
-
-When using Raw Public Keys, a misbinding attack (also called unknown key-share
-attack) is possible when the server name is not cryptographically
-bound to the TLS handshake ({{MM24}}).  The attack is mitigated in this
-draft by requiring the client and server to use TLS SNI when requesting
-the server's raw public key.
-
 
 
 # IANA Considerations {#iana}
