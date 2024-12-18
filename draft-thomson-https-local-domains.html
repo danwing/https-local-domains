@@ -20,15 +20,15 @@ approach ensures secure communication within a local network.
 <meta content="draft-thomson-https-local-domains-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.25.0
-    Python 3.12.7
+    Python 3.12.8
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.4
     lxml 5.3.0
     platformdirs 4.3.6
-    pycountry 22.3.5
-    PyYAML 6.0.1
+    pycountry 24.6.1
+    PyYAML 6.0.2
     requests 2.32.3
     setuptools 70.3.0
     wcwidth 0.2.13
@@ -1273,6 +1273,11 @@ privacy benefits of HTTPS.  However, aside from the exposure to
 man-in-the-middle attack, a site using <span>[<a href="#RFC8164" class="cite xref">RFC8164</a>]</span> does not gain an
 HTTPS origin.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">What is really needed is a way to use HTTPS proper.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">This draft discusses how a client can authenticate to HTTPS servers
+belonging to the local domain where the server name is not unique and
+where the server does not have a certificate signed by a Certification
+Authority (CA) trusted by the client.  This is a relaxed way of
+"doing HTTPS" for servers on the local domain.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="background">
@@ -1386,7 +1391,7 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="extended-origins-for-local-domains">
+<div id="extended-origin">
 <section id="section-4">
       <h2 id="name-extended-origins-for-local-">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-extended-origins-for-local-" class="section-name selfRef">Extended Origins for Local Domains</a>
@@ -1396,8 +1401,9 @@ printer is entitled to claim the name printer.local and use it.  Thus,
 any server has a legitimate claim to that name. If we are to make
 https://printer.local a viable origin, how do we ensure that it is
 unique?<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Extending the origin -- internally on the client -- makes this possible. A web origin is defined as a
-tuple of scheme, host and port. This is a capability that browsers are
+<p id="section-4-2">Extending the origin -- internally on the client -- makes this
+possible. A web origin is defined as a tuple of scheme, host, and port
+<span><a href="https://rfc-editor.org/rfc/rfc6454#section-4" class="relref">Section 4</a> of [<a href="#RFC6454" class="cite xref">RFC6454</a>]</span>. This is a capability that browsers are
 building to enable a range of use cases, such as the creation of
 separate browsing contexts (see e.g., <span>[<a href="#containers" class="cite xref">containers</a>]</span>). By adding an
 additional property to that tuple that cannot be used by any other
@@ -1475,7 +1481,8 @@ https://_NPNE4IG2GJ4VAL4DCHL64YSM5BII4A2X.printer.local, or it could
 use a separator of some sort to partition off space for a key (e.g.,
 "lh--" (<span><a href="https://rfc-editor.org/rfc/rfc5890#section-3.2.1" class="relref">Section 3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>), taking care of each label not
 exceeding 63 octets (<span><a href="https://rfc-editor.org/rfc/rfc1035#section-2.3.1" class="relref">Section 2.3.1</a> of [<a href="#RFC1035" class="cite xref">RFC1035</a>]</span>) if the internal
-representation has such restriction).<a href="#section-6-4" class="pilcrow">¶</a></p>
+representation has such restriction).  The internal representation should
+also include the type of key (e.g., RSA1024, secp256r1).<a href="#section-6-4" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6-5.1">
           <p id="section-6-5.1.1">TBD: Does this need a new scheme? Is it a new field, or can it be
@@ -1566,24 +1573,27 @@ reset, leading to the more alarming user notice.<a href="#section-7.2-2" class="
         <h3 id="name-client-operation">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-client-operation" class="section-name selfRef">Client Operation</a>
         </h3>
-<p id="section-8.1-1">When clients connect to a local domain name or IP address (as
-discussed in <a href="#local" class="auto internal xref">Section 5</a>) using TLS the client includes the server's
-name in the TLS Server Name Indication (SNI) extension (<span><a href="https://rfc-editor.org/rfc/rfc6066#section-3" class="relref">Section 3</a> of [<a href="#RFC6066" class="cite xref">RFC6066</a>]</span>).<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">Upon receipt of the server's certificate, the client validates the
-certificate's before and after dates, validates one of the
-certificate's SubjectAltName matches the previously-transmitted TLS
-SNI, and extracts the public key from the certificate.  That public
-key is internally associated with the server's name to become the
-server's origin.  By doing this the client's web forms, cookies,
-passwords, local storage, and other origin-specific data are all
-associated with both the server's name (as is typical) <em>and</em> its
-public key.  In so doing, the client avoids warning about a
-self-signed certificate because the Certification Authority signature
-is not what validates this certificate: rather, because the name or
-destination IP address are local (<a href="#local" class="auto internal xref">Section 5</a>) a unique name is formed
-internally in the client which partitions data for that origin.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">The client <span class="bcp14">MAY</span>/<span class="bcp14">SHOULD</span> inform the user the first time a server and
-its public key combination is trusted.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">The client connects to a local domain name or IP address (as
+discussed in <a href="#local" class="auto internal xref">Section 5</a>) using TLS.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">Upon receipt of the server's certificate, the client validates
+validates the certificate (<span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span>, <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, and <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.3.4" class="relref">Section 4.3.4</a> of [<a href="#RFC9110" class="cite xref">RFC9110</a>]</span> if using HTTPS).  When performing such a
+connection to a local domain, the client might avoid warning about a
+self-signed certificate because the Certification Authority (CA)
+signature will certainly not be signed by a trusted CA.  Rather, a
+more subtle indication might be warranted for TLS connections to a
+local domain, perhaps only the first time or perhaps each time.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">After the TLS connection finishes successfully, the client forms the
+extended origin for this server (see <a href="#extended-origin" class="auto internal xref">Section 4</a>).  This
+extends the scheme, host, and port origin of <span>[<a href="#RFC6454" class="cite xref">RFC6454</a>]</span> to also
+include server's public key.  By doing this only that server with that
+public key will be associated with the web origin data (web forms,
+cookies, passwords, local storage, etc.).<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-8.1-4.1">
+            <p id="section-8.1-4.1.1">Implementation note: See <a href="#origin-serialization" class="auto internal xref">Section 6</a> for suggestions on
+representing the public key in the client.<a href="#section-8.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="server-operation">
@@ -1591,8 +1601,8 @@ its public key combination is trusted.<a href="#section-8.1-3" class="pilcrow">�
         <h3 id="name-server-operation">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-server-operation" class="section-name selfRef">Server Operation</a>
         </h3>
-<p id="section-8.2-1">The server operates normally and is unaware of the client implementing
-this draft.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">The server is unaware of the client implementing this draft and needs
+no changes.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1607,11 +1617,12 @@ this draft.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
         <h3 id="name-server-identity-change">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-server-identity-change" class="section-name selfRef">Server Identity Change</a>
         </h3>
-<p id="section-9.1-1">This specification effectively encodes the server's public key as part of its identity.
-Changing the public key would also change the internal representation on clients -- thus, its
-identity as known by client password managers and other configurations
-in clients (e.g., printer, SMB share, etc.). As such an identity
-change is extremely disruptive, changing the server's public key needs to be avoided.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">This specification effectively encodes the server's public key as part
+of its identity.  Changing the public key would also change the
+internal representation on clients -- thus, its identity as known by
+client password managers and other configurations in clients (e.g.,
+printer, SMB share, etc.). As such an identity change is extremely
+disruptive, changing the server's public key needs to be avoided.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1631,6 +1642,22 @@ passive attack, or to condition users to validate self-signed certificates
 for local servers. In this case, the
 advantages of making HTTPS available would seem to far outweigh the
 risk of using a key over long periods.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-3">This draft defines a new way for clients to authenticate servers
+belonging to the local domain.  Unlike the unique names on the
+Internet, a server on a local domain definately does not have a unique
+name -- two networks can have their own printer.local which is a
+different physical printer on a different network, but both have the
+same simple name.  When the client associates the server's public key
+with the server's origin (scheme, hostname, port), the client can
+distinguish one printer.local from another printer.local, even though
+they share the same name.  This keeps origin-specific data accessible
+only to a server possessing the private key associated with its public
+key. When visiting another network where a server is using the same
+name, the server will use its own public key in the TLS handshake
+which is the client's indication the server is a different origin.
+When the client is using an extended origin with a local domain
+server, server impersonation still requires possession of the victim's
+private key.<a href="#section-10-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
@@ -1638,7 +1665,7 @@ risk of using a key over long periods.<a href="#section-10-2" class="pilcrow">¶
       <h2 id="name-iana-considerations">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-11-1">New registry for hash type, 0=SHA256.  Extensions via IETF Action.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">This draft requires no IANA actions.<a href="#section-11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -1693,13 +1720,17 @@ risk of using a key over long periods.<a href="#section-10-2" class="pilcrow">¶
         <dd>
 <span class="refAuthor">Rekhter, Y.</span>, <span class="refAuthor">Moskowitz, B.</span>, <span class="refAuthor">Karrenberg, D.</span>, <span class="refAuthor">de Groot, G. J.</span>, and <span class="refAuthor">E. Lear</span>, <span class="refTitle">"Address Allocation for Private Internets"</span>, <span class="seriesInfo">BCP 5</span>, <span class="seriesInfo">RFC 1918</span>, <span class="seriesInfo">DOI 10.17487/RFC1918</span>, <time datetime="1996-02" class="refDate">February 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1918">https://www.rfc-editor.org/rfc/rfc1918</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC5280">[RFC5280]</dt>
+        <dd>
+<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC5890">[RFC5890]</dt>
         <dd>
 <span class="refAuthor">Klensin, J.</span>, <span class="refTitle">"Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework"</span>, <span class="seriesInfo">RFC 5890</span>, <span class="seriesInfo">DOI 10.17487/RFC5890</span>, <time datetime="2010-08" class="refDate">August 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5890">https://www.rfc-editor.org/rfc/rfc5890</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC6066">[RFC6066]</dt>
+<dt id="RFC6454">[RFC6454]</dt>
         <dd>
-<span class="refAuthor">Eastlake 3rd, D.</span>, <span class="refTitle">"Transport Layer Security (TLS) Extensions: Extension Definitions"</span>, <span class="seriesInfo">RFC 6066</span>, <span class="seriesInfo">DOI 10.17487/RFC6066</span>, <time datetime="2011-01" class="refDate">January 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6066">https://www.rfc-editor.org/rfc/rfc6066</a>&gt;</span>. </dd>
+<span class="refAuthor">Barth, A.</span>, <span class="refTitle">"The Web Origin Concept"</span>, <span class="seriesInfo">RFC 6454</span>, <span class="seriesInfo">DOI 10.17487/RFC6454</span>, <time datetime="2011-12" class="refDate">December 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6454">https://www.rfc-editor.org/rfc/rfc6454</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6762">[RFC6762]</dt>
         <dd>
@@ -1716,6 +1747,14 @@ risk of using a key over long periods.<a href="#section-10-2" class="pilcrow">¶
 <dt id="RFC8375">[RFC8375]</dt>
         <dd>
 <span class="refAuthor">Pfister, P.</span> and <span class="refAuthor">T. Lemon</span>, <span class="refTitle">"Special-Use Domain 'home.arpa.'"</span>, <span class="seriesInfo">RFC 8375</span>, <span class="seriesInfo">DOI 10.17487/RFC8375</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8375">https://www.rfc-editor.org/rfc/rfc8375</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9110">[RFC9110]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9525">[RFC9525]</dt>
+        <dd>
+<span class="refAuthor">Saint-Andre, P.</span> and <span class="refAuthor">R. Salz</span>, <span class="refTitle">"Service Identity in TLS"</span>, <span class="seriesInfo">RFC 9525</span>, <span class="seriesInfo">DOI 10.17487/RFC9525</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9525">https://www.rfc-editor.org/rfc/rfc9525</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="secure-context">[secure-context]</dt>
       <dd>
