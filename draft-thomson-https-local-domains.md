@@ -392,6 +392,9 @@ is not what validates this certificate: rather, because the name or
 destination IP address are local ({{local}}) a unique name is formed
 internally in the client which partitions data for that origin.
 
+The client MAY/SHOULD inform the user the first time a server and
+its public key combination is trusted.
+
 ## Server Operation
 
 The server operates normally and is unaware of the client implementing
