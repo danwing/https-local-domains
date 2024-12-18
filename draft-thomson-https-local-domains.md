@@ -111,7 +111,7 @@ Authority (CA) trusted by the client.  This is a relaxed way of
 The best option for a device that is installed in a local network
 might be to use a genuine domain name.  The vendor of a device could
 run a service that assigns a unique name from the global DNS namespace
-to the device, such as \<deviceID\>.devices.example.com. Mozilla’s IOT
+to the device, such as \<deviceID\>.devices.example.com. Mozilla's IOT
 Gateway does exactly this, and this is a pattern that is emerging as
 best practice.
 
@@ -203,12 +203,6 @@ accessing that state remain constant than how it is identified. A
 certificate provides a unique anchor for that state, ensuring that
 only a single entity controls access to that information.
 
-# Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
-
-
-
 # Extended Origins for Local Domains {#extended-origin}
 
 The key challenge for local domains is that names are not unique. Any
@@ -256,13 +250,13 @@ IPv6 Unicast Addresses (fc00::/7) are considered local.
 
 Servers on loopback interfaces are local.  This includes the IPv4
 literal (127.0.0.1), the host-scope IPv6 literal (::1), and any origin
-with the name “localhost”
+with the name "localhost"
 ({{?I-D.ietf-dnsop-let-localhost-be-localhost}}).
 
 Address literals might reach a server that can also be reached using a
 domain name.  This is not fundamentally different to a server that can
 be reached by two different names (for example, servers often respond
-to names both with and without a “www” label: https://example.com and
+to names both with and without a "www" label: https://example.com and
 https://www.example.com).  A server that is identified with a URL that
 includes a domain name has a different identity to the server that is
 identified with a URL that includes an IP address literal, even if the
@@ -292,7 +286,7 @@ message is expected to check that the origin matches their
 expectations.
 
 This proposes a change to the serialization of origins for local
-servers so that it includes a hash of the server’s public key
+servers so that it includes a hash of the server's public key
 information (SPKI).  This is added to the ASCII and Unicode
 serializations of the origin.
 
@@ -348,19 +342,20 @@ with a different public key, such as visiting another network that
 has a server with the same name.  It is
 possible that other security UX might be enhanced to better signal the
 status of local servers. For instance, showing the identicon in the
-above examples next to the server’s chosen favicon.  For password
+above examples next to the server's chosen favicon.  For password
 stealing, using a reliable password manager -- which also does internal
 partioning based on the server's public key -- should help. It might be
 necessary to include notices warning users about the server identity.
 
 Third-party password managers would need to be enhanced to recognize
 the additional information in the origin and properly segment their
-internal namespace. A password manager that looks at window.location.host is
-likely to broadcast passwords inappropriately.
+internal namespace. A password manager that looks at
+window.location.hostname is likely to broadcast passwords
+inappropriately.
 
 To mitigate this risk we might consider blocking concurrent use of the
 same name with different keys if a password manager is installed.
-However, I don’t think that we necessarily know that an extension is a
+However, I do not think that we necessarily know that an extension is a
 password manager.  This probably reduces to some due diligence with
 the help of the addons team.
 
