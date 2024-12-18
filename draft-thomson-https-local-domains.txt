@@ -5,8 +5,8 @@
 Network Working Group                                         M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                            D. Wing, Ed.
-Expires: 20 June 2025                                             Citrix
-                                                        17 December 2024
+Expires: 21 June 2025                                             Citrix
+                                                        18 December 2024
 
 
                    Extended Origins for Local Domains
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 June 2025.
+   This Internet-Draft will expire on 21 June 2025.
 
 Copyright Notice
 
@@ -425,6 +425,9 @@ Table of Contents
    not what validates this certificate: rather, because the name or
    destination IP address are local (Section 5) a unique name is formed
    internally in the client which partitions data for that origin.
+
+   The client MAY/SHOULD inform the user the first time a server and its
+   public key combination is trusted.
 
 8.2.  Server Operation
 
