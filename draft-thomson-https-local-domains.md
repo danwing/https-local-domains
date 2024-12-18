@@ -98,6 +98,12 @@ HTTPS origin.
 
 What is really needed is a way to use HTTPS proper.
 
+This draft discusses how a client can authenticate to HTTPS servers
+belonging to the local domain where the server name is not unique and
+where the server does not have a certificate signed by a Certification
+Authority (CA) trusted by the client.  This is a relaxed way of
+"doing HTTPS" for servers on the local domain.
+
 # Background
 
 ## Using Real Names
@@ -203,7 +209,7 @@ only a single entity controls access to that information.
 
 
 
-# Extended Origins for Local Domains
+# Extended Origins for Local Domains {#extended-origin}
 
 The key challenge for local domains is that names are not unique. Any
 printer is entitled to claim the name printer.local and use it.  Thus,
@@ -211,8 +217,9 @@ any server has a legitimate claim to that name. If we are to make
 https://printer.local a viable origin, how do we ensure that it is
 unique?
 
-Extending the origin -- internally on the client -- makes this possible. A web origin is defined as a
-tuple of scheme, host and port. This is a capability that browsers are
+Extending the origin -- internally on the client -- makes this
+possible. A web origin is defined as a tuple of scheme, host, and port
+{{Section 4 of ?RFC6454}}. This is a capability that browsers are
 building to enable a range of use cases, such as the creation of
 separate browsing contexts (see e.g., {{containers}}). By adding an
 additional property to that tuple that cannot be used by any other
@@ -295,7 +302,8 @@ https://_NPNE4IG2GJ4VAL4DCHL64YSM5BII4A2X.printer.local, or it could
 use a separator of some sort to partition off space for a key (e.g.,
 "lh--" ({{Section 3.2.1 of ?RFC5890}}), taking care of each label not
 exceeding 63 octets ({{Section 2.3.1 of ?RFC1035}}) if the internal
-representation has such restriction).
+representation has such restriction).  The internal representation should
+also include the type of key (e.g., RSA1024, secp256r1).
 
 > TBD: Does this need a new scheme? Is it a new field, or can it be
 added to the domain name? What separator would this use? How should
@@ -373,42 +381,43 @@ reset, leading to the more alarming user notice.
 
 ## Client Operation
 
-When clients connect to a local domain name or IP address (as
-discussed in {{local}}) using TLS the client includes the server's
-name in the TLS Server Name Indication (SNI) extension ({{Section 3 of
-?RFC6066}}).
+The client connects to a local domain name or IP address (as
+discussed in {{local}}) using TLS.
 
-Upon receipt of the server's certificate, the client validates the
-certificate's before and after dates, validates one of the
-certificate's SubjectAltName matches the previously-transmitted TLS
-SNI, and extracts the public key from the certificate.  That public
-key is internally associated with the server's name to become the
-server's origin.  By doing this the client's web forms, cookies,
-passwords, local storage, and other origin-specific data are all
-associated with both the server's name (as is typical) *and* its
-public key.  In so doing, the client avoids warning about a
-self-signed certificate because the Certification Authority signature
-is not what validates this certificate: rather, because the name or
-destination IP address are local ({{local}}) a unique name is formed
-internally in the client which partitions data for that origin.
+Upon receipt of the server's certificate, the client validates
+validates the certificate ({{?RFC9525}}, {{?RFC5280}}, and {{Section
+4.3.4 of ?RFC9110}} if using HTTPS).  When performing such a
+connection to a local domain, the client might avoid warning about a
+self-signed certificate because the Certification Authority (CA)
+signature will certainly not be signed by a trusted CA.  Rather, a
+more subtle indication might be warranted for TLS connections to a
+local domain, perhaps only the first time or perhaps each time.
 
-The client MAY/SHOULD inform the user the first time a server and
-its public key combination is trusted.
+After the TLS connection finishes successfully, the client forms the
+extended origin for this server (see {{extended-origin}}).  This
+extends the scheme, host, and port origin of {{?RFC6454}} to also
+include server's public key.  By doing this only that server with that
+public key will be associated with the web origin data (web forms,
+cookies, passwords, local storage, etc.).
+
+> Implementation note: See {{origin-serialization}} for suggestions on
+representing the public key in the client.
 
 ## Server Operation
 
-The server operates normally and is unaware of the client implementing
-this draft.
+The server is unaware of the client implementing this draft and needs
+no changes.
 
 # Operational Considerations
 
 ## Server Identity Change
 
-This specification effectively encodes the server's public key as part of its identity.
-Changing the public key would also change the internal representation on clients -- thus, its
-identity as known by client password managers and other configurations
-in clients (e.g., printer, SMB share, etc.). As such an identity
-change is extremely disruptive, changing the server's public key needs to be avoided.
+This specification effectively encodes the server's public key as part
+of its identity.  Changing the public key would also change the
+internal representation on clients -- thus, its identity as known by
+client password managers and other configurations in clients (e.g.,
+printer, SMB share, etc.). As such an identity change is extremely
+disruptive, changing the server's public key needs to be avoided.
 
 
 # Security Considerations
@@ -425,10 +434,28 @@ for local servers. In this case, the
 advantages of making HTTPS available would seem to far outweigh the
 risk of using a key over long periods.
 
+This draft defines a new way for clients to authenticate servers
+belonging to the local domain.  Unlike the unique names on the
+Internet, a server on a local domain definately does not have a unique
+name -- two networks can have their own printer.local which is a
+different physical printer on a different network, but both have the
+same simple name.  When the client associates the server's public key
+with the server's origin (scheme, hostname, port), the client can
+distinguish one printer.local from another printer.local, even though
+they share the same name.  This keeps origin-specific data accessible
+only to a server possessing the private key associated with its public
+key. When visiting another network where a server is using the same
+name, the server will use its own public key in the TLS handshake
+which is the client's indication the server is a different origin.
+When the client is using an extended origin with a local domain
+server, server impersonation still requires possession of the victim's
+private key.
+
+
 
 # IANA Considerations {#iana}
 
-New registry for hash type, 0=SHA256.  Extensions via IETF Action.
+This draft requires no IANA actions.
 
 
 --- back
